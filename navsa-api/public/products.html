@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Dashboard</title>
+
+    <style>
+        body{
+    font-family:Arial,Helvetica,sans-serif;
+    margin:20px;
+    background:#f7f7f7;
+}
+
+h2{
+    margin-bottom:20px;
+}
+
+.row{
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+}
+
+input,select,button{
+    padding:10px;
+    font-size:14px;
+}
+
+button{
+    cursor:pointer;
+}
+
+.table-wrap{
+    overflow:auto;
+    max-height:80vh;
+    background:white;
+    border:1px solid #ddd;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:13px;
+}
+
+thead th{
+    position:sticky;
+    top:0;
+    background:#1d3557;
+    color:white;
+    z-index:2;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:8px;
+    white-space:nowrap;
+}
+td{
+    max-width:250px;
+}
+
+tbody tr:nth-child(even){
+    background:#fafafa;
+}
+
+tbody tr:hover{
+    background:#eef7ff;
+}
+
+td{
+    max-width:220px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.product-image{
+    width:55px;
+    height:55px;
+    object-fit:contain;
+    background:#fff;
+}
+
+.badge-yes{
+    color:green;
+    font-weight:bold;
+}
+
+.badge-no{
+    color:red;
+    font-weight:bold;
+}
+
+#productInfo{
+    margin-bottom:15px;
+    font-weight:bold;
+}
+
+#pagination{
+    margin-top:20px;
+}
+
+#pagination button{
+    padding:8px 14px;
+    margin:2px;
+    border:1px solid #ccc;
+    background:white;
+}
+
+.active-page{
+    background:#007bff !important;
+    color:white;
+    font-weight:bold;
+}
+    </style>
+</head>
+
+<body>
+
+<h2>📦 Product Dashboard (Admin — All 34 Columns)</h2>
+
+<div class="row">
+    <input type="text" id="search" placeholder="Search products...">
+
+    <select id="sort_by">
+        <option value="">Sort By</option>
+        <option value="price">Price</option>
+        <option value="description">Name</option>
+        <option value="created_at">Newest</option>
+    </select>
+
+    <select id="order">
+        <option value="asc">ASC</option>
+        <option value="desc">DESC</option>
+    </select>
+
+    <button onclick="loadProducts(1)">Search</button>
+</div>
+
+<div id="productInfo"></div>
+
+<div class="table-wrap">
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Reference</th>
+            <th>Supplier ID</th>
+            <th>Category</th>
+            <th>Brand</th>
+            <th>Description</th>
+            <th>Units Of</th>
+            <th>Inner Case Qty</th>
+            <th>Outer Case Qty</th>
+            <th>Qty Desc</th>
+            <th>Barcode EAN</th>
+            <th>Barcode Case</th>
+            <th>Group Desc</th>
+            <th>VAT Code</th>
+            <th>Layer Qty</th>
+            <th>Pallet Qty</th>
+            <th>Supplier Ref</th>
+            <th>Cost</th>
+            <th>Cost From</th>
+            <th>Cost To</th>
+            <th>Weight</th>
+            <th>Volume</th>
+            <th>Shelf Life</th>
+            <th>Price List</th>
+            <th>Price</th>
+            <th>Comm Code</th>
+            <th>Intra Country</th>
+            <th>Intra Type</th>
+            <th>Web Short Desc</th>
+            <th>Web Long Desc</th>
+            <th>Web Image</th>
+            <th>Live For Web</th>
+            <th>Encore Image</th>
+            <th>Obsolete</th>
+        </tr>
+    </thead>
+    <tbody id="productTable"></tbody>
+</table>
+</div>
+
+<div id="pagination"></div>
+
+<script>
+
+function formatDate(date){
+
+    if(!date) return "";
+
+    const d=new Date(date);
+
+    if(isNaN(d)) return date;
+
+    return d.toLocaleDateString("en-GB");
+}
+
+async function loadProducts(page = 1)
+{
+    try {
+
+        let search = document.getElementById("search").value;
+        let sort_by = document.getElementById("sort_by").value;
+        let order = document.getElementById("order").value;
+
+        let url = `https://britishfoodwarehouse.co.uk/api/products?page=${page}`;
+
+        if (search) {
+            url += `&search=${encodeURIComponent(search)}`;
+        }
+
+        if (sort_by) {
+            url += `&sort_by=${sort_by}&order=${order}`;
+        }
+
+        const response = await fetch(url);
+        const data = await response.json();
+
+        console.log(data);
+
+        let table = "";
+
+        data.data.forEach(product => {
+
+            table += `
+                <tr>
+                    <td>${product.id ?? ''}</td>
+                    <td>${product.reference ?? ''}</td>
+                    <td>${product.supplier_id ?? ''}</td>
+                    <td>${product.category?.category_name ?? ''}</td>
+                    <td>${product.brand?.brand_name ?? ''}</td>
+                    <td>${product.description ?? ''}</td>
+                    <td>${product.units_of ?? ''}</td>
+                    <td>${product.inner_case_quantity ?? ''}</td>
+                    <td>${product.outer_case_quantity ?? ''}</td>
+                    <td>${product.qty_desc ?? ''}</td>
+                    <td>${product.barcode_ean ?? ''}</td>
+                    <td>${product.barcode_case ?? ''}</td>
+                    <td>${product.group_desc ?? ''}</td>
+                    <td>${product.vat_code ?? ''}</td>
+                    <td>${product.layer_quantity ?? ''}</td>
+                    <td>${product.pallet_quantity ?? ''}</td>
+                    <td>${product.supplier_reference ?? ''}</td>
+                    <td>£${product.cost ?? ''}</td>
+                    <td>${formatDate(product.cost_from_date)}</td>
+                    <td>${formatDate(product.cost_to_date)}</td>
+                    <td>${product.weight ?? ''}</td>
+                    <td>${product.volume ?? ''}</td>
+                    <td>${product.shelf_life ?? ''}</td>
+                    <td>${product.price_list ?? ''}</td>
+                    <td>£${product.price ?? ''}</td>
+                    <td>${product.comm_code ?? ''}</td>
+                    <td>${product.intra_country ?? ''}</td>
+                    <td>${product.intra_type ?? ''}</td>
+                    <td>${product.web_short_description ?? ''}</td>
+                    <td>${product.web_long_description ?? ''}</td>
+                    <td>
+${
+product.web_image
+?
+`<img class="product-image"
+src="https://britishfoodwarehouse.co.uk/images/products/${product.web_image}"
+onerror="this.src='https://placehold.co/55x55?text=No+Image'">`
+:
+""
+}
+</td>
+                    <td>
+<span class="${product.live_for_web ? 'badge-yes' : 'badge-no'}">
+${product.live_for_web ? 'Yes' : 'No'}
+</span>
+</td>
+                    <td>${product.encore_image ?? ''}</td>
+                    <td>${product.obsolete ?? ''}</td>
+                </tr>
+            `;
+        });
+
+        document.getElementById("productTable").innerHTML = table;
+
+        document.getElementById("productInfo").innerHTML =
+            `Showing ${data.from} - ${data.to} of ${data.total} products`;
+
+        renderPagination(data);
+
+    } catch(error) {
+
+        console.error(error);
+
+        document.getElementById("productTable").innerHTML =
+            `<tr><td colspan="34">Error loading products</td></tr>`;
+    }
+}
+
+function renderPagination(data)
+{
+    let html = "";
+
+    if (data.current_page > 1) {
+        html += `
+            <button onclick="loadProducts(${data.current_page - 1})">
+                Previous
+            </button>
+        `;
+    }
+
+    for (let i = 1; i <= data.last_page; i++) {
+
+        html += `
+            <button
+                class="${i === data.current_page ? 'active-page' : ''}"
+                onclick="loadProducts(${i})">
+                ${i}
+            </button>
+        `;
+    }
+
+    if (data.current_page < data.last_page) {
+        html += `
+            <button onclick="loadProducts(${data.current_page + 1})">
+                Next
+            </button>
+        `;
+    }
+
+    document.getElementById("pagination").innerHTML = html;
+}
+
+document.getElementById("search").addEventListener("keyup", function(event) {
+    if (event.key === "Enter") {
+        loadProducts(1);
+    }
+});
+
+loadProducts();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+:root {
+  --color-navy: #293681;
+  --color-navy-deep: #0a1128;
+  --color-paper: #D0E7E6;
+  --color-hairline: #95CCDD;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #060c17;
+    color: #0f172a;
+    overflow-x: hidden;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #060c17;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e4d8c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #c9a84c;
+}
+
+/* Animations */
+@keyframes wave {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+@keyframes wave-reverse {
+  0% { transform: translateX(-50%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-wave {
+  animation: wave 25s linear infinite;
+}
+
+.animate-wave-reverse {
+  animation: wave-reverse 30s linear infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Gradient backgrounds & texts */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #c9a84c, #f0d080, #c9a84c);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.bg-gradient-gold {
+  background: linear-gradient(135deg, #c9a84c, #f0d080);
+}
+
+.bg-gradient-navy {
+  background: linear-gradient(135deg, #0f1e36, #060c17);
+}
+
+/* Wave background pattern */
+.bg-waves-pattern {
+  background-image: radial-gradient(circle at 100% 150%, transparent 24%, #1e4d8c 24%, #1e4d8c 28%, transparent 28%, transparent);
+  background-size: 20px 20px;
+}
+
+/* Shop content area (light background for e-commerce content) */
+.shop-section {
+  background: #D0E7E6;
+  color: #293681;
+}
+
+/* Reset for root container */
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Google Translate CSS Overrides to preserve custom UI and translate silently in the background */
+iframe.goog-te-banner-frame,
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-balloon-frame,
+.skiptranslate,
+#goog-gt-tt,
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+}
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+.goog-te-gadget {
+  display: none !important;
+  font-size: 0px !important;
+}
+.goog-logo-link {
+  display: none !important;
+}
+body {
+  top: 0px !important;
+  position: static !important;
+}
