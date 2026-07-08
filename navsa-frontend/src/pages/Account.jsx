@@ -28,7 +28,7 @@ function Account() {
           style={{ width: '100%', padding: '12px 14px', border: `1px solid ${colors.hairline}`, borderRadius: radius.sm, outline: 'none', marginTop: '6px', marginBottom: '24px' }}
         />
 
-        <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '13px', fontWeight: 600, cursor: 'pointer' }}>
+        <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '14px', fontWeight: 600, cursor: 'pointer', borderRadius: radius.pill, boxShadow: '0 8px 20px rgba(41, 54, 129, 0.25)' }}>
           Log In
         </button>
 
