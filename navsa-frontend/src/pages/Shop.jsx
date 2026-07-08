@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { colors, fonts } from '../theme'
+import { colors, fonts, radius, shadow } from '../theme'
 
 const styleTag = `
 @keyframes navsa-shimmer {
@@ -17,8 +17,8 @@ const styleTag = `
 }
 .navsa-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 28px rgba(8, 43, 83, 0.14);
-  border-color: var(--color-navy) !important;
+  box-shadow: 0 6px 14px rgba(10, 17, 40, 0.08), 0 18px 40px rgba(10, 17, 40, 0.14);
+  border-color: rgba(41, 54, 129, 0.35) !important;
 }
 .navsa-card:hover .navsa-view-btn {
   background: var(--color-accent) !important;
@@ -130,15 +130,15 @@ function Shop() {
           onChange={(e) => setSearch(e.target.value)}
           onKeyUp={(e) => e.key === 'Enter' && loadProducts(1)}
           style={{
-            padding: '13px 18px', width: '440px', border: 'none',
-            fontFamily: fonts.body, fontSize: '14px', borderRadius: '2px 0 0 2px'
+            padding: '13px 20px', width: '440px', border: 'none', outline: 'none',
+            fontFamily: fonts.body, fontSize: '14px', borderRadius: `${radius.pill} 0 0 ${radius.pill}`
           }}
         />
         <button
           onClick={() => loadProducts(1)}
           style={{
-            background: colors.accent, color: '#fff', border: 'none', padding: '13px 28px',
-            fontWeight: 700, cursor: 'pointer', borderRadius: '0 2px 2px 0',
+            background: colors.accent, color: '#fff', border: 'none', padding: '13px 30px',
+            fontWeight: 700, cursor: 'pointer', borderRadius: `0 ${radius.pill} ${radius.pill} 0`,
             fontFamily: fonts.mono, fontSize: '13px', letterSpacing: '0.5px'
           }}
         >
@@ -161,7 +161,7 @@ function Shop() {
         {loading ? (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))', gap: '22px' }}>
             {Array.from({ length: 8 }).map((_, i) => (
-              <div key={i} style={{ background: '#fff', border: `1px solid ${colors.hairline}` }}>
+              <div key={i} style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.md, boxShadow: shadow.soft, overflow: 'hidden' }}>
                 <div className="navsa-skeleton" style={{ width: '100%', height: '190px' }} />
                 <div style={{ padding: '18px' }}>
                   <div className="navsa-skeleton" style={{ height: '16px', width: '80%', marginBottom: '10px', borderRadius: '2px' }} />
@@ -185,7 +185,8 @@ function Shop() {
                 to={`/product/${product.id}`}
                 className="navsa-card"
                 style={{
-                  background: '#fff', border: `1px solid ${colors.hairline}`,
+                  background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`,
+                  borderRadius: radius.md, boxShadow: shadow.soft, overflow: 'hidden',
                   position: 'relative', display: 'flex', flexDirection: 'column',
                   animationDelay: `${Math.min(idx, 8) * 0.04}s`,
                   textDecoration: 'none', cursor: 'pointer'
@@ -197,7 +198,7 @@ function Shop() {
                     position: 'absolute', top: '10px', left: '10px', zIndex: 2,
                     background: 'rgba(41,54,129,0.92)', color: '#fff',
                     fontFamily: fonts.mono, fontSize: '10px', fontWeight: 700,
-                    padding: '4px 9px', letterSpacing: '0.5px', borderRadius: '2px',
+                    padding: '4px 10px', letterSpacing: '0.5px', borderRadius: radius.pill,
                     textTransform: 'uppercase'
                   }}>
                     {product.category.category_name}
@@ -252,7 +253,7 @@ function Shop() {
 
                   <div style={{
                     background: colors.paper, border: `1px solid ${colors.hairline}`,
-                    borderRadius: '2px', padding: '10px 12px', marginBottom: '16px',
+                    borderRadius: radius.sm, padding: '12px 14px', marginBottom: '16px',
                     fontFamily: fonts.mono, fontSize: '11px', color: colors.inkMuted,
                     display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 10px', lineHeight: '1.5'
                   }}>
@@ -270,7 +271,7 @@ function Shop() {
                       width: '100%', background: colors.navy, color: '#fff',
                       border: 'none', padding: '12px', fontWeight: 700, cursor: 'pointer',
                       fontFamily: fonts.mono, fontSize: '12px', letterSpacing: '0.5px',
-                      transition: 'background 0.2s ease', textAlign: 'center',
+                      transition: 'background 0.2s ease', textAlign: 'center', borderRadius: radius.sm,
                       marginTop: 'auto', boxSizing: 'border-box'
                     }}
                   >
@@ -291,13 +292,13 @@ function Shop() {
               style={{
                 padding: '10px 18px', border: `1px solid ${colors.hairline}`, background: '#fff',
                 cursor: currentPage <= 1 ? 'not-allowed' : 'pointer', opacity: currentPage <= 1 ? 0.4 : 1,
-                fontFamily: fonts.mono, fontSize: '12px', fontWeight: 700
+                fontFamily: fonts.mono, fontSize: '12px', fontWeight: 700, borderRadius: radius.pill
               }}
             >
               ← PREV
             </button>
             <span style={{
-              color: '#fff', background: colors.navy, fontWeight: 700, padding: '10px 18px'
+              color: '#fff', background: colors.navy, fontWeight: 700, padding: '10px 18px', borderRadius: radius.pill
             }}>
               PAGE {currentPage} / {lastPage}
             </span>
@@ -308,7 +309,7 @@ function Shop() {
               style={{
                 padding: '10px 18px', border: `1px solid ${colors.hairline}`, background: '#fff',
                 cursor: currentPage >= lastPage ? 'not-allowed' : 'pointer', opacity: currentPage >= lastPage ? 0.4 : 1,
-                fontFamily: fonts.mono, fontSize: '12px', fontWeight: 700
+                fontFamily: fonts.mono, fontSize: '12px', fontWeight: 700, borderRadius: radius.pill
               }}
             >
               NEXT →

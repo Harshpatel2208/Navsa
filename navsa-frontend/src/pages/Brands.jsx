@@ -1,6 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { colors, fonts } from '../theme';
+import { colors, fonts, radius, shadow } from '../theme';
 
 // Load all brand logo images automatically from assets/brands/
 const imageModules = import.meta.glob(
@@ -97,11 +97,12 @@ function Brands() {
             width: "350px",
             display: "block",
             margin: "0 auto 25px",
-            padding: "12px 18px",
+            padding: "13px 22px",
             fontSize: "15px",
             border: `1px solid ${colors.hairline}`,
             fontFamily: fonts.body,
-            borderRadius: '4px',
+            borderRadius: radius.pill,
+            boxShadow: shadow.soft,
             color: colors.navyDeep,
             outline: 'none',
           }}
@@ -128,7 +129,8 @@ function Brands() {
               fontFamily: fonts.mono,
               fontWeight: 700,
               fontSize: '12px',
-              borderRadius: '4px',
+              borderRadius: radius.pill,
+              transition: 'all 0.18s ease',
             }}
           >
             ALL
@@ -147,7 +149,9 @@ function Brands() {
                 fontFamily: fonts.mono,
                 fontWeight: 700,
                 fontSize: '12px',
-                borderRadius: '4px',
+                borderRadius: radius.pill,
+                minWidth: '38px',
+                transition: 'all 0.18s ease',
               }}
             >
               {letter}
@@ -188,12 +192,13 @@ function Brands() {
                   >
                     <div
                       style={{
-                        border: `1px solid ${colors.hairline}`,
-                        borderRadius: "8px",
-                        padding: "15px",
+                        border: `1px solid rgba(149, 204, 221, 0.6)`,
+                        borderRadius: radius.md,
+                        boxShadow: shadow.soft,
+                        padding: "18px",
                         textAlign: "center",
                         background: "#fff",
-                        transition: "transform 0.22s ease, box-shadow 0.22s ease",
+                        transition: "transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease",
                         height: '140px',
                         display: 'flex',
                         flexDirection: 'column',
@@ -201,14 +206,14 @@ function Brands() {
                         justifyContent: 'center',
                       }}
                       onMouseOver={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 6px 12px rgba(8, 43, 83, 0.08)';
-                        e.currentTarget.style.borderColor = colors.navy;
+                        e.currentTarget.style.transform = 'translateY(-4px)';
+                        e.currentTarget.style.boxShadow = shadow.hover;
+                        e.currentTarget.style.borderColor = 'rgba(41, 54, 129, 0.35)';
                       }}
                       onMouseOut={(e) => {
                         e.currentTarget.style.transform = 'none';
-                        e.currentTarget.style.boxShadow = 'none';
-                        e.currentTarget.style.borderColor = colors.hairline;
+                        e.currentTarget.style.boxShadow = shadow.soft;
+                        e.currentTarget.style.borderColor = 'rgba(149, 204, 221, 0.6)';
                       }}
                     >
                       {logo ? (
@@ -277,7 +282,7 @@ function Brands() {
                     fontSize: "12px",
                     fontWeight: 700,
                     color: colors.navy,
-                    borderRadius: '4px',
+                    borderRadius: radius.pill,
                     opacity: currentPage <= 1 ? 0.5 : 1,
                   }}
                 >
@@ -297,7 +302,7 @@ function Brands() {
                       fontFamily: fonts.mono,
                       fontWeight: 700,
                       fontSize: '12px',
-                      borderRadius: '4px',
+                      borderRadius: radius.pill,
                     }}
                   >
                     {i + 1}
@@ -316,7 +321,7 @@ function Brands() {
                     fontSize: "12px",
                     fontWeight: 700,
                     color: colors.navy,
-                    borderRadius: '4px',
+                    borderRadius: radius.pill,
                     opacity: currentPage >= totalPages ? 0.5 : 1,
                   }}
                 >

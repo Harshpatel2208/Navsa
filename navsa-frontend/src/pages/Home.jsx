@@ -1,19 +1,25 @@
 import HeroSlider from "../components/HeroSlider";
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { colors, fonts } from '../theme'
+import { colors, fonts, radius, shadow } from '../theme'
 import ShippingSelector from '../components/ShippingSelector'
 
 const stripCardStyle = `
 .navsa-strip-card {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
   cursor: pointer;
 }
 .navsa-strip-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 22px rgba(8, 43, 83, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 14px rgba(10, 17, 40, 0.08), 0 18px 40px rgba(10, 17, 40, 0.12);
+  border-color: rgba(41, 54, 129, 0.35) !important;
 }
-`
+.navsa-strip-card img {
+  transition: transform 0.35s ease;
+}
+.navsa-strip-card:hover img {
+  transform: scale(1.05);
+}`
 
 
 const services = [
@@ -64,13 +70,13 @@ function ProductStrip({ title, subtitle, products, badge }) {
               key={p.id}
               to={`/product/${p.id}`}
               className="navsa-strip-card"
-              style={{ minWidth: '220px', background: '#fff', border: `1px solid ${colors.hairline}`, flex: '0 0 auto', textDecoration: 'none', display: 'block' }}
+              style={{ minWidth: '220px', background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.md, boxShadow: shadow.soft, flex: '0 0 auto', textDecoration: 'none', display: 'block', overflow: 'hidden' }}
             >
               <div style={{ position: 'relative' }}>
                 {badge && (
                   <span style={{
-                    position: 'absolute', top: '8px', left: '8px', background: colors.accent,
-                    color: '#fff', fontFamily: fonts.mono, fontSize: '10px', padding: '3px 8px', zIndex: 1
+                    position: 'absolute', top: '10px', left: '10px', background: colors.accent,
+                    color: '#fff', fontFamily: fonts.mono, fontSize: '10px', fontWeight: 700, letterSpacing: '0.5px', padding: '4px 9px', borderRadius: radius.pill, zIndex: 1
                   }}>
                     {badge}
                   </span>
@@ -159,12 +165,12 @@ function Home() {
       <ShippingSelector />
 
       {/* Brand strip — NEW */}
-      <div style={{ width: '100%', background: '#fff', padding: '30px 6vw', borderTop: `1px solid ${colors.hairline}`, borderBottom: `1px solid ${colors.hairline}` }}>
+      <div style={{ width: '100%', background: '#fff', padding: '30px 6vw', borderTop: `1px solid rgba(149, 204, 221, 0.6)`, borderBottom: `1px solid rgba(149, 204, 221, 0.6)` }}>
         <div style={{ maxWidth: '1600px', margin: '0 auto', display: 'flex', gap: '14px', overflowX: 'auto' }}>
           {brands.map(b => (
             <span key={b} style={{
               fontFamily: fonts.mono, fontSize: '12px', color: colors.navy, fontWeight: 600,
-              border: `1px solid ${colors.hairline}`, padding: '10px 18px', whiteSpace: 'nowrap', flex: '0 0 auto'
+              border: `1px solid ${colors.hairline}`, borderRadius: radius.pill, padding: '10px 18px', whiteSpace: 'nowrap', flex: '0 0 auto'
             }}>
               {b.toUpperCase()}
             </span>
@@ -173,7 +179,7 @@ function Home() {
       </div>
 
       <div style={{ textAlign: 'center', paddingBottom: '20px', paddingTop: '20px' }}>
-        <Link to="/shop" style={{ color: colors.navy, fontWeight: 600, fontFamily: fonts.body, textDecoration: 'none', border: `2px solid ${colors.navy}`, padding: '10px 26px', display: 'inline-block' }}>
+        <Link to="/shop" style={{ color: colors.navy, fontWeight: 600, fontFamily: fonts.body, textDecoration: 'none', border: `2px solid ${colors.navy}`, borderRadius: radius.pill, padding: '11px 30px', display: 'inline-block', transition: 'all 0.2s ease' }}>
           View All
         </Link>
       </div>
@@ -185,7 +191,7 @@ function Home() {
           {categories.length === 0 ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '14px' }}>
               {Array.from({ length: 12 }).map((_, i) => (
-                <div key={i} style={{ height: '62px', background: '#e8e6e0', borderRadius: '2px' }} />
+                <div key={i} style={{ height: '62px', background: '#e8e6e0', borderRadius: radius.sm }} />
               ))}
             </div>
           ) : (
@@ -197,9 +203,9 @@ function Home() {
                   style={{ textDecoration: 'none' }}
                 >
                   <div
-                    style={{ background: '#fff', border: `1px solid ${colors.hairline}`, padding: '20px 16px', color: colors.navy, fontWeight: 600, fontSize: '13px', transition: 'all 0.18s ease' }}
-                    onMouseOver={e => { e.currentTarget.style.background = colors.navy; e.currentTarget.style.color = '#fff'; }}
-                    onMouseOut={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = colors.navy; }}
+                    style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.sm, boxShadow: shadow.soft, padding: '20px 16px', color: colors.navy, fontWeight: 600, fontSize: '13px', transition: 'all 0.18s ease' }}
+                    onMouseOver={e => { e.currentTarget.style.background = colors.navy; e.currentTarget.style.color = '#fff'; e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = shadow.hover; }}
+                    onMouseOut={e => { e.currentTarget.style.background = '#fff'; e.currentTarget.style.color = colors.navy; e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = shadow.soft; }}
                   >
                     {cat.category_name}
                   </div>
@@ -227,7 +233,7 @@ function Home() {
       {/* Become a customer + Trade show */}
       <div style={{ width: '100%', padding: '60px 6vw' }}>
         <div style={{ maxWidth: '1600px', margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
-          <div style={{ background: '#fff', border: `1px solid ${colors.hairline}`, padding: '30px' }}>
+          <div style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.lg, boxShadow: shadow.soft, padding: '32px' }}>
             <h3 style={{ fontFamily: fonts.display, color: colors.navy, fontSize: '20px', marginBottom: '14px' }}>Become a Customer</h3>
             <ul style={{ color: colors.inkMuted, fontSize: '13px', lineHeight: '1.9', paddingLeft: '18px' }}>
               <li>UK companies must be VAT registered</li>
@@ -236,7 +242,7 @@ function Home() {
               <li>UK customers must be trading for over 12 months</li>
             </ul>
           </div>
-          <div style={{ background: colors.navy, color: '#fff', padding: '30px' }}>
+          <div style={{ background: colors.navy, color: '#fff', borderRadius: radius.lg, boxShadow: shadow.soft, padding: '32px' }}>
             <h3 style={{ fontFamily: fonts.display, fontSize: '20px', marginBottom: '14px' }}>Trade Show</h3>
             <p style={{ color: '#AEB8CC', fontSize: '14px' }}>Gulfood — 26th to 30th January 2026</p>
           </div>
@@ -265,7 +271,7 @@ function Home() {
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '18px' }}>
             {comingSoon.map(t => (
               <div key={t} style={{
-                background: colors.navy, color: '#fff', height: '160px', display: 'flex',
+                background: colors.navy, color: '#fff', height: '160px', display: 'flex', borderRadius: radius.lg, boxShadow: shadow.soft,
                 alignItems: 'center', justifyContent: 'center', fontFamily: fonts.display, fontSize: '15px', textAlign: 'center', padding: '20px'
               }}>
                 {t}
@@ -318,7 +324,8 @@ function Home() {
             textDecoration: 'none',
             fontWeight: 600,
             display: 'inline-block',
-            borderRadius: '6px'
+            borderRadius: radius.pill,
+            boxShadow: '0 8px 20px rgba(201, 168, 76, 0.3)'
           }}>
           View Latest Deals PDF
         </a>

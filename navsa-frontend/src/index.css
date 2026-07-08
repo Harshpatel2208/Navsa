@@ -16,22 +16,33 @@
     background-color: #060c17;
     color: #0f172a;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  img {
+    -webkit-user-drag: none;
   }
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 10px;
+  height: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #060c17;
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e4d8c;
-  border-radius: 4px;
+  background: #95CCDD;
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c9a84c;
+  background: #293681;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 
 /* Animations */
