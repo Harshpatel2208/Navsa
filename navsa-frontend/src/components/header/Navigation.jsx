@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
-import { colors } from "../../theme";
 
 const categories = [
   { label: "Chocolates",               db: "Chocolates" },
@@ -41,7 +40,7 @@ export default function Navigation() {
   const [megaOpen, setMegaOpen] = useState(false);
 
   return (
-    <nav style={{ width: "100%", background: colors.navy, position: "relative", zIndex: 200 }}>
+    <nav style={{ width: "100%", background: "#082b53", position: "relative", zIndex: 200 }}>
       <div style={{
         maxWidth: "1600px", margin: "0 auto",
         display: "flex", alignItems: "center", padding: "0 40px",
@@ -75,7 +74,7 @@ export default function Navigation() {
                   padding: "35px 6vw", display: "flex", gap: "55px", zIndex: 999,
                 }}>
                   <div style={{ flex: 2 }}>
-                    <div style={{ fontWeight: 700, color: colors.navy, marginBottom: "18px", fontSize: "13px", letterSpacing: ".5px" }}>
+                    <div style={{ fontWeight: 700, color: "#082b53", marginBottom: "18px", fontSize: "13px", letterSpacing: ".5px" }}>
                       SHOP BY CATEGORY
                     </div>
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "10px" }}>
@@ -96,7 +95,7 @@ export default function Navigation() {
                   </div>
 
                   <div style={{ width: "220px", borderLeft: "1px solid #ececec", paddingLeft: "35px" }}>
-                    <div style={{ fontWeight: 700, color: colors.navy, marginBottom: "18px", fontSize: "13px", letterSpacing: ".5px" }}>
+                    <div style={{ fontWeight: 700, color: "#082b53", marginBottom: "18px", fontSize: "13px", letterSpacing: ".5px" }}>
                       QUICK ACCESS
                     </div>
                     {quickAccess.map((q) => (
@@ -107,7 +106,7 @@ export default function Navigation() {
                   </div>
 
                   <div style={{ width: "260px", borderLeft: "1px solid #ececec", paddingLeft: "35px" }}>
-                    <div style={{ fontWeight: 700, color: colors.navy, marginBottom: "18px", fontSize: "13px", letterSpacing: ".5px" }}>
+                    <div style={{ fontWeight: 700, color: "#082b53", marginBottom: "18px", fontSize: "13px", letterSpacing: ".5px" }}>
                       PROMOTIONS
                     </div>
                     {promotions.map((p) => (
@@ -118,7 +117,7 @@ export default function Navigation() {
                     
                     <a href="https://www.navsainternational.co.uk/resources/deal1.pdf"
                       target="_blank" rel="noreferrer"
-                      style={{ display: "inline-block", marginTop: "20px", color: colors.navy, textDecoration: "none", fontWeight: 700, fontSize: "14px" }}
+                      style={{ display: "inline-block", marginTop: "20px", color: "#082b53", textDecoration: "none", fontWeight: 700, fontSize: "14px" }}
                     >
                       📄 Download Latest Deals PDF
                     </a>

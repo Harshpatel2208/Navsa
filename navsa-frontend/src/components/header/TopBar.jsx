@@ -7,7 +7,6 @@ import {
 } from "react-icons/fa";
 
 import { FaXTwitter } from "react-icons/fa6";
-import { colors } from "../../theme";
 
 export default function TopBar() {
   const socialLinks = [
@@ -33,7 +32,7 @@ export default function TopBar() {
     <div
       style={{
         width: "100%",
-        background: colors.navyDeep,
+        background: "#082c52",
         color: "#ffffff",
         fontSize: "13px",
         fontFamily: "Arial, sans-serif",

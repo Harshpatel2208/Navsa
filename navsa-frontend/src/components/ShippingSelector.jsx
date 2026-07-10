@@ -89,7 +89,7 @@ function ShippingSelector() {
   }
 
   return (
-    <section className="shipping-section">
+    <section id="shipping-selector" className="shipping-section">
       <div className="shipping-card">
         <div className="shipping-header">
           <span className="shipping-badge">EXPORT SHIPPING OPTIONS</span>
@@ -97,13 +97,10 @@ function ShippingSelector() {
           <h2>Check Estimated Shipping Duration and Pricing</h2>
 
           <div className="shipping-note">
-            <strong>NOTE:</strong> Frozen items require a Reefer container. Please select a
-            Reefer container, or remove Frozen/Chilled items from your basket.
-          </div>
+  <strong>NOTE:</strong> Frozen and chilled items require a Reefer container.
+  Please select a Reefer container, or remove Frozen/Chilled items from your basket.
+</div>
 
-          {/* <p>
-            Select your container, delivery country and destination port before ordering.
-          </p> */}
           <p>
   {isCollection
     ? 'Collection selected. Country and port selection are not required.'

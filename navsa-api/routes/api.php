@@ -17,9 +17,9 @@ Route::get('/user', function (Request $request) {
 Route::get('/products', [ProductController::class, 'index']);
 Route::get('/products/{id}', [ProductController::class, 'show']);
 
-// Categories — only categories that have at least one product
+// Categories
 Route::get('/categories', function () {
-    return Category::whereHas('products')
+    return Category::where('status', 1)
         ->orderBy('category_name')
         ->get(['id', 'category_name']);
 });
@@ -39,9 +39,21 @@ Route::get('/sub-categories/{categoryId}', function ($categoryId) {
         ->get(['id', 'category_id', 'sub_category_name', 'group_code']);
 });
 
-// Brands — only brands that have at least one product
+// Brands
+// Route::get('/brands', function () {
+//     return Brand::where('status', 1)
+//         ->orderBy('brand_name')
+//         ->get(['id', 'brand_name']);
+
+// //shipping
+// Route::get('/shipping/containers', [ShippingController::class, 'containers']);
+// Route::get('/shipping/countries', [ShippingController::class, 'countries']);
+// Route::get('/shipping/ports/{country}', [ShippingController::class, 'ports']);
+// });
+
+// Brands
 Route::get('/brands', function () {
-    return Brand::whereHas('products')
+    return Brand::where('status', 1)
         ->orderBy('brand_name')
         ->get(['id', 'brand_name']);
 });
