@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { colors } from "../../theme";
 import {
   FaTruck,
   FaShip,
@@ -57,7 +58,7 @@ export default function ServiceBar() {
     <div
       style={{
         width: "100%",
-        background: "#f58220",
+        background: colors.accent,
         overflow: "hidden",
         borderTop: "1px solid rgba(255,255,255,.15)",
         borderBottom: "1px solid rgba(0,0,0,.08)",

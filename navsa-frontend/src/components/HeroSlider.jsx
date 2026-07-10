@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { colors } from "../theme";
 
 import banner1 from "../assets/banners/banner1.jpg";
 import banner2 from "../assets/banners/banner2.jpg";
@@ -84,7 +85,7 @@ export default function HeroSlider() {
               width: current === index ? "34px" : "12px",
               height: "12px",
               borderRadius: "30px",
-              background: current === index ? "#f58220" : "#ffffff",
+              background: current === index ? colors.accent : "#ffffff",
               cursor: "pointer",
               transition: "all .3s ease",
             }}

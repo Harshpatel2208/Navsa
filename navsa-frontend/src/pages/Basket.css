@@ -11,7 +11,7 @@
 }
 
 .basket-title {
-  color: #082b53;
+  color: var(--color-navy);
   font-size: 32px;
   font-weight: 900;
   margin: 0 0 18px;
@@ -28,7 +28,7 @@
   background: #f5faff;
   border: 1px solid #cfe0f3;
   border-radius: 12px;
-  color: #082b53;
+  color: var(--color-navy);
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -38,9 +38,9 @@
 
 .basket-change-btn,
 .status-change {
-  color: #082b53;
+  color: var(--color-navy);
   background: #fff;
-  border: 2px solid #082b53;
+  border: 2px solid var(--color-navy);
   border-radius: 999px;
   padding: 8px 16px;
   text-decoration: none;
@@ -64,7 +64,7 @@
 }
 
 .basket-head {
-  background: #082b53;
+  background: var(--color-navy);
   color: #fff;
   font-size: 12px;
   font-weight: 900;
@@ -318,8 +318,8 @@
   border-radius: 12px;
   font-weight: 900;
   cursor: pointer;
-  border: 2px solid #082b53;
-  color: #082b53;
+  border: 2px solid var(--color-navy);
+  color: var(--color-navy);
   background: #fff;
 }
 
@@ -343,7 +343,7 @@
 }
 
 .basket-link {
-  color: #082b53;
+  color: var(--color-navy);
   font-weight: 900;
 }
 
@@ -352,7 +352,7 @@
   display: grid;
   place-items: center;
   padding: 60px 6vw;
-  background: #f8f4ed;
+  background: var(--color-paper);
 }
 
 .basket-empty-card {
@@ -368,7 +368,7 @@
 }
 
 .basket-empty-card h2 {
-  color: #082b53;
+  color: var(--color-navy);
 }
 
 .basket-empty-card p {

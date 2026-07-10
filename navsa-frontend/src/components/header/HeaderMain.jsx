@@ -96,7 +96,7 @@
 //             style={{
 //               width: "65px",
 //               border: "none",
-//               background: "#f58220",
+//               background: "#c9a84c",
 //               color: "#fff",
 //               cursor: "pointer",
 //               fontSize: "20px",
@@ -125,7 +125,7 @@
 //           >
 //             <div
 //               style={{
-//                 background: "#f58220",
+//                 background: "#c9a84c",
 //                 color: "#fff",
 //                 padding: "12px 18px",
 //                 display: "flex",
@@ -147,7 +147,7 @@
 //             to="/wishlist"
 //             style={{
 //               textDecoration: "none",
-//               color: "#082b53",
+//               color: "#293681",
 //             }}
 //           >
 //             <div
@@ -158,7 +158,7 @@
 //                 fontWeight: 600,
 //               }}
 //             >
-//               <FaHeart color="#f58220" />
+//               <FaHeart color="#c9a84c" />
 
 //               Wishlist
 //             </div>
@@ -174,7 +174,7 @@
 //           >
 //             <div
 //               style={{
-//                 background: "#082b53",
+//                 background: "#293681",
 //                 color: "#fff",
 //                 padding: "12px 18px",
 //                 borderRadius: "5px",
@@ -216,6 +216,7 @@ import {
 import logo from "../../assets/logo.png";
 import awards from "../../assets/award.jpg";
 import { useCart } from "../../context/CartContext";
+import { colors } from "../../theme";
 
 export default function HeaderMain() {
   const { wishlistCount, basketCount, basketTotal } = useCart();
@@ -306,7 +307,7 @@ export default function HeaderMain() {
             style={{
               width: "65px",
               border: "none",
-              background: "#f58220",
+              background: colors.accent,
               color: "#fff",
               cursor: "pointer",
               fontSize: "20px",
@@ -335,7 +336,7 @@ export default function HeaderMain() {
           >
             <div
               style={{
-                background: "#f58220",
+                background: colors.accent,
                 color: "#fff",
                 padding: "12px 18px",
                 display: "flex",
@@ -357,7 +358,7 @@ export default function HeaderMain() {
             to="/wishlist"
             style={{
               textDecoration: "none",
-              color: "#082b53",
+              color: colors.navy,
             }}
           >
             <div
@@ -370,14 +371,14 @@ export default function HeaderMain() {
               }}
             >
               <span style={{ position: "relative" }}>
-                <FaHeart color="#f58220" />
+                <FaHeart color={colors.accent} />
                 {wishlistCount > 0 && (
                   <span
                     style={{
                       position: "absolute",
                       top: "-9px",
                       right: "-11px",
-                      background: "#082b53",
+                      background: colors.navy,
                       color: "#fff",
                       fontSize: "10px",
                       fontWeight: 700,
@@ -409,7 +410,7 @@ export default function HeaderMain() {
           >
             <div
               style={{
-                background: "#082b53",
+                background: colors.navy,
                 color: "#fff",
                 padding: "12px 18px",
                 borderRadius: "5px",
@@ -428,7 +429,7 @@ export default function HeaderMain() {
                       position: "absolute",
                       top: "-9px",
                       right: "-9px",
-                      background: "#f58220",
+                      background: colors.accent,
                       color: "#fff",
                       fontSize: "10px",
                       fontWeight: 700,

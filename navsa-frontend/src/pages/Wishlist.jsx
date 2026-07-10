@@ -34,7 +34,7 @@ function Wishlist() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '22px' }}>
           {wishlistItems.map(item => (
             <div key={item.id} style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.md, boxShadow: shadow.soft, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: '100%', height: '170px', background: '#EFEDE6', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+              <div style={{ width: '100%', height: '170px', background: '#D0E7E6', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 {item.web_image ? (
                   <img
                     src={`/products/${item.web_image}`}
@@ -49,7 +49,7 @@ function Wishlist() {
 
               <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 {item.brand && (
-                  <span style={{ fontFamily: fonts.mono, fontSize: '10px', color: '#f58220', fontWeight: 700, marginBottom: '6px' }}>
+                  <span style={{ fontFamily: fonts.mono, fontSize: '10px', color: '#c9a84c', fontWeight: 700, marginBottom: '6px' }}>
                     {item.brand}
                   </span>
                 )}

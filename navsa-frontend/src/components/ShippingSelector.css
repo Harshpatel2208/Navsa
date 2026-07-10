@@ -1,7 +1,7 @@
 .shipping-section {
   width: 100%;
   padding: 58px 6vw;
-  background: linear-gradient(135deg, #082b53 0%, #0d3b70 55%, #f58220 100%);
+  background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-navy) 55%, var(--color-accent) 100%);
 }
 
 .shipping-card {
@@ -10,7 +10,7 @@
   padding: 36px;
   border-radius: 22px;
   background: rgba(255, 255, 255, 0.97);
-  color: #082b53;
+  color: var(--color-navy);
   box-shadow: 0 22px 50px rgba(0, 0, 0, 0.24);
 }
 
@@ -24,7 +24,7 @@
   margin-bottom: 12px;
   padding: 7px 16px;
   border-radius: 999px;
-  background: #f58220;
+  background: var(--color-accent);
   color: #fff;
   font-size: 12px;
   font-weight: 900;
@@ -82,7 +82,7 @@
   border: 1px solid #cfd8e3;
   border-radius: 12px;
   background: #fff;
-  color: #082b53;
+  color: var(--color-navy);
   font-size: 15px;
   font-weight: 700;
   outline: none;
