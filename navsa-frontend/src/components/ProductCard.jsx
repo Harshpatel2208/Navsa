@@ -158,30 +158,84 @@ function ProductCard({ product, badge }) {
     setShowQtyModal(true)
   }
 
+  // function saveShipping() {
+  //   if (!selectedContainer) {
+  //     alert('Please select container.')
+  //     return
+  //   }
+
+  //   if (!shippingIsCollection && (!selectedCountry || !selectedPort)) {
+  //     alert('Please select country and port.')
+  //     return
+  //   }
+
+  //   setShippingOption({
+  //     container: selectedContainer,
+  //     country: shippingIsCollection
+  //       ? { id: null, country_name: 'Collection / Ex Works', zone_id: 1 }
+  //       : selectedCountry,
+  //     port: shippingIsCollection
+  //       ? { id: null, port_name: 'Warehouse Collection' }
+  //       : selectedPort,
+  //   })
+
+  //   setShowShippingModal(false)
+  //   setShowQtyModal(true)
+  // }
   function saveShipping() {
-    if (!selectedContainer) {
-      alert('Please select container.')
-      return
-    }
-
-    if (!shippingIsCollection && (!selectedCountry || !selectedPort)) {
-      alert('Please select country and port.')
-      return
-    }
-
-    setShippingOption({
-      container: selectedContainer,
-      country: shippingIsCollection
-        ? { id: null, country_name: 'Collection / Ex Works', zone_id: 1 }
-        : selectedCountry,
-      port: shippingIsCollection
-        ? { id: null, port_name: 'Warehouse Collection' }
-        : selectedPort,
-    })
-
-    setShowShippingModal(false)
-    setShowQtyModal(true)
+  if (!selectedContainer) {
+    alert('Please select a container or collection method.')
+    return
   }
+
+  if (!shippingIsCollection && (!selectedCountry || !selectedPort)) {
+    alert('Please select country and port.')
+    return
+  }
+
+  const chosenContainerType = selectedContainer?.container_type
+  const chosenIsDry = chosenContainerType === 'Dry'
+
+  if (
+    !shippingIsCollection &&
+    chosenIsDry &&
+    (productStorageType === 'Frozen' || productStorageType === 'Chilled')
+  ) {
+    alert(
+      `${productStorageType} items require a Reefer container. Please select a Reefer container.`
+    )
+    return
+  }
+
+  if (frozenMixBlocked) {
+    alert(
+      'Frozen items cannot be mixed with Ambient or Chilled items in the same basket.'
+    )
+    return
+  }
+
+  setShippingOption({
+    container: selectedContainer,
+
+    country: shippingIsCollection
+      ? {
+          id: null,
+          country_name: 'Collection / Ex Works',
+          zone_id: null,
+        }
+      : selectedCountry,
+
+    port: shippingIsCollection
+      ? {
+          id: null,
+          port_name: 'Warehouse Collection',
+        }
+      : selectedPort,
+  })
+
+  setShowShippingModal(false)
+  setShowQtyModal(true)
+}
 
   function addSelectedQty() {
     if (dryBlocked) {
