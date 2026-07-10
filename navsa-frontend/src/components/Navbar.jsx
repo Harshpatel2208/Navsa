@@ -283,9 +283,9 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     style={{
-                      position: 'absolute', top: '100%', left: 0, width: '420px',
-                      background: '#fff', borderTop: `3px solid #4274D9`,
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.15)', padding: '20px', zIndex: 999
+                      position: 'absolute', top: 'calc(100% + 8px)', left: 0, width: '420px',
+                      background: '#fff', borderTop: `3px solid #4274D9`, borderRadius: '14px',
+                      boxShadow: '0 6px 14px rgba(10, 17, 40, 0.08), 0 18px 40px rgba(10, 17, 40, 0.12)', padding: '20px', zIndex: 999, overflow: 'hidden'
                     }}
                   >
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
@@ -294,7 +294,7 @@ export default function Navbar() {
                           key={c.id}
                           to={`/shop?category=${encodeURIComponent(c.category_name)}`}
                           onClick={() => setMegaOpen(false)}
-                          style={{ color: colors.navy, textDecoration: 'none', fontSize: '13.5px', padding: '6px 8px', borderRadius: '4px', transition: 'background 0.2s, color 0.2s' }}
+                          style={{ color: colors.navy, textDecoration: 'none', fontSize: '13.5px', padding: '8px 10px', borderRadius: '8px', transition: 'background 0.2s, color 0.2s' }}
                           onMouseEnter={e => { e.target.style.background = colors.paper; e.target.style.color = '#4274D9' }}
                           onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = colors.navy }}
                         >
@@ -325,9 +325,9 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     style={{
-                      position: 'absolute', top: '100%', left: 0, width: '380px',
-                      background: '#fff', borderTop: `3px solid #4274D9`,
-                      boxShadow: '0 10px 30px rgba(0,0,0,0.15)', padding: '20px', zIndex: 999
+                      position: 'absolute', top: 'calc(100% + 8px)', left: 0, width: '380px',
+                      background: '#fff', borderTop: `3px solid #4274D9`, borderRadius: '14px',
+                      boxShadow: '0 6px 14px rgba(10, 17, 40, 0.08), 0 18px 40px rgba(10, 17, 40, 0.12)', padding: '20px', zIndex: 999, overflow: 'hidden'
                     }}
                   >
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
@@ -336,7 +336,7 @@ export default function Navbar() {
                           key={b.id}
                           to={`/shop?brand=${encodeURIComponent(b.brand_name)}`}
                           onClick={() => setBrandsOpen(false)}
-                          style={{ color: colors.navy, textDecoration: 'none', fontSize: '13px', padding: '6px 8px', borderRadius: '4px' }}
+                          style={{ color: colors.navy, textDecoration: 'none', fontSize: '13px', padding: '8px 10px', borderRadius: '8px' }}
                           onMouseEnter={e => { e.target.style.background = colors.paper; e.target.style.color = '#4274D9' }}
                           onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = colors.navy }}
                         >
@@ -373,7 +373,7 @@ export default function Navbar() {
             <select 
               value={selectedLang} 
               onChange={handleLanguageChange}
-              style={{ border: `1px solid ${colors.hairline}`, borderRadius: '4px', padding: '6px 12px', fontSize: '15px', color: colors.navy, background: '#fff', outline: 'none', cursor: 'pointer', fontWeight: 600 }}
+              style={{ border: `1px solid ${colors.hairline}`, borderRadius: '9999px', padding: '7px 14px', fontSize: '15px', color: colors.navy, background: '#fff', outline: 'none', cursor: 'pointer', fontWeight: 600 }}
             >
               <option value="en">English</option>
               <option value="fr">French</option>

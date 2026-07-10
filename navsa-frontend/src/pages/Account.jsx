@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { colors, fonts } from '../theme'
+import { colors, fonts, radius, shadow } from '../theme'
 
 function Account() {
   const [email, setEmail] = useState('')
@@ -7,7 +7,7 @@ function Account() {
 
   return (
     <div style={{ width: '100%', minHeight: '70vh', background: colors.paper, display: 'flex', justifyContent: 'center', padding: '70px 6vw' }}>
-      <div style={{ background: '#fff', border: `1px solid ${colors.hairline}`, padding: '40px', width: '100%', maxWidth: '420px' }}>
+      <div style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.lg, boxShadow: shadow.soft, padding: '44px', width: '100%', maxWidth: '420px' }}>
         <h2 style={{ fontFamily: fonts.display, color: colors.navy, fontSize: '22px', marginBottom: '24px', textAlign: 'center' }}>
           Trade Account Login
         </h2>
@@ -17,7 +17,7 @@ function Account() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          style={{ width: '100%', padding: '11px', border: `1px solid ${colors.hairline}`, marginTop: '6px', marginBottom: '18px' }}
+          style={{ width: '100%', padding: '12px 14px', border: `1px solid ${colors.hairline}`, borderRadius: radius.sm, outline: 'none', marginTop: '6px', marginBottom: '18px' }}
         />
 
         <label style={{ fontSize: '13px', color: colors.inkMuted, fontFamily: fonts.body }}>Password</label>
@@ -25,10 +25,10 @@ function Account() {
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          style={{ width: '100%', padding: '11px', border: `1px solid ${colors.hairline}`, marginTop: '6px', marginBottom: '24px' }}
+          style={{ width: '100%', padding: '12px 14px', border: `1px solid ${colors.hairline}`, borderRadius: radius.sm, outline: 'none', marginTop: '6px', marginBottom: '24px' }}
         />
 
-        <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '13px', fontWeight: 600, cursor: 'pointer' }}>
+        <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '14px', fontWeight: 600, cursor: 'pointer', borderRadius: radius.pill, boxShadow: '0 8px 20px rgba(41, 54, 129, 0.25)' }}>
           Log In
         </button>
 

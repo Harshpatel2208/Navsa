@@ -63,6 +63,12 @@ class Product extends Model
         'live_for_web',
         'encore_image',
         'obsolete',
+
+        // Admin-managed
+        'is_offer',
+        'offer_label',
+        'stock_quantity',
+        'deleted',
     ];
 
     public function brand() {

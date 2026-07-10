@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { colors, fonts } from '../theme'
+import { colors, fonts, radius, shadow } from '../theme'
 import { useCart } from '../context/CartContext'
 
 function Wishlist() {
@@ -15,7 +15,7 @@ function Wishlist() {
             Browse the catalogue and save products you're interested in.
           </p>
           <Link to="/shop">
-            <button style={{ background: colors.accent, color: '#fff', border: 'none', padding: '12px 28px', fontWeight: 600, cursor: 'pointer' }}>
+            <button style={{ background: colors.accent, color: '#fff', border: 'none', padding: '12px 30px', fontWeight: 600, cursor: 'pointer', borderRadius: radius.pill, boxShadow: '0 8px 20px rgba(201, 168, 76, 0.3)' }}>
               Browse Products
             </button>
           </Link>
@@ -33,7 +33,7 @@ function Wishlist() {
 
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '22px' }}>
           {wishlistItems.map(item => (
-            <div key={item.id} style={{ background: '#fff', border: `1px solid ${colors.hairline}`, display: 'flex', flexDirection: 'column' }}>
+            <div key={item.id} style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.md, boxShadow: shadow.soft, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
               <div style={{ width: '100%', height: '170px', background: '#EFEDE6', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
                 {item.web_image ? (
                   <img
@@ -62,13 +62,13 @@ function Wishlist() {
 
                 <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
                   <Link to={`/product/${item.id}`} style={{ flex: 1, textDecoration: 'none' }}>
-                    <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '10px', fontWeight: 700, cursor: 'pointer', fontFamily: fonts.mono, fontSize: '11px' }}>
+                    <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '10px', fontWeight: 700, cursor: 'pointer', fontFamily: fonts.mono, fontSize: '11px', borderRadius: radius.sm }}>
                       VIEW PRODUCT
                     </button>
                   </Link>
                   <button
                     onClick={() => removeFromWishlist(item.id)}
-                    style={{ background: 'transparent', border: `1px solid ${colors.hairline}`, color: '#B3261E', padding: '10px 12px', cursor: 'pointer', fontFamily: fonts.mono, fontSize: '11px' }}
+                    style={{ background: 'transparent', border: `1px solid ${colors.hairline}`, color: '#B3261E', padding: '10px 12px', cursor: 'pointer', fontFamily: fonts.mono, fontSize: '11px', borderRadius: radius.sm }}
                   >
                     ✕
                   </button>

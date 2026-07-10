@@ -11,14 +11,11 @@ import Shop from './pages/Shop'
 import Account from './pages/Account'
 import Wishlist from './pages/Wishlist'
 import Basket from './pages/Basket'
+import Admin from './pages/Admin'
 
 function ScrollToTop() {
   const location = useLocation()
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [location])
-
+  useEffect(() => { window.scrollTo(0, 0) }, [location])
   return null
 }
 
@@ -36,27 +33,47 @@ function PlaceholderPage({ title }) {
   )
 }
 
+// Layout wrapper for public pages (with Navbar + Footer)
+function PublicLayout({ children }) {
+  return (
+    <>
+      <Navbar />
+      {children}
+      <Footer />
+    </>
+  )
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <Navbar />
       <Routes>
-        <Route path="/"                   element={<Home />} />
-        <Route path="/shop"               element={<Shop />} />
-        <Route path="/account"            element={<Account />} />
-        <Route path="/wishlist"           element={<Wishlist />} />
-        <Route path="/basket"             element={<Basket />} />
-        <Route path="/brand"              element={<Brands />} />
-        <Route path="/about"              element={<PlaceholderPage title="About Us" />} />
-        <Route path="/contact"            element={<PlaceholderPage title="Contact Us" />} />
-        <Route path="/terms"              element={<PlaceholderPage title="Terms & Conditions" />} />
-        <Route path="/privacy"            element={<PlaceholderPage title="Privacy & Cookies" />} />
-        <Route path="/become-a-customer"  element={<PlaceholderPage title="Become a Customer" />} />
-        <Route path="/product/:id"        element={<ProductDetail />} />
-        <Route path="*"                   element={<Navigate to="/" replace />} />
+        {/* Admin — no Navbar/Footer */}
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/admin/*" element={<Admin />} />
+
+        {/* Public pages — wrapped with Navbar/Footer */}
+        <Route path="/*" element={
+          <PublicLayout>
+            <Routes>
+              <Route path="/"                   element={<Home />} />
+              <Route path="/shop"               element={<Shop />} />
+              <Route path="/account"            element={<Account />} />
+              <Route path="/wishlist"           element={<Wishlist />} />
+              <Route path="/basket"             element={<Basket />} />
+              <Route path="/brand"              element={<Brands />} />
+              <Route path="/about"              element={<PlaceholderPage title="About Us" />} />
+              <Route path="/contact"            element={<PlaceholderPage title="Contact Us" />} />
+              <Route path="/terms"              element={<PlaceholderPage title="Terms & Conditions" />} />
+              <Route path="/privacy"            element={<PlaceholderPage title="Privacy & Cookies" />} />
+              <Route path="/become-a-customer"  element={<PlaceholderPage title="Become a Customer" />} />
+              <Route path="/product/:id"        element={<ProductDetail />} />
+              <Route path="*"                   element={<Navigate to="/" replace />} />
+            </Routes>
+          </PublicLayout>
+        } />
       </Routes>
-      <Footer />
     </BrowserRouter>
   )
 }

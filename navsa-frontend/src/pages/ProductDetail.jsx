@@ -1,7 +1,7 @@
 import Barcode from 'react-barcode'
 import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { colors, fonts } from '../theme'
+import { colors, fonts, radius, shadow } from '../theme'
 import { useCart } from '../context/CartContext'
 
 const styleTag = `
@@ -218,16 +218,16 @@ export default function ProductDetail() {
           {/* Left — image + barcodes */}
           <div>
             <div className="navsa-img-frame" style={{
-              background: '#fff', border: `1px solid ${colors.hairline}`,
+              background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, boxShadow: shadow.soft,
               display: 'flex', alignItems: 'center', justifyContent: 'center',
-              height: '420px', borderRadius: '4px', overflow: 'hidden', position: 'relative'
+              height: '420px', borderRadius: radius.lg, overflow: 'hidden', position: 'relative'
             }}>
               {product.category?.category_name && (
                 <div style={{
                   position: 'absolute', top: '14px', left: '14px', zIndex: 2,
                   background: 'rgba(41,54,129,0.92)', color: '#fff',
                   fontFamily: fonts.mono, fontSize: '11px', fontWeight: 700,
-                  padding: '5px 11px', letterSpacing: '0.5px', borderRadius: '2px',
+                  padding: '5px 12px', letterSpacing: '0.5px', borderRadius: radius.pill,
                   textTransform: 'uppercase'
                 }}>
                   {product.category.category_name}
