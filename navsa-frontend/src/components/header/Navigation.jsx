@@ -44,12 +44,13 @@ export default function Navigation({ isSticky, scrollProgress }) {
   return (
     <nav style={{
       width: "100%",
-      background: colors.navy,
+      background: isSticky ? "#ffffff" : colors.navy,
       position: isSticky ? "fixed" : "relative",
       top: isSticky ? 0 : "auto",
       left: isSticky ? 0 : "auto",
       right: isSticky ? 0 : "auto",
-      boxShadow: isSticky ? "0 10px 30px rgba(0,0,0,0.1)" : "none",
+      boxShadow: isSticky ? "0 4px 20px rgba(0,0,0,0.08)" : "none",
+      borderBottom: isSticky ? "1px solid #e2e8f0" : "none",
       animation: isSticky ? "navsa-slide-down 0.3s ease-out" : "none",
       zIndex: 200,
     }}>
@@ -71,13 +72,10 @@ export default function Navigation({ isSticky, scrollProgress }) {
             marginRight: `${scrollProgress * 16}px`,
             transform: `translateX(${(1 - scrollProgress) * -40}px)`,
             transition: "none",
-            background: "#ffffff",
-            padding: "4px 8px",
-            borderRadius: "6px",
           }}
         >
           <Link to="/" style={{ display: "flex", alignItems: "center" }}>
-            <img src={logo} alt="NAVSA Logo" style={{ height: "34px", width: "auto", objectFit: "contain" }} />
+            <img src={logo} alt="NAVSA Logo" style={{ height: "42px", width: "auto", objectFit: "contain" }} />
           </Link>
         </div>
         {navItems.map((item) =>
@@ -91,10 +89,23 @@ export default function Navigation({ isSticky, scrollProgress }) {
               <Link
                 to={item.path}
                 style={{
-                  color: "#fff", textDecoration: "none",
-                  padding: "18px 24px", display: "flex", alignItems: "center",
-                  gap: "8px", fontWeight: 600, fontSize: "15px", whiteSpace: "nowrap",
+                  color: megaOpen ? "#fff" : (isSticky ? colors.navyDeep : "#fff"),
+                  textDecoration: "none",
+                  padding: "18px 24px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  fontWeight: 600,
+                  fontSize: "15px",
+                  whiteSpace: "nowrap",
                   background: megaOpen ? colors.accent : "transparent",
+                  transition: "color 0.2s, background 0.2s",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = "#ffffff";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = megaOpen ? "#ffffff" : (isSticky ? colors.navyDeep : "#ffffff");
                 }}
               >
                 {item.name}
@@ -165,12 +176,25 @@ export default function Navigation({ isSticky, scrollProgress }) {
               key={item.name}
               to={item.path}
               style={{
-                color: "#fff", textDecoration: "none",
-                padding: "18px 24px", display: "flex", alignItems: "center",
-                gap: "8px", fontWeight: 600, fontSize: "15px", whiteSpace: "nowrap",
+                color: isSticky ? colors.navyDeep : "#fff",
+                textDecoration: "none",
+                padding: "18px 24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                fontWeight: 600,
+                fontSize: "15px",
+                whiteSpace: "nowrap",
+                transition: "color 0.2s, background 0.2s",
               }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = colors.accent; }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = colors.accent;
+                e.currentTarget.style.color = "#ffffff";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = "transparent";
+                e.currentTarget.style.color = isSticky ? colors.navyDeep : "#ffffff";
+              }}
             >
               {item.name}
               {item.dropdown && <FaChevronDown size={11} />}
