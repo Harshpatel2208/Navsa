@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaChevronDown } from "react-icons/fa";
 import { colors } from "../../theme";
+import logo from "../../assets/logo.png";
 
 const categories = [
   { label: "Chocolates",               db: "Chocolates" },
@@ -37,15 +38,45 @@ const navItems = [
   { name: "Become a Customer",  path: "/become-a-customer", mega: false },
 ];
 
-export default function Navigation() {
+export default function Navigation({ isSticky, scrollProgress }) {
   const [megaOpen, setMegaOpen] = useState(false);
 
   return (
-    <nav style={{ width: "100%", background: colors.navy, position: "relative", zIndex: 200 }}>
+    <nav style={{
+      width: "100%",
+      background: colors.navy,
+      position: isSticky ? "fixed" : "relative",
+      top: isSticky ? 0 : "auto",
+      left: isSticky ? 0 : "auto",
+      right: isSticky ? 0 : "auto",
+      boxShadow: isSticky ? "0 10px 30px rgba(0,0,0,0.1)" : "none",
+      animation: isSticky ? "navsa-slide-down 0.3s ease-out" : "none",
+      zIndex: 200,
+    }}>
       <div style={{
-        maxWidth: "1600px", margin: "0 auto",
-        display: "flex", alignItems: "center", padding: "0 40px",
+        maxWidth: "1600px",
+        margin: "0 auto",
+        display: "flex",
+        alignItems: "center",
+        padding: "0 40px",
       }}>
+        {/* Live Progress Scroll Animated Logo */}
+        <div
+          style={{
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            opacity: scrollProgress,
+            maxWidth: `${scrollProgress * 80}px`,
+            marginRight: `${scrollProgress * 16}px`,
+            transform: `translateX(${(1 - scrollProgress) * -40}px)`,
+            transition: "none",
+          }}
+        >
+          <Link to="/" style={{ display: "flex", alignItems: "center" }}>
+            <img src={logo} alt="NAVSA Logo" style={{ height: "42px", width: "auto", objectFit: "contain" }} />
+          </Link>
+        </div>
         {navItems.map((item) =>
           item.mega ? (
             <div

@@ -142,3 +142,8 @@ body {
   top: 0px !important;
   position: static !important;
 }
+
+@keyframes navsa-slide-down {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(0); }
+}
