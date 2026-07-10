@@ -20,19 +20,9 @@ class ImportShippingPorts extends Command
             return 1;
         }
 
-        if (str_ends_with(strtolower($filePath), '.csv')) {
-            $rows = [];
-            if (($handle = fopen($filePath, "r")) !== FALSE) {
-                while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
-                    $rows[] = $data;
-                }
-                fclose($handle);
-            }
-        } else {
-            $spreadsheet = IOFactory::load($filePath);
-            $sheet = $spreadsheet->getActiveSheet();
-            $rows = $sheet->toArray(null, true, true, false);
-        }
+        $spreadsheet = IOFactory::load($filePath);
+        $sheet = $spreadsheet->getActiveSheet();
+        $rows = $sheet->toArray(null, true, true, false);
 
         array_shift($rows);
 

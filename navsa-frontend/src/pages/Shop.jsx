@@ -18,10 +18,10 @@ const styleTag = `
 .navsa-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 14px 28px rgba(8, 43, 83, 0.14);
-  border-color: var(--color-navy) !important;
+  border-color: #082b53 !important;
 }
 .navsa-card:hover .navsa-view-btn {
-  background: var(--color-accent) !important;
+  background: #f58220 !important;
 }
 .navsa-card img {
   transition: transform 0.35s ease;
@@ -38,9 +38,9 @@ const styleTag = `
   transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
 }
 .navsa-page-btn:hover:not(:disabled) {
-  background: var(--color-navy) !important;
+  background: #082b53 !important;
   color: #fff !important;
-  border-color: var(--color-navy) !important;
+  border-color: #082b53 !important;
 }
 `
 
@@ -106,21 +106,21 @@ function Shop() {
 
       {categoryFilter && (
         <div style={{
-          width: '100%', background: colors.navy, padding: '14px 6vw',
+          width: '100%', background: '#082b53', padding: '14px 6vw',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          borderBottom: `3px solid ${colors.accent}`
+          borderBottom: '3px solid #f58220'
         }}>
           <span style={{ color: '#fff', fontWeight: 700, fontSize: '13px', fontFamily: fonts.mono, letterSpacing: '1px' }}>
             ▣ CATEGORY MANIFEST — {categoryFilter.toUpperCase()}
           </span>
-          <Link to="/shop" style={{ color: colors.accent, fontSize: '13px', textDecoration: 'none', fontWeight: 700, fontFamily: fonts.mono }}>
+          <Link to="/shop" style={{ color: '#f58220', fontSize: '13px', textDecoration: 'none', fontWeight: 700, fontFamily: fonts.mono }}>
             ✕ CLEAR
           </Link>
         </div>
       )}
 
       <div style={{
-        width: '100%', background: colors.navy, padding: '22px 6vw',
+        width: '100%', background: '#082b53', padding: '22px 6vw',
         display: 'flex', justifyContent: 'center', gap: '0'
       }}>
         <input
@@ -137,7 +137,7 @@ function Shop() {
         <button
           onClick={() => loadProducts(1)}
           style={{
-            background: colors.accent, color: '#fff', border: 'none', padding: '13px 28px',
+            background: '#f58220', color: '#fff', border: 'none', padding: '13px 28px',
             fontWeight: 700, cursor: 'pointer', borderRadius: '0 2px 2px 0',
             fontFamily: fonts.mono, fontSize: '13px', letterSpacing: '0.5px'
           }}
@@ -152,7 +152,7 @@ function Shop() {
           marginBottom: '28px', paddingBottom: '14px', borderBottom: `1px solid ${colors.hairline}`
         }}>
           <p style={{ fontFamily: fonts.mono, fontSize: '12px', color: colors.inkMuted, letterSpacing: '0.5px', margin: 0 }}>
-            SHOWING <strong style={{ color: colors.navy }}>{products.length}</strong> OF <strong style={{ color: colors.navy }}>{total}</strong> PRODUCTS
+            SHOWING <strong style={{ color: '#082b53' }}>{products.length}</strong> OF <strong style={{ color: '#082b53' }}>{total}</strong> PRODUCTS
             {categoryFilter && ` · "${categoryFilter.toUpperCase()}"`}
             {brandFilter && ` · BRAND: "${brandFilter.toUpperCase()}"`}
           </p>
@@ -174,7 +174,7 @@ function Shop() {
         ) : products.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '80px 20px', color: colors.inkMuted }}>
             <div style={{ fontSize: '40px', marginBottom: '16px' }}>🔍</div>
-            <h3 style={{ color: colors.navy, fontFamily: fonts.display, marginBottom: '6px' }}>No products found</h3>
+            <h3 style={{ color: '#082b53', fontFamily: fonts.display, marginBottom: '6px' }}>No products found</h3>
             <p style={{ fontFamily: fonts.mono, fontSize: '13px' }}>Try a different category or search term.</p>
           </div>
         ) : (
@@ -195,7 +195,7 @@ function Shop() {
                 {product.category?.category_name && (
                   <div style={{
                     position: 'absolute', top: '10px', left: '10px', zIndex: 2,
-                    background: 'rgba(41,54,129,0.92)', color: '#fff',
+                    background: 'rgba(8,43,83,0.92)', color: '#fff',
                     fontFamily: fonts.mono, fontSize: '10px', fontWeight: 700,
                     padding: '4px 9px', letterSpacing: '0.5px', borderRadius: '2px',
                     textTransform: 'uppercase'
@@ -233,14 +233,14 @@ function Shop() {
 
                 <div style={{ padding: '18px', display: 'flex', flexDirection: 'column', flex: 1 }}>
                   <span style={{
-                    fontFamily: fonts.mono, fontSize: '10px', color: colors.accent,
+                    fontFamily: fonts.mono, fontSize: '10px', color: '#f58220',
                     fontWeight: 700, letterSpacing: '0.8px', marginBottom: '6px'
                   }}>
                     {product.brand?.brand_name || 'UNBRANDED'}
                   </span>
 
                   <h3 style={{
-                    fontFamily: fonts.display, fontSize: '15px', color: colors.navy,
+                    fontFamily: fonts.display, fontSize: '15px', color: '#082b53',
                     minHeight: '44px', margin: '0 0 12px', lineHeight: '1.35'
                   }}>
                     {product.description}
@@ -256,18 +256,18 @@ function Shop() {
                     fontFamily: fonts.mono, fontSize: '11px', color: colors.inkMuted,
                     display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '5px 10px', lineHeight: '1.5'
                   }}>
-                    <div>CODE <strong style={{ color: colors.navy }}>{product.reference}</strong></div>
-                    <div>UNITS <strong style={{ color: colors.navy }}>{product.inner_case_quantity}</strong></div>
-                    <div>WT <strong style={{ color: colors.navy }}>{product.weight}kg</strong></div>
-                    <div>VOL <strong style={{ color: colors.navy }}>{product.volume}m³</strong></div>
-                    <div style={{ gridColumn: '1 / -1' }}>EAN <strong style={{ color: colors.navy }}>{product.barcode_ean}</strong></div>
-                    <div style={{ gridColumn: '1 / -1' }}>BBD <strong style={{ color: colors.navy }}>{formatDate(product.bbd)}</strong> · {product.intra_country}</div>
+                    <div>CODE <strong style={{ color: '#082b53' }}>{product.reference}</strong></div>
+                    <div>UNITS <strong style={{ color: '#082b53' }}>{product.inner_case_quantity}</strong></div>
+                    <div>WT <strong style={{ color: '#082b53' }}>{product.weight}kg</strong></div>
+                    <div>VOL <strong style={{ color: '#082b53' }}>{product.volume}m³</strong></div>
+                    <div style={{ gridColumn: '1 / -1' }}>EAN <strong style={{ color: '#082b53' }}>{product.barcode_ean}</strong></div>
+                    <div style={{ gridColumn: '1 / -1' }}>BBD <strong style={{ color: '#082b53' }}>{formatDate(product.bbd)}</strong> · {product.intra_country}</div>
                   </div>
 
                   <div
                     className="navsa-view-btn"
                     style={{
-                      width: '100%', background: colors.navy, color: '#fff',
+                      width: '100%', background: '#082b53', color: '#fff',
                       border: 'none', padding: '12px', fontWeight: 700, cursor: 'pointer',
                       fontFamily: fonts.mono, fontSize: '12px', letterSpacing: '0.5px',
                       transition: 'background 0.2s ease', textAlign: 'center',
@@ -297,7 +297,7 @@ function Shop() {
               ← PREV
             </button>
             <span style={{
-              color: '#fff', background: colors.navy, fontWeight: 700, padding: '10px 18px'
+              color: '#fff', background: '#082b53', fontWeight: 700, padding: '10px 18px'
             }}>
               PAGE {currentPage} / {lastPage}
             </span>

@@ -1,15 +1,20 @@
-// Shared design tokens used across the e-commerce pages
 export const colors = {
-  navy:     '#293681',
-  navyDeep: '#0a1128',
-  accent:   '#c9a84c',
-  paper:    '#D0E7E6',
-  hairline: '#95CCDD',
-  inkMuted: '#5a6a7e',
+  navy: '#0B1F3A',
+  navyDeep: '#081526',
+  paper: '#F6F4EE',
+  ink: '#1B2230',
+  inkMuted: '#5B6478',
+  accent: '#D97B29',
+  accentDark: '#B5611C',
+  success: '#1F7A4D',
+  hairline: '#DCD8CC',
+  cardBg: '#FFFFFF',
 }
 
 export const fonts = {
-  display: "'Inter', 'Segoe UI', Arial, sans-serif",
-  body:    "'Inter', 'Segoe UI', Arial, sans-serif",
-  mono:    "'JetBrains Mono', 'Fira Mono', monospace",
+  display: "'Archivo Expanded', sans-serif",
+  body: "'Inter', system-ui, sans-serif",
+  mono: "'JetBrains Mono', monospace",
 }
+
+export const sectionPad = '64px 6vw'

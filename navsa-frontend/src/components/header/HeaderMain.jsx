@@ -216,7 +216,6 @@ import {
 import logo from "../../assets/logo.png";
 import awards from "../../assets/award.jpg";
 import { useCart } from "../../context/CartContext";
-import { colors } from "../../theme";
 
 export default function HeaderMain() {
   const { wishlistCount, basketCount, basketTotal } = useCart();
@@ -358,7 +357,7 @@ export default function HeaderMain() {
             to="/wishlist"
             style={{
               textDecoration: "none",
-              color: colors.navy,
+              color: "#082b53",
             }}
           >
             <div
@@ -378,7 +377,7 @@ export default function HeaderMain() {
                       position: "absolute",
                       top: "-9px",
                       right: "-11px",
-                      background: colors.navy,
+                      background: "#082b53",
                       color: "#fff",
                       fontSize: "10px",
                       fontWeight: 700,
@@ -410,7 +409,7 @@ export default function HeaderMain() {
           >
             <div
               style={{
-                background: colors.navy,
+                background: "#082b53",
                 color: "#fff",
                 padding: "12px 18px",
                 borderRadius: "5px",
