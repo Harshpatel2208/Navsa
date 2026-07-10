@@ -71,10 +71,13 @@ export default function Navigation({ isSticky, scrollProgress }) {
             marginRight: `${scrollProgress * 16}px`,
             transform: `translateX(${(1 - scrollProgress) * -40}px)`,
             transition: "none",
+            background: "#ffffff",
+            padding: "4px 8px",
+            borderRadius: "6px",
           }}
         >
           <Link to="/" style={{ display: "flex", alignItems: "center" }}>
-            <img src={logo} alt="NAVSA Logo" style={{ height: "42px", width: "auto", objectFit: "contain" }} />
+            <img src={logo} alt="NAVSA Logo" style={{ height: "34px", width: "auto", objectFit: "contain" }} />
           </Link>
         </div>
         {navItems.map((item) =>
