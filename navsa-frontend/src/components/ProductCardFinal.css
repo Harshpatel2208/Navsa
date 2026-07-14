@@ -1,0 +1,201 @@
+
+/* Final quantity-popup overrides.
+   Keep ProductCard.css as it is and import this file after it. */
+
+.qty-modal-redesigned {
+  width: min(1120px, 96vw);
+  max-height: 92vh;
+  padding: 24px;
+  overflow-y: auto;
+  border-radius: 22px;
+}
+
+.qty-modal-new-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(330px, 0.75fr);
+  gap: 18px;
+  align-items: stretch;
+}
+
+.qty-modal-left {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 10px;
+}
+
+.qty-large-image {
+  width: 100%;
+  height: 410px;
+  min-height: 410px;
+  padding: 12px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(145deg, #faf7f1, #ffffff);
+  border: 1px solid #dbe3ef;
+  border-radius: 16px;
+}
+
+.qty-large-image img {
+  width: 100%;
+  height: 100%;
+  max-width: 99%;
+  max-height: 390px;
+  object-fit: contain;
+}
+
+.qty-selection-panel {
+  padding: 9px;
+  gap: 5px;
+  border-radius: 13px;
+}
+
+.qty-selection-panel .qty-line {
+  grid-template-columns: 56px 150px minmax(100px, 1fr);
+  min-height: 42px;
+  padding: 5px 9px;
+  gap: 7px;
+  border-radius: 8px;
+}
+
+.qty-selection-panel .qty-line > span {
+  font-size: 12px;
+}
+
+.qty-selection-panel .qty-line-controls {
+  gap: 4px;
+}
+
+.qty-selection-panel .qty-line-controls button {
+  width: 27px;
+  height: 27px;
+  font-size: 13px;
+  border-radius: 7px;
+}
+
+.qty-selection-panel .qty-line-controls strong {
+  min-width: 36px;
+  height: 27px;
+  font-size: 12px;
+  border-radius: 7px;
+}
+
+.qty-selection-panel .qty-line small {
+  font-size: 10px;
+}
+
+.qty-order-summary {
+  border-radius: 9px;
+}
+
+.qty-summary-primary {
+  min-height: 36px;
+  padding: 7px 11px;
+  font-size: 12px;
+}
+
+.qty-summary-primary strong {
+  font-size: 14px;
+}
+
+.qty-summary-metrics div {
+  min-height: 38px;
+  padding: 6px 9px;
+}
+
+.qty-summary-metrics span {
+  font-size: 9px;
+}
+
+.qty-summary-metrics strong {
+  font-size: 11px;
+}
+
+.qty-product-details {
+  padding: 24px;
+}
+
+.qty-product-details h4 {
+  font-size: 21px;
+}
+
+.qty-detail-price {
+  font-size: 30px;
+}
+
+.qty-detail-list > div {
+  padding: 12px 0;
+}
+
+.qty-product-actions {
+  display: grid;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.qty-view-product-btn,
+.qty-add-btn-right {
+  width: 100%;
+  padding: 15px 18px;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.qty-view-product-btn {
+  color: #ffffff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.qty-view-product-btn:hover {
+  color: #082b53;
+  background: #ffffff;
+}
+
+.qty-add-btn-right {
+  color: #ffffff;
+  background: #dc2626;
+  border: none;
+}
+
+.qty-add-btn-right:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-1px);
+}
+
+.qty-add-btn-right:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+@media (max-width: 950px) {
+  .qty-modal-new-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .qty-large-image {
+    height: 340px;
+    min-height: 340px;
+  }
+}
+
+@media (max-width: 650px) {
+  .qty-large-image {
+    height: 260px;
+    min-height: 260px;
+  }
+
+  .qty-selection-panel .qty-line {
+    grid-template-columns: 1fr;
+  }
+
+  .qty-selection-panel .qty-line small {
+    text-align: left;
+  }
+}

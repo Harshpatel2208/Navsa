@@ -1,131 +1,106 @@
+import { useEffect, useState } from 'react'
 import {
   FaFacebookF,
   FaInstagram,
   FaLinkedinIn,
   FaPhoneAlt,
   FaEnvelope,
-} from "react-icons/fa";
+} from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
+import './TopBar.css'
 
-import { FaXTwitter } from "react-icons/fa6";
+const promotions = [
+  {
+    text: 'NAVSA P10 VALID 08/06/2026 TO 19/07/2026',
+    pdf: '/deals/deal1.pdf',
+  },
+  {
+    text: 'NAVSA P11 VALID 29/06/2026 TO 09/08/2026',
+    pdf: '/deals/deal2.pdf',
+  },
+  {
+    text: 'NAVSA CHRISTMAS 2026',
+    pdf: '/deals/deal3.pdf',
+  },
+]
 
 export default function TopBar() {
+  const [promotionIndex, setPromotionIndex] = useState(0)
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setPromotionIndex(current =>
+        current === promotions.length - 1 ? 0 : current + 1
+      )
+    }, 5000)
+
+    return () => window.clearInterval(timer)
+  }, [])
+
   const socialLinks = [
     {
       icon: <FaFacebookF />,
-      url: "https://facebook.com/navsainternational",
+      url: 'https://facebook.com/navsainternational',
+      label: 'Facebook',
     },
     {
       icon: <FaInstagram />,
-      url: "https://instagram.com/navsainternational",
+      url: 'https://instagram.com/navsainternational',
+      label: 'Instagram',
     },
     {
       icon: <FaXTwitter />,
-      url: "https://x.com/navsaintl",
+      url: 'https://x.com/navsaintl',
+      label: 'X',
     },
     {
       icon: <FaLinkedinIn />,
-      url: "https://linkedin.com/company/navsa-international-limited",
+      url: 'https://linkedin.com/company/navsa-international-limited',
+      label: 'LinkedIn',
     },
-  ];
+  ]
+
+  const activePromotion = promotions[promotionIndex]
 
   return (
-    <div
-      style={{
-        width: "100%",
-        background: "#082c52",
-        color: "#ffffff",
-        fontSize: "13px",
-        fontFamily: "Arial, sans-serif",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
-      }}
-    >
-      <div
-        style={{
-          maxWidth: "1600px",
-          margin: "0 auto",
-          padding: "10px 40px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "12px",
-        }}
-      >
-        {/* Left Side */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            flexWrap: "wrap",
-          }}
-        >
-          {socialLinks.map((item, index) => (
+    <div className="top-bar">
+      <div className="top-bar__inner">
+        <div className="top-bar__socials">
+          {socialLinks.map(item => (
             <a
-              key={index}
+              key={item.label}
               href={item.url}
               target="_blank"
               rel="noreferrer"
-              style={{
-                width: "28px",
-                height: "28px",
-                borderRadius: "50%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "rgba(255,255,255,0.12)",
-                color: "#ffffff",
-                textDecoration: "none",
-                transition: "0.3s",
-              }}
+              aria-label={item.label}
             >
               {item.icon}
             </a>
           ))}
-
-          <span
-            style={{
-              marginLeft: "12px",
-              fontWeight: 600,
-              letterSpacing: "0.3px",
-            }}
-          >
-            NAVSA P10 VALID 01/06/2026 TO 30/06/2026
-          </span>
         </div>
 
-        {/* Right Side */}
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "24px",
-            flexWrap: "wrap",
-          }}
+        <a
+          key={promotionIndex}
+          href={activePromotion.pdf}
+          target="_blank"
+          rel="noreferrer"
+          className="top-bar__promotion"
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <FaPhoneAlt size={12} />
-            <span>+44 (0) 1908 909160</span>
-          </div>
+          {activePromotion.text}
+        </a>
 
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-            }}
-          >
-            <FaEnvelope size={12} />
+        <div className="top-bar__contact">
+          <a href="tel:+441908909160">
+            <FaPhoneAlt />
+            <span>+44 (0) 1908 909160</span>
+          </a>
+
+          <a href="mailto:sales@navsainternational.com">
+            <FaEnvelope />
             <span>sales@navsainternational.com</span>
-          </div>
+          </a>
         </div>
       </div>
     </div>
-  );
+  )
 }

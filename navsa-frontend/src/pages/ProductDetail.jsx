@@ -1,7 +1,6 @@
 import Barcode from 'react-barcode'
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { colors, fonts } from '../theme'
 import { useCart } from '../context/CartContext'
 import { useShipping } from '../context/ShippingContext'
 import {
@@ -9,6 +8,8 @@ import {
   getCountries,
   getPorts,
 } from '../services/shippingService'
+import NoticeModal from '../components/NoticeModal'
+import './ProductDetail.css'
 
 const styleTag = `
 @keyframes navsa-spin {
@@ -657,10 +658,7 @@ function normalizeEan(raw) {
 
   if (digits.length >= 9 && digits.length <= 13) {
     return {
-      value:
-        digits.length < 12
-          ? digits.padStart(12, '0')
-          : digits,
+      value: digits.length < 12 ? digits.padStart(12, '0') : digits,
       format: 'EAN13',
     }
   }
@@ -675,30 +673,11 @@ function normalizeCase(raw) {
 
   if (digits.length >= 8 && digits.length <= 14) {
     return {
-      value:
-        digits.length < 13
-          ? digits.padStart(13, '0')
-          : digits,
+      value: digits.length < 13 ? digits.padStart(13, '0') : digits,
     }
   }
 
   return null
-}
-
-function formatDate(value) {
-  if (!value) return '—'
-
-  const date = new Date(value)
-
-  if (Number.isNaN(date.getTime())) {
-    return value
-  }
-
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
 }
 
 function money(value) {
@@ -707,18 +686,14 @@ function money(value) {
 
 function makeBrandUrl(product) {
   const brandName = product?.brand?.brand_name
-
-  if (!brandName) return '/shop'
-
-  return `/shop?brand=${encodeURIComponent(brandName)}`
+  return brandName ? `/shop?brand=${encodeURIComponent(brandName)}` : '/shop'
 }
 
 function makeCategoryUrl(product) {
   const categoryName = product?.category?.category_name
-
-  if (!categoryName) return '/shop'
-
-  return `/shop?category=${encodeURIComponent(categoryName)}`
+  return categoryName
+    ? `/shop?category=${encodeURIComponent(categoryName)}`
+    : '/shop'
 }
 
 function getStorageType(product) {
@@ -740,6 +715,24 @@ function isCollectionContainer(container) {
   )
 }
 
+function calculateIndicativeBbd(shelfLifeDays) {
+  const days = Number(shelfLifeDays || 0)
+
+  if (!Number.isFinite(days) || days <= 0) {
+    return 'Not available'
+  }
+
+  const date = new Date()
+  date.setHours(12, 0, 0, 0)
+  date.setDate(date.getDate() + days)
+
+  return date.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
+}
+
 export default function ProductDetail() {
   const { id } = useParams()
 
@@ -753,6 +746,7 @@ export default function ProductDetail() {
   const [justAdded, setJustAdded] = useState(false)
 
   const [showShippingModal, setShowShippingModal] = useState(false)
+  const [showImagePreview, setShowImagePreview] = useState(false)
 
   const [containers, setContainers] = useState([])
   const [countries, setCountries] = useState([])
@@ -764,6 +758,13 @@ export default function ProductDetail() {
 
   const [shippingLoading, setShippingLoading] = useState(false)
   const [shippingError, setShippingError] = useState('')
+
+  const [notice, setNotice] = useState({
+    open: false,
+    title: '',
+    message: '',
+    type: 'warning',
+  })
 
   const {
     basketItems,
@@ -797,7 +798,7 @@ export default function ProductDetail() {
         setLoading(false)
       })
       .catch(fetchError => {
-        setError(fetchError.message)
+        setError(fetchError.message || 'Unable to load product')
         setLoading(false)
       })
   }, [id])
@@ -815,13 +816,8 @@ export default function ProductDetail() {
           getCountries(),
         ])
 
-        setContainers(
-          Array.isArray(containerData) ? containerData : []
-        )
-
-        setCountries(
-          Array.isArray(countryData) ? countryData : []
-        )
+        setContainers(Array.isArray(containerData) ? containerData : [])
+        setCountries(Array.isArray(countryData) ? countryData : [])
       } catch (loadError) {
         console.error(loadError)
         setShippingError(
@@ -847,8 +843,7 @@ export default function ProductDetail() {
     port => String(port.id) === String(portId)
   )
 
-  const popupIsCollection =
-    isCollectionContainer(selectedPopupContainer)
+  const popupIsCollection = isCollectionContainer(selectedPopupContainer)
 
   useEffect(() => {
     async function loadCountryPorts() {
@@ -859,15 +854,10 @@ export default function ProductDetail() {
 
       try {
         const portData = await getPorts(countryId)
-
-        setPorts(
-          Array.isArray(portData) ? portData : []
-        )
+        setPorts(Array.isArray(portData) ? portData : [])
       } catch (loadError) {
         console.error(loadError)
-        setShippingError(
-          'Ports could not be loaded for this country.'
-        )
+        setShippingError('Ports could not be loaded for this country.')
       }
     }
 
@@ -875,20 +865,39 @@ export default function ProductDetail() {
   }, [countryId, popupIsCollection])
 
   useEffect(() => {
-    if (!showShippingModal) {
-      document.body.style.overflow = ''
-      return
-    }
+    const shouldLock =
+      showShippingModal ||
+      showImagePreview ||
+      notice.open
 
-    document.body.style.overflow = 'hidden'
+    document.body.style.overflow = shouldLock ? 'hidden' : ''
 
     return () => {
       document.body.style.overflow = ''
     }
-  }, [showShippingModal])
+  }, [showShippingModal, showImagePreview, notice.open])
+
+  function showNotice(title, message, type = 'warning') {
+    setNotice({
+      open: true,
+      title,
+      message,
+      type,
+    })
+  }
+
+  function closeNotice() {
+    setNotice(current => ({
+      ...current,
+      open: false,
+    }))
+  }
 
   if (loading) {
     return (
+      <div className="pd-state">
+        <div className="pd-spinner" />
+        <p>LOADING PRODUCT…</p>
       <div
         style={{
           minHeight: '60vh',
@@ -926,6 +935,10 @@ export default function ProductDetail() {
 
   if (error) {
     return (
+      <div className="pd-state pd-state-error">
+        <div className="pd-state-icon">📦</div>
+        <p>{error}</p>
+        <Link to="/shop">← BACK TO SHOP</Link>
       <div
         style={{
           minHeight: '60vh',
@@ -973,16 +986,14 @@ export default function ProductDetail() {
 
   const unitsPerCase = Number(
     product.units_of ||
-    product.inner_case_quantity ||
-    product.case_size ||
-    1
+      product.inner_case_quantity ||
+      product.case_size ||
+      1
   )
 
   const totalCases =
-    Number(layerQty || 0) *
-      Number(product.layer_quantity || 0) +
-    Number(palletQty || 0) *
-      Number(product.pallet_quantity || 0)
+    Number(layerQty || 0) * Number(product.layer_quantity || 0) +
+    Number(palletQty || 0) * Number(product.pallet_quantity || 0)
 
   const selectedWeight =
     Number(product.weight || 0) *
@@ -998,21 +1009,21 @@ export default function ProductDetail() {
     unitsPerCase
 
   const productStorageType = getStorageType(product)
+  const productImage = product.web_image
+    ? `/products/${product.web_image}`
+    : ''
 
   const currentContainer = shipping?.container
 
   const currentContainerIsDry =
-    String(currentContainer?.container_type || '')
-      .toLowerCase() === 'dry'
+    String(currentContainer?.container_type || '').toLowerCase() === 'dry'
 
   const requiresReefer =
     hasShipping &&
     !isCollection &&
     currentContainerIsDry &&
-    (
-      productStorageType === 'Frozen' ||
-      productStorageType === 'Chilled'
-    )
+    (productStorageType === 'Frozen' ||
+      productStorageType === 'Chilled')
 
   const basketHasFrozen = basketItems.some(
     item => getStorageType(item) === 'Frozen'
@@ -1020,22 +1031,14 @@ export default function ProductDetail() {
 
   const basketHasAmbientOrChilled = basketItems.some(item => {
     const type = getStorageType(item)
-
     return type === 'Ambient' || type === 'Chilled'
   })
 
   const frozenMixBlocked =
-    (
-      productStorageType === 'Frozen' &&
-      basketHasAmbientOrChilled
-    ) ||
-    (
-      (
-        productStorageType === 'Ambient' ||
-        productStorageType === 'Chilled'
-      ) &&
-      basketHasFrozen
-    )
+    (productStorageType === 'Frozen' && basketHasAmbientOrChilled) ||
+    ((productStorageType === 'Ambient' ||
+      productStorageType === 'Chilled') &&
+      basketHasFrozen)
 
   function resetShippingForm() {
     setContainerId('')
@@ -1050,24 +1053,38 @@ export default function ProductDetail() {
     resetShippingForm()
   }
 
+  function handleContainerChange(event) {
+    setContainerId(event.target.value)
+    setCountryId('')
+    setPortId('')
+    setPorts([])
+    setShippingError('')
+  }
+
   function performAddToBasket() {
     if (totalCases <= 0) {
-      alert(
-        'Please select at least one Layer or Pallet before adding to basket.'
+      showNotice(
+        'Select Quantity',
+        'Please select at least one Layer or Pallet before adding this product to the basket.',
+        'warning'
       )
       return false
     }
 
     if (frozenMixBlocked) {
-      alert(
-        'Frozen items cannot be mixed with Ambient or Chilled items in the same basket.'
+      showNotice(
+        'Products Cannot Be Mixed',
+        'Frozen items cannot be mixed with Ambient or Chilled items in the same basket.',
+        'error'
       )
       return false
     }
 
     if (requiresReefer) {
-      alert(
-        `${productStorageType} items require a Reefer container. Please change your shipping option first.`
+      showNotice(
+        'Reefer Container Required',
+        `${productStorageType} items require a Reefer container. Please change your shipping option first.`,
+        'warning'
       )
       return false
     }
@@ -1078,8 +1095,10 @@ export default function ProductDetail() {
     })
 
     if (!added) {
-      alert(
-        'Please select at least one Layer or Pallet before adding to basket.'
+      showNotice(
+        'Unable to Add Product',
+        'Please select at least one Layer or Pallet.',
+        'error'
       )
       return false
     }
@@ -1096,9 +1115,6 @@ export default function ProductDetail() {
   }
 
   function handleAddToBasket() {
-    /*
-     * Shipping is mandatory before adding.
-     */
     if (!hasShipping) {
       setShowShippingModal(true)
       return
@@ -1107,17 +1123,13 @@ export default function ProductDetail() {
     performAddToBasket()
   }
 
-  function handleContainerChange(event) {
-    setContainerId(event.target.value)
-    setCountryId('')
-    setPortId('')
-    setPorts([])
-    setShippingError('')
-  }
-
   function saveShippingAndContinue() {
     if (!selectedPopupContainer) {
-      alert('Please select a container or collection method.')
+      showNotice(
+        'Select a Shipping Method',
+        'Please select a container or Collection / Ex Works method.',
+        'warning'
+      )
       return
     }
 
@@ -1125,7 +1137,11 @@ export default function ProductDetail() {
       !popupIsCollection &&
       (!selectedPopupCountry || !selectedPopupPort)
     ) {
-      alert('Please select a country and destination port.')
+      showNotice(
+        'Destination Required',
+        'Please select both the delivery country and destination port.',
+        'warning'
+      )
       return
     }
 
@@ -1137,20 +1153,22 @@ export default function ProductDetail() {
     if (
       !popupIsCollection &&
       selectedContainerIsDry &&
-      (
-        productStorageType === 'Frozen' ||
-        productStorageType === 'Chilled'
-      )
+      (productStorageType === 'Frozen' ||
+        productStorageType === 'Chilled')
     ) {
-      alert(
-        `${productStorageType} items require a Reefer container. Please select a 20 ft Reefer or 40 ft Reefer container.`
+      showNotice(
+        'Reefer Container Required',
+        `${productStorageType} products cannot be transported in a Dry container. Please select a Reefer container.`,
+        'warning'
       )
       return
     }
 
     if (frozenMixBlocked) {
-      alert(
-        'Frozen items cannot be mixed with Ambient or Chilled items in the same basket.'
+      showNotice(
+        'Products Cannot Be Mixed',
+        'Frozen items cannot be mixed with Ambient or Chilled items in the same basket.',
+        'error'
       )
       return
     }
@@ -1177,29 +1195,16 @@ export default function ProductDetail() {
     setShowShippingModal(false)
     resetShippingForm()
 
-    /*
-     * On Product Detail, quantity is already selected on the page.
-     * Therefore, add automatically after valid shipping is saved.
-     */
-    const added = addToBasket(product, {
-      layerQty,
-      palletQty,
-    })
-
-    if (!added) {
-      alert(
-        'Shipping option saved. Now select at least one Layer or Pallet and click Add to Basket.'
+    if (totalCases <= 0) {
+      showNotice(
+        'Shipping Option Saved',
+        'Shipping has been saved. Now select at least one Layer or Pallet and click Add to Basket.',
+        'success'
       )
       return
     }
 
-    setLayerQty(0)
-    setPalletQty(0)
-    setJustAdded(true)
-
-    window.setTimeout(() => {
-      setJustAdded(false)
-    }, 2200)
+    performAddToBasket()
   }
 
   function handleWishlistToggle() {
@@ -1212,68 +1217,81 @@ export default function ProductDetail() {
 
   return (
     <div className="product-page-wrap">
-      <style>{styleTag}</style>
-
       <div className="product-main navsa-fade">
         <div className="product-breadcrumb">
           <Link to="/">Home</Link>
-          {' › '}
+          <span>›</span>
           <Link to="/shop">Shop</Link>
 
           {product.category?.category_name && (
             <>
-              {' › '}
+              <span>›</span>
               <Link to={makeCategoryUrl(product)}>
                 {product.category.category_name}
               </Link>
             </>
           )}
 
-          {' › '}
-          {product.description}
+          <span>›</span>
+          <span>{product.description}</span>
         </div>
 
         <div className="product-grid">
-          <div>
+          <div className="product-left-column">
             <div className="product-image-card">
-              {product.web_image ? (
-                <img
-                  src={`/products/${product.web_image}`}
-                  alt={product.description}
-                />
-              ) : (
-                <div
-                  style={{
-                    textAlign: 'center',
-                    color: '#9ca3af',
-                    fontWeight: 900,
-                  }}
-                >
-                  <div
-                    style={{
-                      fontSize: '46px',
-                      marginBottom: '12px',
-                    }}
-                  >
-                    📦
-                  </div>
+              <button
+                type="button"
+                className={`product-image-wishlist ${
+                  isInWishlist(product.id) ? 'active' : ''
+                }`}
+                onClick={handleWishlistToggle}
+                aria-label={
+                  isInWishlist(product.id)
+                    ? 'Remove from wishlist'
+                    : 'Add to wishlist'
+                }
+                title={
+                  isInWishlist(product.id)
+                    ? 'Remove from wishlist'
+                    : 'Add to wishlist'
+                }
+              >
+                {isInWishlist(product.id) ? '♥' : '♡'}
+              </button>
 
-                  NO IMAGE ON FILE
-                </div>
-              )}
+              <button
+                type="button"
+                className="product-image-button"
+                onClick={() => {
+                  if (productImage) {
+                    setShowImagePreview(true)
+                  }
+                }}
+                aria-label="View larger product image"
+              >
+                {productImage ? (
+                  <img
+                    src={productImage}
+                    alt={product.description}
+                    className="product-main-image"
+                  />
+                ) : (
+                  <div className="product-no-image">
+                    <span>📦</span>
+                    <strong>NO IMAGE ON FILE</strong>
+                  </div>
+                )}
+              </button>
+
             </div>
 
             <div className="product-barcode-card">
-              <div className="barcode-title">
-                Barcode
-              </div>
+              <div className="barcode-title">Barcode</div>
 
               <div className="barcode-tabs">
                 <button
                   type="button"
-                  className={
-                    barcodeTab === 'ean' ? 'active' : ''
-                  }
+                  className={barcodeTab === 'ean' ? 'active' : ''}
                   onClick={() => setBarcodeTab('ean')}
                 >
                   EAN
@@ -1282,9 +1300,7 @@ export default function ProductDetail() {
                 {caseBarcode && (
                   <button
                     type="button"
-                    className={
-                      barcodeTab === 'case' ? 'active' : ''
-                    }
+                    className={barcodeTab === 'case' ? 'active' : ''}
                     onClick={() => setBarcodeTab('case')}
                   >
                     Case ITF-14
@@ -1293,8 +1309,8 @@ export default function ProductDetail() {
               </div>
 
               <div className="barcode-box">
-                {barcodeTab === 'ean' && (
-                  eanBarcode ? (
+                {barcodeTab === 'ean' &&
+                  (eanBarcode ? (
                     <Barcode
                       value={eanBarcode.value}
                       format={eanBarcode.format}
@@ -1306,11 +1322,10 @@ export default function ProductDetail() {
                     />
                   ) : (
                     <span>No EAN on file</span>
-                  )
-                )}
+                  ))}
 
-                {barcodeTab === 'case' && (
-                  caseBarcode ? (
+                {barcodeTab === 'case' &&
+                  (caseBarcode ? (
                     <Barcode
                       value={caseBarcode.value}
                       format="ITF14"
@@ -1322,8 +1337,7 @@ export default function ProductDetail() {
                     />
                   ) : (
                     <span>No case barcode on file</span>
-                  )
-                )}
+                  ))}
               </div>
             </div>
           </div>
@@ -1349,13 +1363,9 @@ export default function ProductDetail() {
               )}
             </div>
 
-            <h1 className="product-title">
-              {product.description}
-            </h1>
+            <h1 className="product-title">{product.description}</h1>
 
-            <div className="product-price">
-              {money(product.price)}
-            </div>
+            <div className="product-price">{money(product.price)}</div>
 
             <div className="product-subtitle">
               Per case, ex warehouse
@@ -1394,28 +1404,31 @@ export default function ProductDetail() {
 
               <DetailRow
                 label="Unit Weight"
-                value={`${Number(
-                  product.weight || 0
-                ).toFixed(3)} kg`}
+                value={`${Number(product.weight || 0).toFixed(3)} kg`}
               />
 
               <DetailRow
                 label="Unit Volume"
-                value={`${Number(
-                  product.volume || 0
-                ).toFixed(6)} m³`}
+                value={`${Number(product.volume || 0).toFixed(6)} m³`}
               />
 
               <DetailRow
-                label="Best before date (indicative)"
-                value={formatDate(product.bbd)}
+                label="Shelf Life"
+                value={
+                  Number(product.shelf_life || 0) > 0
+                    ? `${Number(product.shelf_life)} days`
+                    : 'Not available'
+                }
+              />
+
+              <DetailRow
+                label="Best Before Date (Indicative)"
+                value={calculateIndicativeBbd(product.shelf_life)}
               />
             </div>
 
             <div className="quantity-card">
-              <div className="quantity-title">
-                Quantity Options
-              </div>
+              <div className="quantity-title">Quantity Options</div>
 
               <QtyRow
                 label="Case"
@@ -1431,16 +1444,12 @@ export default function ProductDetail() {
                 )} Cases per Layer`}
                 qty={layerQty}
                 onMinus={() =>
-                  setLayerQty(current =>
-                    Math.max(0, current - 1)
-                  )
+                  setLayerQty(current => Math.max(0, current - 1))
                 }
                 onPlus={() =>
                   setLayerQty(current => current + 1)
                 }
-                disabled={
-                  Number(product.layer_quantity || 0) <= 0
-                }
+                disabled={Number(product.layer_quantity || 0) <= 0}
               />
 
               <QtyRow
@@ -1450,68 +1459,60 @@ export default function ProductDetail() {
                 )} Cases per Pallet`}
                 qty={palletQty}
                 onMinus={() =>
-                  setPalletQty(current =>
-                    Math.max(0, current - 1)
-                  )
+                  setPalletQty(current => Math.max(0, current - 1))
                 }
                 onPlus={() =>
                   setPalletQty(current => current + 1)
                 }
-                disabled={
-                  Number(product.pallet_quantity || 0) <= 0
-                }
+                disabled={Number(product.pallet_quantity || 0) <= 0}
               />
 
               <div className="total-strip">
-                {totalCases} total cases
-                {' · '}
-                {money(
-                  totalCases *
-                  Number(product.price || 0)
-                )}
+                <span>
+                  <strong>{totalCases}</strong> total cases
+                </span>
+
+                <span>
+                  <strong>
+                    {money(
+                      totalCases * Number(product.price || 0)
+                    )}
+                  </strong>
+                </span>
               </div>
 
               <div className="calculation-strip">
                 <div>
-                  Total Weight
-                  <br />
-                  {selectedWeight.toFixed(3)} kg
+                  <span>Total Weight</span>
+                  <strong>{selectedWeight.toFixed(3)} kg</strong>
                 </div>
 
                 <div>
-                  Total CBM
-                  <br />
-                  {selectedVolume.toFixed(6)} m³
+                  <span>Total CBM</span>
+                  <strong>{selectedVolume.toFixed(6)} m³</strong>
                 </div>
               </div>
             </div>
 
             {!hasShipping && (
               <div className="shipping-required-notice">
-                <strong>
-                  Shipping selection is required.
-                </strong>
-
-                Choose a container or Collection / Ex Works,
-                country and destination port before this product
-                can be added to the basket.
+                <strong>Shipping selection is required.</strong>
+                <span>
+                  Choose a container or Collection / Ex Works,
+                  country and destination port before this product
+                  can be added to the basket.
+                </span>
               </div>
             )}
 
             {requiresReefer && (
               <div className="reefer-warning">
                 <strong>
-                  {productStorageType} items require a Reefer
-                  container.
+                  {productStorageType} items require a Reefer container.
                 </strong>
-
-                <br />
-
-                Dry containers can only be used for Ambient
-                products.
-
-                <br />
-
+                <span>
+                  Dry containers can only be used for Ambient products.
+                </span>
                 <Link to="/#shipping-selector">
                   Change shipping option
                 </Link>
@@ -1521,20 +1522,12 @@ export default function ProductDetail() {
             {frozenMixBlocked && (
               <div className="mix-warning">
                 <strong>
-                  Frozen items cannot be mixed with Ambient or
-                  Chilled items.
+                  Frozen items cannot be mixed with Ambient or Chilled items.
                 </strong>
-
-                <br />
-
-                Remove the incompatible products from your basket
-                before continuing.
-
-                <br />
-
-                <Link to="/basket">
-                  Go to basket
-                </Link>
+                <span>
+                  Remove the incompatible products from your basket before continuing.
+                </span>
+                <Link to="/basket">Go to basket</Link>
               </div>
             )}
 
@@ -1608,8 +1601,7 @@ export default function ProductDetail() {
           }
           className="back-link"
         >
-          ← Back to{' '}
-          {product.category?.category_name || 'Shop'}
+          ← Back to {product.category?.category_name || 'Shop'}
         </Link>
       </div>
 
@@ -1642,15 +1634,14 @@ export default function ProductDetail() {
             </h2>
 
             <p>
-              Shipping preferences must be selected before
-              products can be added to the basket.
+              Shipping preferences must be selected before products can be
+              added to the basket.
             </p>
 
             <div className="pd-shipping-note">
-              <strong>Important:</strong> Frozen and chilled
-              products require a Reefer container. Frozen products
-              cannot be mixed with Ambient or Chilled products in
-              the same order.
+              <strong>Important:</strong> Frozen and chilled products require
+              a Reefer container. Frozen products cannot be mixed with Ambient
+              or Chilled products in the same order.
             </div>
 
             {shippingError && (
@@ -1698,9 +1689,7 @@ export default function ProductDetail() {
                   {!popupIsCollection && (
                     <>
                       <div className="pd-shipping-field">
-                        <label htmlFor="pd-country">
-                          Country
-                        </label>
+                        <label htmlFor="pd-country">Country</label>
 
                         <select
                           id="pd-country"
@@ -1710,9 +1699,7 @@ export default function ProductDetail() {
                             setShippingError('')
                           }}
                         >
-                          <option value="">
-                            Select country...
-                          </option>
+                          <option value="">Select country...</option>
 
                           {countries.map(country => (
                             <option
@@ -1758,40 +1745,33 @@ export default function ProductDetail() {
                   )}
                 </div>
 
-                {selectedPopupContainer &&
-                  popupIsCollection && (
-                    <div className="pd-container-info">
-                      <strong>
-                        Collection / Ex Works selected.
-                      </strong>
+                {selectedPopupContainer && popupIsCollection && (
+                  <div className="pd-container-info">
+                    <strong>Collection / Ex Works selected.</strong>{' '}
+                    You will arrange collection. No container capacity checks
+                    apply. Minimum order £5,000.
+                  </div>
+                )}
 
-                      {' '}
-                      You will arrange collection. No container
-                      capacity checks apply. Minimum order £5,000.
-                    </div>
-                  )}
-
-                {selectedPopupContainer &&
-                  !popupIsCollection && (
-                    <div className="pd-container-info">
-                      <strong>
-                        {selectedPopupContainer.container_name}
-                      </strong>
-
-                      {' · '}
-                      Volume{' '}
-                      {Number(
-                        selectedPopupContainer.volume_m3 || 0
-                      ).toLocaleString()} m³
-
-                      {' · '}
-                      Payload{' '}
-                      {Number(
-                        selectedPopupContainer.payload_weight_kg ||
-                        0
-                      ).toLocaleString()} kg
-                    </div>
-                  )}
+                {selectedPopupContainer && !popupIsCollection && (
+                  <div className="pd-container-info">
+                    <strong>
+                      {selectedPopupContainer.container_name}
+                    </strong>
+                    {' · '}
+                    Volume{' '}
+                    {Number(
+                      selectedPopupContainer.volume_m3 || 0
+                    ).toLocaleString()}{' '}
+                    m³
+                    {' · '}
+                    Payload{' '}
+                    {Number(
+                      selectedPopupContainer.payload_weight_kg || 0
+                    ).toLocaleString()}{' '}
+                    kg
+                  </div>
+                )}
 
                 <button
                   type="button"
@@ -1799,13 +1779,9 @@ export default function ProductDetail() {
                   onClick={saveShippingAndContinue}
                   disabled={
                     !selectedPopupContainer ||
-                    (
-                      !popupIsCollection &&
-                      (
-                        !selectedPopupCountry ||
-                        !selectedPopupPort
-                      )
-                    )
+                    (!popupIsCollection &&
+                      (!selectedPopupCountry ||
+                        !selectedPopupPort))
                   }
                 >
                   Start Order →
@@ -1815,6 +1791,46 @@ export default function ProductDetail() {
           </section>
         </div>
       )}
+
+      {showImagePreview && productImage && (
+        <div
+          className="product-image-preview-backdrop"
+          onMouseDown={event => {
+            if (event.target === event.currentTarget) {
+              setShowImagePreview(false)
+            }
+          }}
+        >
+          <section
+            className="product-image-preview"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Large product image"
+          >
+            <button
+              type="button"
+              className="product-image-preview-close"
+              onClick={() => setShowImagePreview(false)}
+              aria-label="Close image preview"
+            >
+              ×
+            </button>
+
+            <img
+              src={productImage}
+              alt={product.description}
+            />
+          </section>
+        </div>
+      )}
+
+      <NoticeModal
+        open={notice.open}
+        title={notice.title}
+        message={notice.message}
+        type={notice.type}
+        onClose={closeNotice}
+      />
     </div>
   )
 }
@@ -1834,9 +1850,7 @@ function DetailRow({ label, value, linkTo }) {
 
       <span>
         {linkTo ? (
-          <Link to={linkTo}>
-            {value}
-          </Link>
+          <Link to={linkTo}>{value}</Link>
         ) : (
           value
         )}
@@ -1855,13 +1869,10 @@ function QtyRow({
 }) {
   return (
     <div className={`qty-row ${disabled ? 'disabled' : ''}`}>
-      <span className="qty-label">
-        {label}
-      </span>
-
-      <span className="qty-desc">
-        {desc}
-      </span>
+      <div className="qty-copy">
+        <span className="qty-label">{label}</span>
+        <span className="qty-desc">{desc}</span>
+      </div>
 
       <div className="qty-controls">
         <button
@@ -1883,9 +1894,7 @@ function QtyRow({
         </button>
       </div>
 
-      <span className="qty-x">
-        ×
-      </span>
+      <span className="qty-x">×</span>
     </div>
   )
 }

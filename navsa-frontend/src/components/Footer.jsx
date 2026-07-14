@@ -1,121 +1,135 @@
-// import { Link } from 'react-router-dom'
-// import { colors, fonts } from '../theme'
-
-// function Footer() {
-//   return (
-//     <div style={{ width: '100%', background: colors.navyDeep, color: '#9AA4B8' }}>
-//       <div style={{
-//         padding: '56px 6vw', display: 'grid',
-//         gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '40px'
-//       }}>
-//         <div>
-//           <h3 style={{ fontFamily: fonts.display, color: '#fff', fontSize: '18px', marginBottom: '14px' }}>
-//             NAVSA INTERNATIONAL
-//           </h3>
-//           <p style={{ fontFamily: fonts.body, fontSize: '13px', lineHeight: '1.8' }}>
-//             Wholesale, Distributor, Importer & Consolidator of UK FMCG products.
-//             Milton Keynes, United Kingdom.
-//           </p>
-//         </div>
-
-//         <div>
-//           <h4 style={{ fontFamily: fonts.mono, fontSize: '12px', letterSpacing: '1px', color: '#fff', marginBottom: '14px' }}>
-//             QUICK LINKS
-//           </h4>
-//           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontFamily: fonts.body, fontSize: '13px' }}>
-//             <Link to="/" style={{ color: '#9AA4B8', textDecoration: 'none' }}>Home</Link>
-//             <Link to="/shop" style={{ color: '#9AA4B8', textDecoration: 'none' }}>Shop</Link>
-//             <span>Trade Account</span>
-//             <span>Services</span>
-//           </div>
-//         </div>
-
-//         <div>
-//           <h4 style={{ fontFamily: fonts.mono, fontSize: '12px', letterSpacing: '1px', color: '#fff', marginBottom: '14px' }}>
-//             CONTACT
-//           </h4>
-//           <p style={{ fontFamily: fonts.body, fontSize: '13px', lineHeight: '1.8' }}>
-//             +44 (0) 1908 909 160<br />
-//             sales@navsainternational.com
-//           </p>
-//         </div>
-//       </div>
-
-//       <div style={{
-//         borderTop: '1px solid #1C2C42', padding: '18px 6vw',
-//         fontFamily: fonts.mono, fontSize: '11px', letterSpacing: '0.5px'
-//       }}>
-//         © {new Date().getFullYear()} NAVSA INTERNATIONAL LIMITED
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Footer
 import { Link } from 'react-router-dom'
-import { colors, fonts } from '../theme'
+import {
+  FaFacebookF,
+  FaInstagram,
+  FaLinkedinIn,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaWhatsapp,
+} from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
+import './Footer.css'
 
 const categories = [
-  'Chocolates', 'Groceries', 'Seasonal', 'Health & Personal Care', 'Chilled Item',
-  'Confectionery', 'Crisps & Snacks', 'Cold & Hot Beverages', 'Pet Care & Food',
-  'Biscuits', 'Cleaning & Household', 'Frozen', 'Baby & Kids'
+  'Chocolates',
+  'Groceries',
+  'Seasonal',
+  'Health & Personal Care',
+  'Chilled Items',
+  'Confectionery',
+  'Crisps & Snacks',
+  'Cold & Hot Beverages',
+  'Pet Care & Food',
+  'Biscuits',
+  'Cleaning & Households',
+  'Frozen',
+  'Baby and Kids',
 ]
 
 function Footer() {
   return (
-    <div style={{ width: '100%', background: colors.navyDeep, color: '#9AA4B8' }}>
-      <div style={{
-        padding: '56px 6vw', display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '40px'
-      }}>
-        <div>
-          <img
-            src="https://www.navsainternational.co.uk/images/footer-logo.png"
-            alt="NAVSA International"
-            style={{ height: '40px', marginBottom: '16px', filter: 'brightness(0) invert(1)' }}
-          />
-          <p style={{ fontFamily: fonts.body, fontSize: '13px', lineHeight: '1.8' }}>
-            NAVSA INTERNATIONAL LIMITED<br />
-            Unit 18, Regus House, Fairbourne Drive<br />
-            Milton Keynes, MK10 9RG, United Kingdom
-          </p>
-          <p style={{ fontFamily: fonts.body, fontSize: '13px', lineHeight: '1.8', marginTop: '10px' }}>
-            Phone: +44 1908 909 160<br />
-            Text Us: +44 7985 781627<br />
-            WhatsApp: +44 7544 359587
-          </p>
-        </div>
+    <footer className="site-footer">
+      <div className="site-footer__main">
+        <div className="site-footer__grid">
+          <section className="site-footer__brand">
+            <img
+              src="/logos/navsa-logo.png"
+              alt="NAVSA International"
+            />
 
-        <div>
-          <h4 style={{ fontFamily: fonts.mono, fontSize: '12px', letterSpacing: '1px', color: '#fff', marginBottom: '14px' }}>LINKS</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontFamily: fonts.body, fontSize: '13px' }}>
-            <span>Terms & Conditions</span>
-            <span>Privacy & Cookies</span>
-            <Link to="/shop" style={{ color: '#9AA4B8', textDecoration: 'none' }}>Offers</Link>
-            <Link to="/shop" style={{ color: '#9AA4B8', textDecoration: 'none' }}>New Arrivals</Link>
-            <span>About Us</span>
-            <span>Contact Us</span>
-          </div>
-        </div>
+            <p>
+              Wholesale exporter, distributor and consolidator of leading
+              British FMCG products.
+            </p>
 
-        <div>
-          <h4 style={{ fontFamily: fonts.mono, fontSize: '12px', letterSpacing: '1px', color: '#fff', marginBottom: '14px' }}>CATEGORIES</h4>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontFamily: fonts.body, fontSize: '13px' }}>
-            {categories.map(c => (
-              <Link to="/shop" key={c} style={{ color: '#9AA4B8', textDecoration: 'none' }}>{c}</Link>
-            ))}
-          </div>
+            <address>
+              Unit 18, Regus House, Fairbourne Drive<br />
+              Milton Keynes, MK10 9RG, United Kingdom
+            </address>
+
+            <div className="site-footer__socials">
+              <a href="https://facebook.com/navsainternational" target="_blank" rel="noreferrer" aria-label="Facebook">
+                <FaFacebookF />
+              </a>
+              <a href="https://instagram.com/navsainternational" target="_blank" rel="noreferrer" aria-label="Instagram">
+                <FaInstagram />
+              </a>
+              <a href="https://x.com/navsaintl" target="_blank" rel="noreferrer" aria-label="X">
+                <FaXTwitter />
+              </a>
+              <a href="https://linkedin.com/company/navsa-international-limited" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                <FaLinkedinIn />
+              </a>
+            </div>
+          </section>
+
+          <section>
+            <h3>Quick Links</h3>
+            <Link to="/">Home</Link>
+            <Link to="/shop">Shop</Link>
+            <Link to="/brand">Brands</Link>
+            <Link to="/about">About Us</Link>
+            <Link to="/contact">Contact Us</Link>
+            <Link to="/become-a-customer">Become a Customer</Link>
+          </section>
+
+          <section>
+            <h3>Product Categories</h3>
+
+            <div className="site-footer__category-grid">
+              {categories.map(category => (
+                <Link
+                  key={category}
+                  to={`/shop?category=${encodeURIComponent(category)}`}
+                >
+                  {category}
+                </Link>
+              ))}
+            </div>
+          </section>
+
+          <section>
+            <h3>Contact NAVSA</h3>
+
+            <a href="tel:+441908909160">
+              <FaPhoneAlt />
+              +44 (0) 1908 909160
+            </a>
+
+            <a href="mailto:sales@navsainternational.com">
+              <FaEnvelope />
+              sales@navsainternational.com
+            </a>
+
+            <a href="https://wa.me/447544359587" target="_blank" rel="noreferrer">
+              <FaWhatsapp />
+              +44 7544 359587
+            </a>
+
+            <div className="site-footer__deals">
+              <span>Latest Promotions</span>
+              <a href="/deals/deal1.pdf" target="_blank" rel="noreferrer">
+                NAVSA P10
+              </a>
+              <a href="/deals/deal2.pdf" target="_blank" rel="noreferrer">
+                NAVSA P11
+              </a>
+            </div>
+          </section>
         </div>
       </div>
 
-      <div style={{
-        borderTop: '1px solid #1C2C42', padding: '18px 6vw',
-        fontFamily: fonts.mono, fontSize: '11px', letterSpacing: '0.5px'
-      }}>
-        © {new Date().getFullYear()} NAVSA INTERNATIONAL LIMITED — All Rights Reserved.
-        Companies House No. 13041212 · VAT GB364947456 · EORI 13041212
+      <div className="site-footer__bottom">
+        <span>
+          © {new Date().getFullYear()} NAVSA INTERNATIONAL LIMITED —
+          All Rights Reserved.
+        </span>
+
+        <span>
+          Companies House No. 13041212 · VAT GB364947456 · EORI 13041212
+        </span>
       </div>
-    </div>
+    </footer>
   )
 }
 

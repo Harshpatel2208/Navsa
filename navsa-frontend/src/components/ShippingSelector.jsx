@@ -1,6 +1,11 @@
 import { useEffect, useState } from 'react'
-import { getContainers, getCountries, getPorts } from '../services/shippingService'
+import {
+  getContainers,
+  getCountries,
+  getPorts,
+} from '../services/shippingService'
 import { useShipping } from '../context/ShippingContext'
+import NoticeModal from './NoticeModal'
 import './ShippingSelector.css'
 
 function ShippingSelector() {
@@ -14,12 +19,29 @@ function ShippingSelector() {
   const [countryId, setCountryId] = useState('')
   const [portId, setPortId] = useState('')
 
-  const selectedContainer = containers.find(c => String(c.id) === String(containerId))
-  const selectedCountry = countries.find(c => String(c.id) === String(countryId))
-  const selectedPort = ports.find(p => String(p.id) === String(portId))
+  const [notice, setNotice] = useState({
+    open: false,
+    title: '',
+    message: '',
+    type: 'warning',
+  })
+
+  const selectedContainer = containers.find(
+    container => String(container.id) === String(containerId)
+  )
+
+  const selectedCountry = countries.find(
+    country => String(country.id) === String(countryId)
+  )
+
+  const selectedPort = ports.find(
+    port => String(port.id) === String(portId)
+  )
 
   const isCollection =
-    selectedContainer?.container_name?.toLowerCase().includes('collection / ex works')
+    selectedContainer?.container_name
+      ?.toLowerCase()
+      .includes('collection / ex works')
 
   useEffect(() => {
     async function loadData() {
@@ -29,10 +51,16 @@ function ShippingSelector() {
           getCountries(),
         ])
 
-        setContainers(containerData)
-        setCountries(countryData)
+        setContainers(Array.isArray(containerData) ? containerData : [])
+        setCountries(Array.isArray(countryData) ? countryData : [])
       } catch (error) {
         console.error(error)
+
+        showNotice(
+          'Unable to Load Shipping',
+          'Shipping containers and countries could not be loaded. Please refresh the page and try again.',
+          'error'
+        )
       }
     }
 
@@ -48,17 +76,39 @@ function ShippingSelector() {
 
       try {
         const portData = await getPorts(countryId)
-        setPorts(portData)
+        setPorts(Array.isArray(portData) ? portData : [])
       } catch (error) {
         console.error(error)
+
+        showNotice(
+          'Unable to Load Ports',
+          'Destination ports could not be loaded for the selected country.',
+          'error'
+        )
       }
     }
 
     loadPorts()
   }, [countryId, isCollection])
 
-  function handleContainerChange(e) {
-    setContainerId(e.target.value)
+  function showNotice(title, message, type = 'warning') {
+    setNotice({
+      open: true,
+      title,
+      message,
+      type,
+    })
+  }
+
+  function closeNotice() {
+    setNotice(current => ({
+      ...current,
+      open: false,
+    }))
+  }
+
+  function handleContainerChange(event) {
+    setContainerId(event.target.value)
     setCountryId('')
     setPortId('')
     setPorts([])
@@ -66,138 +116,233 @@ function ShippingSelector() {
 
   function handleStartOrder() {
     if (!selectedContainer) {
-      alert('Please select container.')
+      showNotice(
+        'Select a Shipping Method',
+        'Please select a container or Collection / Ex Works method.',
+        'warning'
+      )
       return
     }
 
     if (!isCollection && (!selectedCountry || !selectedPort)) {
-      alert('Please select country and port.')
+      showNotice(
+        'Destination Required',
+        'Please select both the delivery country and destination port.',
+        'warning'
+      )
       return
     }
 
     setShippingOption({
       container: selectedContainer,
       country: isCollection
-        ? { id: null, country_name: 'Collection / Ex Works', zone_id: 1 }
+        ? {
+            id: null,
+            country_name: 'Collection / Ex Works',
+            zone_id: null,
+          }
         : selectedCountry,
       port: isCollection
-        ? { id: null, port_name: 'Warehouse Collection' }
+        ? {
+            id: null,
+            port_name: 'Warehouse Collection',
+          }
         : selectedPort,
     })
 
-    alert('Shipping option saved. You can now continue shopping.')
+    showNotice(
+      'Shipping Option Saved',
+      isCollection
+        ? 'Collection / Ex Works has been selected. You can now continue shopping and add products to your basket.'
+        : `${selectedContainer.container_name}, ${selectedCountry.country_name} and ${selectedPort.port_name} have been saved. You can now continue shopping.`,
+      'success'
+    )
   }
 
   return (
-    <section id="shipping-selector" className="shipping-section">
-      <div className="shipping-card">
-        <div className="shipping-header">
-          <span className="shipping-badge">EXPORT SHIPPING OPTIONS</span>
+    <>
+      <section
+        id="shipping-selector"
+        className="shipping-section"
+      >
+        <div className="shipping-card">
+          <div className="shipping-header">
+            <span className="shipping-badge">
+              EXPORT SHIPPING OPTIONS
+            </span>
 
-          <h2>Check Estimated Shipping Duration and Pricing</h2>
+            <h2>
+              Check Estimated Shipping Duration and Pricing
+            </h2>
 
-          <div className="shipping-note">
-  <strong>NOTE:</strong> Frozen and chilled items require a Reefer container.
-  Please select a Reefer container, or remove Frozen/Chilled items from your basket.
-</div>
+            <div className="shipping-note">
+              <strong>NOTE:</strong> Frozen and chilled items require a
+              Reefer container. Please select a Reefer container, or remove
+              Frozen/Chilled items from your basket.
+            </div>
 
-          <p>
-  {isCollection
-    ? 'Collection selected. Country and port selection are not required.'
-    : 'Select your container, delivery country and destination port before ordering.'}
-</p>
-        </div>
-
-        <div className={`shipping-form ${isCollection ? 'collection-mode' : ''}`}>
-          <div className="shipping-field">
-            <label>Container</label>
-            <select value={containerId} onChange={handleContainerChange}>
-              <option value="">Select container...</option>
-              {containers.map(container => (
-                <option key={container.id} value={container.id}>
-                  {container.container_name}
-                </option>
-              ))}
-            </select>
+            <p>
+              {isCollection
+                ? 'Collection selected. Country and port selection are not required.'
+                : 'Select your container, delivery country and destination port before ordering.'}
+            </p>
           </div>
 
-          {!isCollection && (
-            <>
-              <div className="shipping-field">
-                <label>Country</label>
-                <select value={countryId} onChange={(e) => setCountryId(e.target.value)}>
-                  <option value="">Select country...</option>
-                  {countries.map(country => (
-                    <option key={country.id} value={country.id}>
-                      {country.country_name}
+          <div
+            className={`shipping-form ${
+              isCollection ? 'collection-mode' : ''
+            }`}
+          >
+            <div className="shipping-field">
+              <label>Container</label>
+
+              <select
+                value={containerId}
+                onChange={handleContainerChange}
+              >
+                <option value="">Select container...</option>
+
+                {containers.map(container => (
+                  <option
+                    key={container.id}
+                    value={container.id}
+                  >
+                    {container.container_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {!isCollection && (
+              <>
+                <div className="shipping-field">
+                  <label>Country</label>
+
+                  <select
+                    value={countryId}
+                    onChange={event =>
+                      setCountryId(event.target.value)
+                    }
+                  >
+                    <option value="">Select country...</option>
+
+                    {countries.map(country => (
+                      <option
+                        key={country.id}
+                        value={country.id}
+                      >
+                        {country.country_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="shipping-field">
+                  <label>Port</label>
+
+                  <select
+                    value={portId}
+                    onChange={event =>
+                      setPortId(event.target.value)
+                    }
+                    disabled={!countryId}
+                  >
+                    <option value="">
+                      {countryId
+                        ? 'Select port...'
+                        : 'Select country first'}
                     </option>
-                  ))}
-                </select>
+
+                    {ports.map(port => (
+                      <option
+                        key={port.id}
+                        value={port.id}
+                      >
+                        {port.port_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </>
+            )}
+
+            <button
+              type="button"
+              className="shipping-start-btn"
+              onClick={handleStartOrder}
+              disabled={
+                !selectedContainer ||
+                (!isCollection &&
+                  (!selectedCountry || !selectedPort))
+              }
+            >
+              Start Order →
+            </button>
+          </div>
+
+          {selectedContainer && isCollection && (
+            <>
+              <div className="shipping-collection-line">
+                <strong>Collection:</strong> You will arrange pickup
+                (EXW). No shipping specs. Minimum order{' '}
+                <strong>£5,000</strong>.
               </div>
 
-              <div className="shipping-field">
-                <label>Port</label>
-                <select
-                  value={portId}
-                  onChange={(e) => setPortId(e.target.value)}
-                  disabled={!countryId}
-                >
-                  <option value="">
-                    {countryId ? 'Select port...' : 'Select country first'}
-                  </option>
-
-                  {ports.map(port => (
-                    <option key={port.id} value={port.id}>
-                      {port.port_name}
-                    </option>
-                  ))}
-                </select>
+              <div className="shipping-collection-note">
+                Collection selected - minimum order{' '}
+                <strong>£5,000</strong> applies. Click{' '}
+                <strong>Start Order</strong>.
               </div>
             </>
           )}
 
-          <button
-            className="shipping-start-btn"
-            onClick={handleStartOrder}
-            disabled={!selectedContainer || (!isCollection && (!selectedCountry || !selectedPort))}
-          >
-            Start Order →
-          </button>
+          {selectedContainer && !isCollection && (
+            <div className="shipping-spec-line">
+              <strong>Specs:</strong>{' '}
+              {selectedContainer.container_name}
+              {' | '}Cubic:{' '}
+              <strong>
+                {Number(
+                  selectedContainer.volume_m3
+                ).toLocaleString(undefined, {
+                  maximumFractionDigits: 1,
+                })}{' '}
+                m³
+              </strong>
+              {' | '}Gross:{' '}
+              <strong>
+                {Number(
+                  selectedContainer.gross_weight_kg
+                ).toLocaleString()}{' '}
+                kg
+              </strong>
+              {' | '}Payload:{' '}
+              <strong>
+                {Number(
+                  selectedContainer.payload_weight_kg
+                ).toLocaleString()}{' '}
+                kg
+              </strong>
+            </div>
+          )}
+
+          {!isCollection && selectedCountry && selectedPort && (
+            <div className="shipping-selected">
+              Shipping selected: {selectedCountry.country_name} ·{' '}
+              {selectedPort.port_name}
+            </div>
+          )}
         </div>
+      </section>
 
-        {selectedContainer && isCollection && (
-          <>
-            <div className="shipping-collection-line">
-              <strong>Collection:</strong> You will arrange pickup (EXW). No shipping specs.
-              Minimum order <strong>£5,000</strong>.
-            </div>
-
-            <div className="shipping-collection-note">
-              Collection selected - minimum order <strong>£5,000</strong> applies. Click{' '}
-              <strong>Start Order</strong>.
-            </div>
-          </>
-        )}
-
-        {selectedContainer && !isCollection && (
-          <div className="shipping-spec-line">
-            <strong>Specs:</strong> {selectedContainer.container_name}
-            {' | '}Cubic:{' '}
-            <strong>{Number(selectedContainer.volume_m3).toLocaleString(undefined, { maximumFractionDigits: 1 })} m³</strong>
-            {' | '}Gross:{' '}
-            <strong>{Number(selectedContainer.gross_weight_kg).toLocaleString()} kg</strong>
-            {' | '}Payload:{' '}
-            <strong>{Number(selectedContainer.payload_weight_kg).toLocaleString()} kg</strong>
-          </div>
-        )}
-
-        {!isCollection && selectedCountry && selectedPort && (
-          <div className="shipping-selected">
-            Shipping selected: {selectedCountry.country_name} · {selectedPort.port_name}
-          </div>
-        )}
-      </div>
-    </section>
+      <NoticeModal
+        open={notice.open}
+        title={notice.title}
+        message={notice.message}
+        type={notice.type}
+        onClose={closeNotice}
+      />
+    </>
   )
 }
 
