@@ -46,4 +46,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'approved_at'       => 'datetime',
     ];
+
+    public function customerDetail()
+    {
+        return $this->hasOne(CustomerDetail::class);
+    }
 }

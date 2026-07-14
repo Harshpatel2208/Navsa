@@ -1,10 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getBrands, createBrand, updateBrand, softDeleteBrand, hardDeleteBrand } from '../../services/adminApi'
-
-const inp = {
-  background: '#1a2744', border: '1px solid #2a3f6f', borderRadius: '8px',
-  color: '#fff', padding: '8px 12px', fontSize: '13px', outline: 'none', width: '100%',
-}
+import { Plus, Edit2, Trash2, EyeOff } from 'lucide-react';
 
 function BrandRow({ brand, onRefresh }) {
   const [editing, setEditing] = useState(false)
@@ -43,40 +39,44 @@ function BrandRow({ brand, onRefresh }) {
   }
 
   return (
-    <tr style={{ borderBottom: '1px solid #1a2744' }}>
-      <td style={{ padding: '14px 12px' }}>
+    <tr>
+      <td>
         {editing ? (
           <div style={{ display: 'flex', gap: '6px' }}>
-            <input value={name} onChange={e => setName(e.target.value)} style={{ ...inp, width: '180px' }}
+            <input value={name} onChange={e => setName(e.target.value)} className="admin-input-field" style={{ width: '180px' }}
               onKeyDown={e => e.key === 'Enter' && save()} autoFocus />
-            <button onClick={save} disabled={busy} style={{ background:'#c9a84c', border:'none', borderRadius:'8px', color:'#0a1128', fontWeight:700, padding:'6px 12px', cursor:'pointer' }}>✓</button>
-            <button onClick={() => setEditing(false)} style={{ background:'#1a2744', border:'1px solid #2a3f6f', borderRadius:'8px', color:'#fff', padding:'6px 10px', cursor:'pointer' }}>✕</button>
+            <button onClick={save} disabled={busy} className="admin-btn admin-btn-primary" style={{ padding: '6px 12px' }}>✓</button>
+            <button onClick={() => setEditing(false)} className="admin-btn admin-btn-ghost" style={{ padding: '6px 10px', border: '1px solid rgba(255,255,255,0.1)' }}>✕</button>
           </div>
         ) : (
           <div style={{ color: '#fff', fontWeight: 600, fontSize: '14px' }}>{brand.brand_name}</div>
         )}
       </td>
-      <td style={{ padding: '14px 12px', color: '#c9a84c', fontWeight: 700, textAlign: 'center' }}>
+      <td style={{ color: '#94a3b8', fontWeight: 600 }}>
         {brand.products_count ?? 0}
       </td>
-      <td style={{ padding: '14px 12px' }}>
-        <span style={{
-          background: brand.status ? '#052e16' : '#451a03',
-          color: brand.status ? '#4ade80' : '#fbbf24',
-          border: `1px solid ${brand.status ? '#166534' : '#92400e'}`,
-          borderRadius: '20px', padding: '3px 12px', fontSize: '11px', fontWeight: 700,
-        }}>{brand.status ? 'Active' : 'Disabled'}</span>
+      <td>
+        <span className={`admin-badge ${brand.status ? 'admin-badge-success' : 'admin-badge-warning'}`}>
+          {brand.status ? 'Active' : 'Disabled'}
+        </span>
       </td>
-      <td style={{ padding: '14px 12px' }}>
+      <td>
         <div style={{ display: 'flex', gap: '6px' }}>
           {!editing && (
-            <button onClick={() => setEditing(true)} style={{ background:'#1e3a5f', border:'1px solid #2a4f7f', borderRadius:'6px', color:'#7ea8c4', cursor:'pointer', fontSize:'11px', padding:'5px 10px' }}>✏ Edit</button>
+            <button onClick={() => setEditing(true)} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#3b82f6' }}>
+              <Edit2 size={16} />
+            </button>
           )}
-          <button onClick={toggleStatus} disabled={busy} style={{ background: brand.status ? '#451a03' : '#052e16', border:`1px solid ${brand.status?'#78350f':'#166534'}`, borderRadius:'6px', color: brand.status?'#fbbf24':'#4ade80', cursor:'pointer', fontSize:'11px', padding:'5px 10px' }}>
-            {brand.status ? 'Disable' : 'Enable'}
+          <label className="admin-switch" style={{ alignSelf: 'center', margin: '0 8px' }}>
+            <input type="checkbox" checked={!!brand.status} onChange={toggleStatus} disabled={busy} />
+            <span className="admin-slider"></span>
+          </label>
+          <button onClick={doSoft} disabled={busy} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#f59e0b' }}>
+            <EyeOff size={16} />
           </button>
-          <button onClick={doSoft} disabled={busy} style={{ background:'#451a03', border:'1px solid #78350f', borderRadius:'6px', color:'#fbbf24', cursor:'pointer', fontSize:'11px', padding:'5px 10px' }}>🗑 Soft</button>
-          <button onClick={doHard} disabled={busy} style={{ background:'#450a0a', border:'1px solid #991b1b', borderRadius:'6px', color:'#f87171', cursor:'pointer', fontSize:'11px', padding:'5px 10px' }}>💥</button>
+          <button onClick={doHard} disabled={busy} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#ef4444' }}>
+            <Trash2 size={16} />
+          </button>
         </div>
       </td>
     </tr>
@@ -108,32 +108,33 @@ export default function AdminBrands() {
 
   return (
     <div>
-      <h2 style={{ color: '#fff', marginBottom: '20px', fontSize: '22px', fontWeight: 700 }}>🔤 Brand Management</h2>
+      <div className="admin-flex-between mb-6">
+        <div>
+          <h1 style={{ marginBottom: '0.25rem' }}>Brands</h1>
+          <p style={{ color: '#94a3b8' }}>Manage product brands</p>
+        </div>
+      </div>
 
       {/* Add brand */}
-      <div style={{ background: '#0f1e36', border: '1px solid #1a2744', borderRadius: '16px', padding: '20px', marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
+      <div className="glass-panel" style={{ padding: '1.5rem', marginBottom: '20px', display: 'flex', gap: '10px', alignItems: 'center' }}>
         <input value={newName} onChange={e => setNewName(e.target.value)} placeholder="New brand name…"
           onKeyDown={e => e.key === 'Enter' && addBrand()}
-          style={{ ...inp, flex: 1 }} />
-        <button onClick={addBrand} disabled={adding || !newName.trim()} style={{
-          background: '#c9a84c', border: 'none', borderRadius: '10px', color: '#0a1128',
-          fontWeight: 700, padding: '10px 20px', cursor: 'pointer', whiteSpace: 'nowrap',
-          opacity: adding || !newName.trim() ? .5 : 1,
-        }}>
-          {adding ? '…' : '+ Add Brand'}
+          className="admin-input-field" style={{ flex: 1 }} />
+        <button onClick={addBrand} disabled={adding || !newName.trim()} className="admin-btn admin-btn-primary" style={{ whiteSpace: 'nowrap' }}>
+          {adding ? '…' : <><Plus size={18} style={{ marginRight: '6px' }} /> Add Brand</>}
         </button>
       </div>
 
       {/* Table */}
-      <div style={{ background: '#0f1e36', borderRadius: '16px', border: '1px solid #1a2744', overflow: 'hidden' }}>
+      <div className="glass-panel admin-table-container">
         {loading ? (
-          <div style={{ color: '#7ea8c4', padding: '40px', textAlign: 'center' }}>Loading brands…</div>
+          <div style={{ color: '#94a3b8', padding: '40px', textAlign: 'center' }}>Loading brands…</div>
         ) : (
-          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+          <table className="admin-table">
             <thead>
-              <tr style={{ background: '#1a2744' }}>
+              <tr>
                 {['Brand Name', 'Products', 'Status', 'Actions'].map(h => (
-                  <th key={h} style={{ padding: '12px', textAlign: 'left', color: '#7ea8c4', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase' }}>{h}</th>
+                  <th key={h}>{h}</th>
                 ))}
               </tr>
             </thead>

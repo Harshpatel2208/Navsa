@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
@@ -22,6 +23,32 @@ class AdminController extends Controller
     private function deny()
     {
         return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    public function login(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Invalid email or password'], 401);
+        }
+
+        if ($user->status !== 'approved') {
+            return response()->json(['message' => 'Your account is pending approval by the admin.'], 403);
+        }
+
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $user,
+            'token' => $token
+        ]);
     }
 
     // ── Dashboard ─────────────────────────────────────────────────────────────
@@ -46,6 +73,34 @@ class AdminController extends Controller
             'approved_users'   => User::where('status', 'approved')->count(),
             'rejected_users'   => User::where('status', 'rejected')->count(),
         ]);
+    }
+
+    // Registrations
+    public function getRegistrations(Request $request)
+    {
+        if (!$this->auth($request)) return $this->deny();
+
+        $registrations = User::with('customerDetail')
+            ->where('status', 'pending')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return response()->json($registrations);
+    }
+
+    public function approveRegistration(Request $request, $id)
+    {
+        if (!$this->auth($request)) return $this->deny();
+
+        $user = User::findOrFail($id);
+        if ($user->status !== 'pending') {
+            return response()->json(['error' => 'User is not pending approval'], 400);
+        }
+
+        $user->status = 'approved';
+        $user->approved_at = now();
+        $user->save();
+
+        return response()->json(['message' => 'Registration approved successfully', 'user' => $user]);
     }
 
     // ── Products ──────────────────────────────────────────────────────────────

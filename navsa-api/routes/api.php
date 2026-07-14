@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Brand;
 use App\Models\SubCategory;
 use App\Http\Controllers\Api\ShippingController;
+use App\Http\Controllers\Api\CustomerRegistrationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -63,9 +64,21 @@ Route::get('/shipping/containers', [ShippingController::class, 'containers']);
 Route::get('/shipping/countries', [ShippingController::class, 'countries']);
 Route::get('/shipping/ports/{country}', [ShippingController::class, 'ports']);
 
+// Customer Registration (public)
+Route::post('/register-customer', [CustomerRegistrationController::class, 'register']);
+
+// Public routes
+Route::post('/login', [AdminController::class, 'login']);
+
 // ── Admin Routes (protected by X-Admin-Key: navsa2024 header) ─────────────
 Route::prefix('admin')->group(function () {
 
+    // Admin Dashboard & Registrations
+    Route::get('/stats', [AdminController::class, 'stats']);
+    Route::get('/registrations', [AdminController::class, 'getRegistrations']);
+    Route::post('/registrations/{id}/approve', [AdminController::class, 'approveRegistration']);
+
+    // Admin routes CRUD + stock + delete
     // Dashboard
     Route::get('/stats', [AdminController::class, 'stats']);
 

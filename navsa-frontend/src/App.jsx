@@ -11,6 +11,7 @@ import Wishlist from './pages/Wishlist'
 import Basket from './pages/Basket'
 import ScrollToHash from './components/ScrollToHash'
 import Admin from './pages/Admin'
+import BecomeCustomer from './pages/BecomeCustomer'
 
 function PlaceholderPage({ title }) {
   return (
@@ -59,7 +60,7 @@ function App() {
               <Route path="/contact"            element={<PlaceholderPage title="Contact Us" />} />
               <Route path="/terms"              element={<PlaceholderPage title="Terms & Conditions" />} />
               <Route path="/privacy"            element={<PlaceholderPage title="Privacy & Cookies" />} />
-              <Route path="/become-a-customer"  element={<PlaceholderPage title="Become a Customer" />} />
+              <Route path="/become-a-customer"  element={<BecomeCustomer />} />
               <Route path="/product/:id"        element={<ProductDetail />} />
               <Route path="*"                   element={<Navigate to="/" replace />} />
             </Routes>
