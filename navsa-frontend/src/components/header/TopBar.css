@@ -1,0 +1,128 @@
+@keyframes top-bar-promotion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.top-bar {
+  width: 100%;
+  color: #ffffff;
+  background: #082c52;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: Arial, sans-serif;
+}
+
+.top-bar__inner {
+  width: min(100% - 40px, 1500px);
+  min-height: 42px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(160px, 1fr) auto minmax(320px, 1fr);
+  align-items: center;
+  gap: 20px;
+}
+
+.top-bar__socials,
+.top-bar__contact {
+  display: flex;
+  align-items: center;
+}
+
+.top-bar__socials {
+  justify-content: flex-start;
+  gap: 7px;
+}
+
+.top-bar__socials a {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.11);
+  border-radius: 50%;
+  text-decoration: none;
+  font-size: 12px;
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.top-bar__socials a:hover {
+  color: #082c52;
+  background: #ffffff;
+  transform: translateY(-1px);
+}
+
+.top-bar__promotion {
+  justify-self: center;
+  color: #ffffff;
+  text-align: center;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.45px;
+  white-space: nowrap;
+  animation: top-bar-promotion-enter 0.55s ease both;
+}
+
+.top-bar__promotion:hover {
+  color: #ffd0a5;
+}
+
+.top-bar__contact {
+  justify-content: flex-end;
+  gap: 18px;
+}
+
+.top-bar__contact a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 10px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 930px) {
+  .top-bar__inner {
+    grid-template-columns: 1fr;
+    gap: 7px;
+    padding: 7px 0;
+  }
+
+  .top-bar__promotion {
+    grid-row: 1;
+  }
+
+  .top-bar__socials,
+  .top-bar__contact {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 520px) {
+  .top-bar__inner {
+    width: calc(100% - 18px);
+  }
+
+  .top-bar__promotion {
+    max-width: 100%;
+    font-size: 8px;
+    white-space: normal;
+  }
+
+  .top-bar__contact {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
