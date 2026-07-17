@@ -39,7 +39,7 @@ export default function AdminDashboard() {
           <h1 style={{ marginBottom: '0.25rem' }}>Dashboard Overview</h1>
           <p style={{ color: '#94a3b8' }}>Welcome back, Admin</p>
         </div>
-        <button className="admin-btn admin-btn-primary">Generate Report</button>
+        <button onClick={() => window.print()} className="admin-btn admin-btn-primary">Print Report</button>
       </div>
 
       <h3 style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.1em', marginBottom: '12px' }}>Products</h3>

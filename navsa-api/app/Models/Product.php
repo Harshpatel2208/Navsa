@@ -69,6 +69,8 @@ class Product extends Model
         'offer_label',
         'stock_quantity',
         'deleted',
+        'is_best_offer',
+        'is_new_arrival',
     ];
 
     public function brand() {

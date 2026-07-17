@@ -41,18 +41,6 @@ Route::get('/sub-categories/{categoryId}', function ($categoryId) {
 });
 
 // Brands
-// Route::get('/brands', function () {
-//     return Brand::where('status', 1)
-//         ->orderBy('brand_name')
-//         ->get(['id', 'brand_name']);
-
-// //shipping
-// Route::get('/shipping/containers', [ShippingController::class, 'containers']);
-// Route::get('/shipping/countries', [ShippingController::class, 'countries']);
-// Route::get('/shipping/ports/{country}', [ShippingController::class, 'ports']);
-// });
-
-// Brands
 Route::get('/brands', function () {
     return Brand::where('status', 1)
         ->orderBy('brand_name')
@@ -69,6 +57,7 @@ Route::post('/register-customer', [CustomerRegistrationController::class, 'regis
 
 // Public routes
 Route::post('/login', [AdminController::class, 'login']);
+Route::post('/logout', [AdminController::class, 'logout'])->middleware('auth:sanctum');
 
 // ── Admin Routes (protected by X-Admin-Key: navsa2024 header) ─────────────
 Route::prefix('admin')->group(function () {
@@ -77,10 +66,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/stats', [AdminController::class, 'stats']);
     Route::get('/registrations', [AdminController::class, 'getRegistrations']);
     Route::post('/registrations/{id}/approve', [AdminController::class, 'approveRegistration']);
-
-    // Admin routes CRUD + stock + delete
-    // Dashboard
-    Route::get('/stats', [AdminController::class, 'stats']);
+    Route::post('/registrations/{id}/reject', [AdminController::class, 'rejectRegistration']);
 
     // Products CRUD + stock + delete
     Route::get('/products',                        [AdminController::class, 'products']);
@@ -88,10 +74,13 @@ Route::prefix('admin')->group(function () {
     Route::put('/products/{id}',                   [AdminController::class, 'updateProduct']);
     Route::patch('/products/{id}/toggle-web',      [AdminController::class, 'toggleWeb']);
     Route::patch('/products/{id}/toggle-offer',    [AdminController::class, 'toggleOffer']);
+    Route::patch('/products/{id}/toggle-best-offer',[AdminController::class, 'toggleBestOffer']);
+    Route::patch('/products/{id}/toggle-new-arrival',[AdminController::class, 'toggleNewArrival']);
     Route::patch('/products/{id}/stock',           [AdminController::class, 'updateStock']);
     Route::patch('/products/{id}/soft-delete',     [AdminController::class, 'softDeleteProduct']);
     Route::patch('/products/{id}/restore',         [AdminController::class, 'restoreProduct']);
     Route::delete('/products/{id}',                [AdminController::class, 'hardDeleteProduct']);
+    Route::patch('/products/clear-offers',         [AdminController::class, 'clearOffers']);
 
     // Users
     Route::get('/users',                           [AdminController::class, 'users']);
@@ -111,4 +100,9 @@ Route::prefix('admin')->group(function () {
     Route::put('/categories/{id}',                 [AdminController::class, 'updateCategory']);
     Route::patch('/categories/{id}/soft-delete',   [AdminController::class, 'softDeleteCategory']);
     Route::delete('/categories/{id}',              [AdminController::class, 'hardDeleteCategory']);
+
+    // PDFs
+    Route::get('/pdfs',                            [AdminController::class, 'pdfs']);
+    Route::post('/pdfs',                           [AdminController::class, 'uploadPdf']);
+    Route::delete('/pdfs/{id}',                    [AdminController::class, 'deletePdf']);
 });

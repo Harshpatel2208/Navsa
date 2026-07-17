@@ -36,6 +36,12 @@ class CustomerDetail extends Model
         'brands_interested',
         'categories_interested',
         'eori_number',
+        'same_as_billing',
+        'shipping_address_line_1',
+        'shipping_address_line_2',
+        'shipping_city',
+        'shipping_province',
+        'shipping_zip_code',
     ];
 
     protected $casts = [

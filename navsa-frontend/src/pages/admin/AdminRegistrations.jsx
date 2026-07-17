@@ -13,8 +13,8 @@ export default function AdminRegistrations() {
 
   const fetchRegistrations = async () => {
     try {
-      // In a real app, send X-Admin-Key header
-      const res = await fetch('http://localhost:8000/api/admin/registrations', {
+      const BASE = import.meta.env.VITE_API_URL || '/api';
+      const res = await fetch(`${BASE}/admin/registrations`, {
         headers: { 'X-Admin-Key': 'navsa2024' }
       });
       const data = await res.json();
@@ -32,7 +32,8 @@ export default function AdminRegistrations() {
     if (!window.confirm("Are you sure you want to approve this registration?")) return;
     setProcessing(true);
     try {
-      const res = await fetch(`http://localhost:8000/api/admin/registrations/${id}/approve`, {
+      const BASE = import.meta.env.VITE_API_URL || '/api';
+      const res = await fetch(`${BASE}/admin/registrations/${id}/approve`, {
         method: 'POST',
         headers: { 'X-Admin-Key': 'navsa2024' }
       });
@@ -45,6 +46,29 @@ export default function AdminRegistrations() {
       }
     } catch (error) {
       console.error("Approval error", error);
+    } finally {
+      setProcessing(false);
+    }
+  };
+
+  const handleReject = async (id) => {
+    if (!window.confirm("Are you sure you want to reject this registration?")) return;
+    setProcessing(true);
+    try {
+      const BASE = import.meta.env.VITE_API_URL || '/api';
+      const res = await fetch(`${BASE}/admin/registrations/${id}/reject`, {
+        method: 'POST',
+        headers: { 'X-Admin-Key': 'navsa2024' }
+      });
+      if (res.ok) {
+        alert("Registration rejected successfully!");
+        fetchRegistrations();
+        setSelectedReg(null);
+      } else {
+        alert("Failed to reject");
+      }
+    } catch (error) {
+      console.error("Rejection error", error);
     } finally {
       setProcessing(false);
     }
@@ -94,8 +118,15 @@ export default function AdminRegistrations() {
                       onClick={() => handleApprove(reg.id)}
                       disabled={processing}
                       className="admin-btn" 
-                      style={{ padding: '5px 10px', background: '#10b981' }}>
+                      style={{ padding: '5px 10px', background: '#10b981', marginRight: '8px' }}>
                       <CheckCircle size={16} style={{ marginRight: '5px' }}/> Approve
+                    </button>
+                    <button 
+                      onClick={() => handleReject(reg.id)}
+                      disabled={processing}
+                      className="admin-btn" 
+                      style={{ padding: '5px 10px', background: '#ef4444' }}>
+                      <XCircle size={16} style={{ marginRight: '5px' }}/> Reject
                     </button>
                   </td>
                 </tr>
@@ -153,6 +184,9 @@ export default function AdminRegistrations() {
 
             <div style={{ marginTop: '30px', textAlign: 'right' }}>
               <button onClick={() => setSelectedReg(null)} className="admin-btn admin-btn-ghost" style={{ marginRight: '10px' }}>Cancel</button>
+              <button onClick={() => handleReject(selectedReg.id)} disabled={processing} className="admin-btn" style={{ background: '#ef4444', marginRight: '10px' }}>
+                Reject Request
+              </button>
               <button onClick={() => handleApprove(selectedReg.id)} disabled={processing} className="admin-btn" style={{ background: '#10b981' }}>
                 Approve Request
               </button>

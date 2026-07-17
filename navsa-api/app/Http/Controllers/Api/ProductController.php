@@ -10,11 +10,13 @@ class ProductController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Product::with(['brand', 'category', 'subCategory', 'supplier']);
+        $query = Product::with(['brand', 'category', 'subCategory', 'supplier'])
+            ->where('deleted', false)
+            ->where('live_for_web', 1);
 
         if ($request->filled('search')) {
 
-            $search = $request->search;
+            $search = trim($request->search);
 
             $query->where(function ($q) use ($search) {
 
@@ -116,7 +118,10 @@ class ProductController extends Controller
             'category',
             'subCategory',
             'supplier'
-        ])->findOrFail($id);
+        ])
+            ->where('deleted', false)
+            ->where('live_for_web', 1)
+            ->findOrFail($id);
 
         return response()->json($product);
     }

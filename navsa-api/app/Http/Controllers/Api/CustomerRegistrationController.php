@@ -62,6 +62,12 @@ class CustomerRegistrationController extends Controller
                 'brands_interested' => $request->brands_interested,
                 'categories_interested' => $request->categories_interested,
                 'eori_number' => $request->eori_number,
+                'same_as_billing' => filter_var($request->same_as_billing, FILTER_VALIDATE_BOOLEAN),
+                'shipping_address_line_1' => filter_var($request->same_as_billing, FILTER_VALIDATE_BOOLEAN) ? null : $request->shipping_address_line_1,
+                'shipping_address_line_2' => filter_var($request->same_as_billing, FILTER_VALIDATE_BOOLEAN) ? null : $request->shipping_address_line_2,
+                'shipping_city' => filter_var($request->same_as_billing, FILTER_VALIDATE_BOOLEAN) ? null : $request->shipping_city,
+                'shipping_province' => filter_var($request->same_as_billing, FILTER_VALIDATE_BOOLEAN) ? null : $request->shipping_province,
+                'shipping_zip_code' => filter_var($request->same_as_billing, FILTER_VALIDATE_BOOLEAN) ? null : $request->shipping_zip_code,
             ]);
 
             DB::commit();
@@ -73,10 +79,9 @@ class CustomerRegistrationController extends Controller
             
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Registration Error: ' . $e->getMessage());
+            Log::error('Registration Error: ' . $e->getMessage(), ['exception' => $e]);
             return response()->json([
-                'message' => 'An error occurred during registration.',
-                'error' => $e->getMessage()
+                'message' => 'An error occurred during registration. Please try again later.'
             ], 500);
         }
     }

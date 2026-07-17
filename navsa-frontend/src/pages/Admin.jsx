@@ -8,6 +8,7 @@ import AdminOffers     from './admin/AdminOffers';
 import AdminBrands     from './admin/AdminBrands';
 import AdminCategories from './admin/AdminCategories';
 import AdminRegistrations from './admin/AdminRegistrations';
+import AdminPdfs from './admin/AdminPdfs';
 
 // Temporary bypass for login as requested
 function AdminShell({ onLogout }) {
@@ -45,6 +46,9 @@ function AdminShell({ onLogout }) {
           <NavLink to="/admin/categories" className={({isActive}) => `admin-nav-item ${isActive ? 'active' : ''}`}>
             <Settings size={20} /> Categories
           </NavLink>
+          <NavLink to="/admin/pdfs" className={({isActive}) => `admin-nav-item ${isActive ? 'active' : ''}`}>
+            <Package size={20} /> PDFs & Manuals
+          </NavLink>
         </nav>
 
         <div style={{ padding: '1.5rem', borderTop: '1px solid rgba(255, 255, 255, 0.1)' }}>
@@ -58,19 +62,8 @@ function AdminShell({ onLogout }) {
       <main className="admin-main-content">
         {/* Topbar */}
         <header className="glass-header admin-flex-between" style={{ padding: '1rem 2rem' }}>
-          <div style={{ position: 'relative', width: '300px' }}>
-            <Search size={18} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#94a3b8' }} />
-            <input 
-              type="text" 
-              className="admin-input-field" 
-              style={{ width: '100%', paddingLeft: '2.5rem', padding: '0.5rem 1rem 0.5rem 2.5rem', borderRadius: '20px' }} 
-              placeholder="Search..." 
-            />
-          </div>
+          <div />
           <div className="admin-flex-center" style={{ gap: '1rem' }}>
-            <button className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', borderRadius: '50%' }}>
-              <Bell size={20} />
-            </button>
             <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
               A
             </div>
@@ -88,6 +81,7 @@ function AdminShell({ onLogout }) {
             <Route path="users" element={<AdminUsers />} />
             <Route path="brands" element={<AdminBrands />} />
             <Route path="categories" element={<AdminCategories />} />
+            <Route path="pdfs" element={<AdminPdfs />} />
           </Routes>
         </div>
       </main>
@@ -95,11 +89,72 @@ function AdminShell({ onLogout }) {
   );
 }
 
-export default function Admin() {
-  const logout = () => {
-    alert("Logout clicked (login disabled for testing)");
+function AdminLogin({ onLogin }) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    try {
+      const res = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Login failed');
+      localStorage.setItem('admin_token', data.token);
+      localStorage.setItem('admin_user', JSON.stringify(data.user));
+      onLogin();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Login bypassed for testing
+  return (
+    <div className="admin-bg" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <div className="glass-panel" style={{ padding: '40px', width: '100%', maxWidth: '400px' }}>
+        <h2 style={{ color: '#3b82f6', textAlign: 'center', marginBottom: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+          <Lock size={22} /> Admin Login
+        </h2>
+        <p style={{ color: '#94a3b8', textAlign: 'center', marginBottom: '24px', fontSize: '14px' }}>Sign in to access the admin panel</p>
+
+        {error && <div style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid #ef4444', color: '#ef4444', padding: '10px 14px', borderRadius: '8px', marginBottom: '16px', fontSize: '13px' }}>{error}</div>}
+
+        <form onSubmit={handleSubmit}>
+          <label style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Email</label>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="admin-input-field" style={{ width: '100%', padding: '10px 14px', marginBottom: '16px' }} />
+
+          <label style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 600, display: 'block', marginBottom: '6px' }}>Password</label>
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} required className="admin-input-field" style={{ width: '100%', padding: '10px 14px', marginBottom: '24px' }} />
+
+          <button type="submit" disabled={loading} className="admin-btn admin-btn-primary" style={{ width: '100%', padding: '12px', fontSize: '15px' }}>
+            {loading ? 'Signing in...' : 'Sign In'}
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default function Admin() {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!localStorage.getItem('admin_token'));
+
+  const logout = () => {
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_user');
+    setIsLoggedIn(false);
+  };
+
+  if (!isLoggedIn) {
+    return <AdminLogin onLogin={() => setIsLoggedIn(true)} />;
+  }
+
   return <AdminShell onLogout={logout} />;
 }

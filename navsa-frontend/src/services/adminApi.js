@@ -1,6 +1,6 @@
 // Central admin API helper — always injects X-Admin-Key header
 const BASE = import.meta.env.VITE_API_URL || '/api'
-const KEY  = 'navsa2024'
+const KEY  = import.meta.env.VITE_ADMIN_KEY || 'navsa2024'
 
 const headers = () => ({
   'Content-Type': 'application/json',
@@ -26,14 +26,18 @@ export const getProducts = (params = {}) => {
   const qs = new URLSearchParams(params).toString()
   return req('GET', `/products${qs ? '?' + qs : ''}`)
 }
+export const createProduct    = (data)     => req('POST',  '/products', data)
 export const updateProduct    = (id, data) => req('PUT',   `/products/${id}`, data)
 export const toggleWeb        = (id)       => req('PATCH', `/products/${id}/toggle-web`)
 export const toggleOffer      = (id, label) => req('PATCH', `/products/${id}/toggle-offer`, label ? { offer_label: label } : {})
+export const toggleBestOffer  = (id) => req('PATCH', `/products/${id}/toggle-best-offer`)
+export const toggleNewArrival = (id) => req('PATCH', `/products/${id}/toggle-new-arrival`)
 export const updateStock      = (id, stock_quantity, price, price_list) =>
   req('PATCH', `/products/${id}/stock`, { stock_quantity, price, price_list })
 export const softDeleteProduct= (id) => req('PATCH', `/products/${id}/soft-delete`)
 export const restoreProduct   = (id) => req('PATCH', `/products/${id}/restore`)
 export const hardDeleteProduct= (id) => req('DELETE', `/products/${id}`)
+export const clearAllOffers   = () => req('PATCH', '/products/clear-offers')
 
 // ── Users ─────────────────────────────────────────────────────────────────────
 export const getUsers    = (params = {}) => {
@@ -56,3 +60,21 @@ export const createCategory      = (category_name) => req('POST',  '/categories'
 export const updateCategory      = (id, data)       => req('PUT',   `/categories/${id}`, data)
 export const softDeleteCategory  = (id) => req('PATCH',  `/categories/${id}/soft-delete`)
 export const hardDeleteCategory  = (id) => req('DELETE', `/categories/${id}`)
+
+// ── PDFs ──────────────────────────────────────────────────────────────────────
+export const getPdfs     = () => req('GET', '/pdfs')
+export const uploadPdf   = async (file, title, type) => {
+  const formData = new FormData()
+  formData.append('file', file)
+  formData.append('title', title)
+  if (type) formData.append('type', type)
+  
+  const res = await fetch(`${BASE}/admin/pdfs`, {
+    method: 'POST',
+    headers: { 'X-Admin-Key': KEY }, // no content-type for FormData
+    body: formData
+  })
+  if (!res.ok) throw new Error(await res.text())
+  return res.json()
+}
+export const deletePdf   = (id) => req('DELETE', `/pdfs/${id}`)

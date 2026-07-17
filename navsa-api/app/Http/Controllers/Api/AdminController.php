@@ -7,17 +7,22 @@ use App\Models\Product;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
-    private const ADMIN_KEY = 'navsa2024';
+    private function getAdminKey(): string
+    {
+        return env('ADMIN_API_KEY', 'navsa2024');
+    }
 
     private function auth(Request $request): bool
     {
         $key = $request->header('X-Admin-Key') ?? $request->query('admin_key');
-        return $key === self::ADMIN_KEY;
+        return $key === $this->getAdminKey();
     }
 
     private function deny()
@@ -49,6 +54,12 @@ class AdminController extends Controller
             'user' => $user,
             'token' => $token
         ]);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json(['message' => 'Logged out successfully']);
     }
 
     // ── Dashboard ─────────────────────────────────────────────────────────────
@@ -103,6 +114,21 @@ class AdminController extends Controller
         return response()->json(['message' => 'Registration approved successfully', 'user' => $user]);
     }
 
+    public function rejectRegistration(Request $request, $id)
+    {
+        if (!$this->auth($request)) return $this->deny();
+
+        $user = User::findOrFail($id);
+        if ($user->status !== 'pending') {
+            return response()->json(['error' => 'User is not pending approval'], 400);
+        }
+
+        $user->status = 'rejected';
+        $user->save();
+
+        return response()->json(['message' => 'Registration rejected successfully', 'user' => $user]);
+    }
+
     // ── Products ──────────────────────────────────────────────────────────────
 
     public function products(Request $request)
@@ -117,11 +143,11 @@ class AdminController extends Controller
         }
 
         if ($request->filled('search')) {
-            $s = $request->search;
+            $s = trim($request->search);
             $q->where(function ($sub) use ($s) {
-                $sub->where('description', 'like', "%$s%")
-                    ->orWhere('reference', 'like', "%$s%")
-                    ->orWhere('barcode_ean', 'like', "%$s%");
+                $sub->where('description', 'like', '%' . $s . '%')
+                    ->orWhere('reference', 'like', '%' . $s . '%')
+                    ->orWhere('barcode_ean', 'like', '%' . $s . '%');
             });
         }
         if ($request->filled('brand_id'))     $q->where('brand_id', $request->brand_id);
@@ -136,7 +162,32 @@ class AdminController extends Controller
     public function createProduct(Request $request)
     {
         if (!$this->auth($request)) return $this->deny();
-        $product = Product::create($request->except(['admin_key']));
+
+        $request->validate([
+            'description'   => 'required|string|max:500',
+            'brand_id'      => 'nullable|integer|exists:brands,id',
+            'category_id'   => 'nullable|integer|exists:categories,id',
+            'reference'     => 'nullable|string|max:100',
+            'price'         => 'nullable|numeric|min:0',
+            'price_list'    => 'nullable|numeric|min:0',
+            'cost'          => 'nullable|numeric|min:0',
+            'stock_quantity' => 'nullable|integer|min:0',
+            'barcode_ean'   => 'nullable|string|max:50',
+            'barcode_case'  => 'nullable|string|max:50',
+        ]);
+
+        $allowed = [
+            'reference', 'description', 'supplier_id', 'category_id', 'sub_category_id', 'brand_id',
+            'units_of', 'inner_case_quantity', 'outer_case_quantity', 'qty_desc',
+            'barcode_ean', 'barcode_case', 'group_desc', 'vat_code',
+            'layer_quantity', 'pallet_quantity', 'supplier_reference',
+            'cost', 'cost_from_date', 'cost_to_date', 'price_list', 'price', 'from_date', 'to_date',
+            'weight', 'volume', 'shelf_life', 'bbd', 'comm_code', 'intra_country', 'intra_type',
+            'web_short_description', 'web_long_description', 'web_image', 'live_for_web',
+            'is_offer', 'offer_label', 'stock_quantity', 'is_best_offer', 'is_new_arrival',
+        ];
+
+        $product = Product::create($request->only($allowed));
         return response()->json($product->load(['brand', 'category']), 201);
     }
 
@@ -144,7 +195,32 @@ class AdminController extends Controller
     {
         if (!$this->auth($request)) return $this->deny();
         $product = Product::findOrFail($id);
-        $product->update($request->except(['admin_key']));
+
+        $request->validate([
+            'description'   => 'sometimes|string|max:500',
+            'brand_id'      => 'nullable|integer|exists:brands,id',
+            'category_id'   => 'nullable|integer|exists:categories,id',
+            'reference'     => 'nullable|string|max:100',
+            'price'         => 'nullable|numeric|min:0',
+            'price_list'    => 'nullable|numeric|min:0',
+            'cost'          => 'nullable|numeric|min:0',
+            'stock_quantity' => 'nullable|integer|min:0',
+            'barcode_ean'   => 'nullable|string|max:50',
+            'barcode_case'  => 'nullable|string|max:50',
+        ]);
+
+        $allowed = [
+            'reference', 'description', 'supplier_id', 'category_id', 'sub_category_id', 'brand_id',
+            'units_of', 'inner_case_quantity', 'outer_case_quantity', 'qty_desc',
+            'barcode_ean', 'barcode_case', 'group_desc', 'vat_code',
+            'layer_quantity', 'pallet_quantity', 'supplier_reference',
+            'cost', 'cost_from_date', 'cost_to_date', 'price_list', 'price', 'from_date', 'to_date',
+            'weight', 'volume', 'shelf_life', 'bbd', 'comm_code', 'intra_country', 'intra_type',
+            'web_short_description', 'web_long_description', 'web_image', 'live_for_web',
+            'is_offer', 'offer_label', 'stock_quantity', 'is_best_offer', 'is_new_arrival',
+        ];
+
+        $product->update($request->only($allowed));
         return response()->json($product->fresh(['brand', 'category']));
     }
 
@@ -167,6 +243,31 @@ class AdminController extends Controller
         if (!$new) $data['offer_label'] = null; // Clear label when removing offer
         $product->update($data);
         return response()->json(['id' => $id, 'is_offer' => $new, 'offer_label' => $product->offer_label]);
+    }
+
+    public function clearOffers(Request $request)
+    {
+        if (!$this->auth($request)) return $this->deny();
+        Product::where('is_offer', 1)->update(['is_offer' => 0, 'offer_label' => null]);
+        return response()->json(['success' => true]);
+    }
+
+    public function toggleBestOffer(Request $request, $id)
+    {
+        if (!$this->auth($request)) return $this->deny();
+        $product = Product::findOrFail($id);
+        $new = $product->is_best_offer ? 0 : 1;
+        $product->update(['is_best_offer' => $new]);
+        return response()->json(['id' => $id, 'is_best_offer' => $new]);
+    }
+
+    public function toggleNewArrival(Request $request, $id)
+    {
+        if (!$this->auth($request)) return $this->deny();
+        $product = Product::findOrFail($id);
+        $new = $product->is_new_arrival ? 0 : 1;
+        $product->update(['is_new_arrival' => $new]);
+        return response()->json(['id' => $id, 'is_new_arrival' => $new]);
     }
 
     public function updateStock(Request $request, $id)
@@ -323,6 +424,46 @@ class AdminController extends Controller
     {
         if (!$this->auth($request)) return $this->deny();
         Category::findOrFail($id)->delete();
+        return response()->json(['id' => $id, 'destroyed' => true]);
+    }
+
+    // ── PDFs ──────────────────────────────────────────────────────────────────
+
+    public function pdfs(Request $request)
+    {
+        if (!$this->auth($request)) return $this->deny();
+        return response()->json(Pdf::orderBy('created_at', 'desc')->get());
+    }
+
+    public function uploadPdf(Request $request)
+    {
+        if (!$this->auth($request)) return $this->deny();
+        
+        $request->validate([
+            'title' => 'required|string',
+            'type' => 'nullable|string',
+            'file' => 'required|mimes:pdf|max:10000', // max 10MB
+        ]);
+
+        $path = $request->file('file')->store('pdfs', 'public');
+
+        $pdf = Pdf::create([
+            'title' => $request->title,
+            'type' => $request->type ?? 'manual',
+            'file_path' => $path,
+        ]);
+
+        return response()->json($pdf, 201);
+    }
+
+    public function deletePdf(Request $request, $id)
+    {
+        if (!$this->auth($request)) return $this->deny();
+        
+        $pdf = Pdf::findOrFail($id);
+        Storage::disk('public')->delete($pdf->file_path);
+        $pdf->delete();
+
         return response()->json(['id' => $id, 'destroyed' => true]);
     }
 }

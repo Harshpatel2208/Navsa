@@ -8,8 +8,8 @@ echo ================================================
 echo.
 
 :: Start Laravel API server (port 8001) in a new window
-echo [1/2] Starting Laravel API server on port 8001...
-start "Navsa API - Port 8001" cmd /k "cd /d C:\Users\harsh\Desktop\Navsa-Website\navsa-api && C:\xampp\php\php.exe -S 127.0.0.1:8001 -t public"
+echo [1/2] Starting Laravel API server on port 8000...
+start "Navsa API - Port 8000" cmd /k "cd /d C:\Users\harsh\Desktop\Navsa-Website\navsa-api && C:\xampp\php\php.exe -S 127.0.0.1:8000 -t public"
 
 :: Small delay before starting frontend
 ping 127.0.0.1 -n 3 >nul

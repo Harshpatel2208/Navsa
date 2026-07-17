@@ -184,6 +184,20 @@ input[type="password"]:focus {
   margin-bottom: 20px;
 }
 
+.shipping-address-section {
+  background-color: #f8fafc;
+  border: 1px solid #cbd5e1;
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.shipping-address-section .section-title {
+  margin-top: 0;
+}
+
 @media (max-width: 768px) {
   .form-group.row {
     flex-direction: column;

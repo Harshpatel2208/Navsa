@@ -1,3 +1,4 @@
+SET FOREIGN_KEY_CHECKS=0;
 -- MySQL dump 10.13  Distrib 8.0.46, for Win64 (x86_64)
 --
 -- Host: localhost    Database: navsa
@@ -33,7 +34,7 @@ CREATE TABLE `addresses` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `addresses_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -70,7 +71,7 @@ CREATE TABLE `basket_shipping` (
   CONSTRAINT `fk_basket_container` FOREIGN KEY (`container_id`) REFERENCES `shipping_containers` (`id`),
   CONSTRAINT `fk_basket_country` FOREIGN KEY (`country_id`) REFERENCES `shipping_countries` (`id`),
   CONSTRAINT `fk_basket_port` FOREIGN KEY (`port_id`) REFERENCES `shipping_ports` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -97,7 +98,7 @@ CREATE TABLE `brands` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -125,7 +126,7 @@ CREATE TABLE `categories` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -157,7 +158,7 @@ CREATE TABLE `category_mappings` (
   KEY `brand_id` (`brand_id`),
   CONSTRAINT `category_mappings_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `category_mappings_ibfk_2` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -186,7 +187,7 @@ CREATE TABLE `customer_accounts` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `customer_accounts_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +216,7 @@ CREATE TABLE `erp_import_logs` (
   `remarks` text,
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +245,7 @@ CREATE TABLE `erp_products_raw` (
   `price` decimal(12,2) DEFAULT NULL,
   `imported_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -266,10 +267,10 @@ DROP TABLE IF EXISTS `migrations`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `migrations` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `migration` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -300,7 +301,7 @@ CREATE TABLE `order_items` (
   KEY `product_id` (`product_id`),
   CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`),
   CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -328,7 +329,7 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,11 +349,11 @@ DROP TABLE IF EXISTS `password_resets`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `password_resets` (
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -373,11 +374,11 @@ DROP TABLE IF EXISTS `personal_access_tokens`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `personal_access_tokens` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `tokenable_type` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `tokenable_id` bigint unsigned NOT NULL,
-  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
+  `name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `token` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `abilities` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci,
   `last_used_at` timestamp NULL DEFAULT NULL,
   `expires_at` timestamp NULL DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -385,7 +386,7 @@ CREATE TABLE `personal_access_tokens` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
   KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -413,7 +414,7 @@ CREATE TABLE `product_images` (
   PRIMARY KEY (`id`),
   KEY `product_id` (`product_id`),
   CONSTRAINT `product_images_ibfk_1` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -482,7 +483,7 @@ CREATE TABLE `products` (
   CONSTRAINT `products_ibfk_1` FOREIGN KEY (`supplier_id`) REFERENCES `suppliers` (`id`),
   CONSTRAINT `products_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`),
   CONSTRAINT `products_ibfk_3` FOREIGN KEY (`brand_id`) REFERENCES `brands` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=158 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -542,7 +543,7 @@ CREATE TABLE `products_backup` (
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `supplier_reference` varchar(100) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -573,7 +574,7 @@ CREATE TABLE `shipping_containers` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -604,7 +605,7 @@ CREATE TABLE `shipping_countries` (
   PRIMARY KEY (`id`),
   KEY `fk_country_zone` (`zone_id`),
   CONSTRAINT `fk_country_zone` FOREIGN KEY (`zone_id`) REFERENCES `shipping_zones` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=195 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -634,7 +635,7 @@ CREATE TABLE `shipping_ports` (
   PRIMARY KEY (`id`),
   KEY `fk_port_country` (`country_id`),
   CONSTRAINT `fk_port_country` FOREIGN KEY (`country_id`) REFERENCES `shipping_countries` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=239 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=239 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -661,7 +662,7 @@ CREATE TABLE `shipping_zones` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -690,7 +691,7 @@ CREATE TABLE `storage_group_mapping` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `group_code` (`group_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -699,7 +700,7 @@ CREATE TABLE `storage_group_mapping` (
 
 LOCK TABLES `storage_group_mapping` WRITE;
 /*!40000 ALTER TABLE `storage_group_mapping` DISABLE KEYS */;
-INSERT INTO `storage_group_mapping` VALUES (1,'BAB10','BABY FOOD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(2,'BAB11','BABY PRODUCTS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(3,'BIS10','BISCUITS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(4,'CER10','CEREAL','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(5,'CHI10','CHILLED DESSERTS','Chilled','2026-07-06 11:59:36','2026-07-06 15:07:29'),(6,'CHI11','CHILLED DRINKS','Chilled','2026-07-06 11:59:36','2026-07-06 15:07:29'),(7,'CHI12','CHILLED MIX','Chilled','2026-07-06 11:59:36','2026-07-06 15:07:29'),(8,'CON10','CONDIMENTS & SAUCES','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(9,'CON11','CONFECTIONERY CHOCOLATE','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(10,'CON12','CONFECTIONERY SWEETS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(11,'CRI10','CRISPS & SNACKS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(12,'DEN10','DENTAL CARE','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(13,'DES10','CHILLED DESSERTS','Chilled','2026-07-06 11:59:36','2026-07-06 15:07:29'),(14,'ENE10','ENERGY DRINKS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(15,'EST10','EASTER','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(16,'FRE10','FREE FROM','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(17,'FRO10','FROZEN DESSERTS','Frozen','2026-07-06 11:59:36','2026-07-06 15:07:29'),(18,'FRO11','FROZEN FOOD','Frozen','2026-07-06 11:59:36','2026-07-06 15:07:29'),(19,'GRO10','GROCERY','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(20,'GUM10','GUM AND MINTS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(21,'HEA10','HEALTH AND BEAUTY','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(22,'HEA11','HEALTHFOOD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(23,'HOT10','HOT BEVERAGES','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(24,'HOU10','HOUSEHOLD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(25,'JAM10','JAMS & SPREADS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(26,'MED10','MEDICINAL','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(27,'NON10','NON FOODS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(28,'OIL10','OILS AND VINEGARS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(29,'PET10','PET FOOD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(30,'PET11','PET CARE','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(31,'SAU10','SAUCES AND SYRUPS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(32,'SEA10','SEASONAL XMAS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(33,'SEA11','SEASONAL','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(34,'SOF10','SOFTDRINKS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(35,'SUG10','SUGAR & SWEETNERS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(36,'WAF10','WAFER','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(37,'WAT10','WATER','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(38,'WOR10','WORLD FOODS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29');
+INSERT INTO `storage_group_mapping` VALUES (1,'BAB10','BABY FOOD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(2,'BAB11','BABY PRODUCTS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(3,'BIS10','BISCUITS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(4,'CER10','CEREAL','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(5,'CHI10','CHILLED DESSERTS','Chilled','2026-07-06 11:59:36','2026-07-07 16:59:10'),(6,'CHI11','CHILLED DRINKS','Chilled','2026-07-06 11:59:36','2026-07-07 16:59:10'),(7,'CHI12','CHILLED MIX','Chilled','2026-07-06 11:59:36','2026-07-07 16:59:10'),(8,'CON10','CONDIMENTS & SAUCES','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(9,'CON11','CONFECTIONERY CHOCOLATE','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(10,'CON12','CONFECTIONERY SWEETS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(11,'CRI10','CRISPS & SNACKS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(12,'DEN10','DENTAL CARE','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(13,'DES10','CHILLED DESSERTS','Chilled','2026-07-06 11:59:36','2026-07-07 16:59:10'),(14,'ENE10','ENERGY DRINKS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(15,'EST10','EASTER','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(16,'FRE10','FREE FROM','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(17,'FRO10','FROZEN DESSERTS','Frozen','2026-07-06 11:59:36','2026-07-07 16:59:04'),(18,'FRO11','FROZEN FOOD','Frozen','2026-07-06 11:59:36','2026-07-07 16:59:04'),(19,'GRO10','GROCERY','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(20,'GUM10','GUM AND MINTS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(21,'HEA10','HEALTH AND BEAUTY','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(22,'HEA11','HEALTHFOOD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(23,'HOT10','HOT BEVERAGES','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(24,'HOU10','HOUSEHOLD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(25,'JAM10','JAMS & SPREADS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(26,'MED10','MEDICINAL','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(27,'NON10','NON FOODS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(28,'OIL10','OILS AND VINEGARS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(29,'PET10','PET FOOD','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(30,'PET11','PET CARE','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(31,'SAU10','SAUCES AND SYRUPS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(32,'SEA10','SEASONAL XMAS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(33,'SEA11','SEASONAL','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(34,'SOF10','SOFTDRINKS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(35,'SUG10','SUGAR & SWEETNERS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(36,'WAF10','WAFER','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(37,'WAT10','WATER','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29'),(38,'WOR10','WORLD FOODS','Ambient','2026-07-06 11:59:36','2026-07-06 15:07:29');
 /*!40000 ALTER TABLE `storage_group_mapping` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -721,7 +722,7 @@ CREATE TABLE `sub_categories` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `unique_group_code` (`group_code`),
   KEY `category_id` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -752,7 +753,7 @@ CREATE TABLE `suppliers` (
   `supplier_code` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `supplier_index` (`supplier_index`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -783,7 +784,7 @@ CREATE TABLE `users` (
   `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -804,4 +805,69 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-07-07 17:08:34
+-- Dump completed on 2026-07-14 19:12:21
+
+
+-- --------------------------------------------------------
+-- ADDED: NEW TABLES AND COLUMNS FOR NAVSA WEBSITE
+-- --------------------------------------------------------
+
+-- 1. Create the new customer_details table (which handles registration data)
+CREATE TABLE IF NOT EXISTS `customer_details` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `region` varchar(255) DEFAULT NULL,
+  `country` varchar(255) DEFAULT NULL,
+  `position` varchar(255) DEFAULT NULL,
+  `trading_years` varchar(255) DEFAULT NULL,
+  `business_nature` varchar(255) DEFAULT NULL,
+  `website` varchar(255) DEFAULT NULL,
+  `director_name` varchar(255) DEFAULT NULL,
+  `currency` varchar(255) DEFAULT NULL,
+  `mobile` varchar(255) DEFAULT NULL,
+  `address_line_1` varchar(255) DEFAULT NULL,
+  `address_line_2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `province` varchar(255) DEFAULT NULL,
+  `zip_code` varchar(255) DEFAULT NULL,
+  `account_name` varchar(255) DEFAULT NULL,
+  `account_email` varchar(255) DEFAULT NULL,
+  `other_wholesalers` varchar(255) DEFAULT NULL,
+  `average_order_value` varchar(255) DEFAULT NULL,
+  `turnover` varchar(255) DEFAULT NULL,
+  `import_full_containers` varchar(255) DEFAULT NULL,
+  `brands_interested` text DEFAULT NULL,
+  `categories_interested` json DEFAULT NULL,
+  `eori_number` varchar(255) DEFAULT NULL,
+  `same_as_billing` tinyint(1) NOT NULL DEFAULT 1,
+  `shipping_address_line_1` varchar(255) DEFAULT NULL,
+  `shipping_address_line_2` varchar(255) DEFAULT NULL,
+  `shipping_city` varchar(255) DEFAULT NULL,
+  `shipping_province` varchar(255) DEFAULT NULL,
+  `shipping_zip_code` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- 2. Add Best Offer and New Arrival flags to existing products table
+-- We use a try-catch equivalent in SQL (or just let it run if it doesn't exist)
+ALTER TABLE `products`
+ADD COLUMN `is_best_offer` tinyint(1) NOT NULL DEFAULT 0,
+ADD COLUMN `is_new_arrival` tinyint(1) NOT NULL DEFAULT 0;
+
+-- 3. Create PDFs table for the new PDF Management feature
+CREATE TABLE IF NOT EXISTS `pdfs` (
+  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `file_path` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+SET FOREIGN_KEY_CHECKS=1;
