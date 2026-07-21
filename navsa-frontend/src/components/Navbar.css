@@ -1,0 +1,6 @@
+.site-header {
+  position: relative;
+  z-index: 1000;
+  width: 100%;
+  background: #ffffff;
+}

@@ -273,3 +273,90 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Four-card desktop directory and live category-aware search suggestions. */
+.shop-search-area {
+  position: relative;
+  width: min(100%, 900px);
+  margin: 0 auto;
+}
+
+.shop-search-box { max-width: none; }
+
+.shop-search-suggestions {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  max-height: 430px;
+  overflow-y: auto;
+  background: #ffffff;
+  border: 1px solid #dbe3ef;
+  border-radius: 16px;
+  box-shadow: 0 20px 42px rgba(8, 43, 83, 0.2);
+}
+
+.shop-search-warning,
+.shop-search-status {
+  padding: 14px 16px;
+  color: #253041;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+.shop-search-warning { border: 1px solid #1f2937; }
+
+.shop-search-suggestion {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  padding: 10px 13px;
+  text-align: left;
+  background: #ffffff;
+  border: 0;
+  border-bottom: 1px solid #edf0f4;
+  cursor: pointer;
+}
+
+.shop-search-suggestion:hover { background: #f5f8fc; }
+.shop-search-suggestion-image {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background: #f7f8fa;
+  border: 1px solid #e6eaf0;
+  border-radius: 8px;
+}
+.shop-search-suggestion-image img { width: 100%; height: 100%; object-fit: contain; }
+.shop-search-suggestion > span:last-child { min-width: 0; display: grid; gap: 3px; }
+.shop-search-suggestion strong,
+.shop-search-suggestion small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.shop-search-suggestion strong { color: var(--color-navy); font-size: 12px; }
+.shop-search-suggestion small { color: #7b8491; font-size: 9px; }
+.shop-search-view-all {
+  width: 100%;
+  padding: 12px;
+  color: #ffffff;
+  background: var(--color-navy);
+  border: 0;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+@media (min-width: 1280px) {
+  .shop-content { max-width: 1540px; padding-left: 4.5vw; padding-right: 4.5vw; }
+  .shop-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+}
+
+@media (min-width: 900px) and (max-width: 1279px) {
+  .shop-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+}
+
+@media (min-width: 560px) and (max-width: 899px) {
+  .shop-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+}

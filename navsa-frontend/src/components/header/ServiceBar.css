@@ -1,0 +1,106 @@
+@keyframes navsa-service-scroll {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.service-bar {
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #ffffff;
+  border-top: 1px solid #e7ebf1;
+  border-bottom: 1px solid #dbe3ef;
+}
+
+.service-bar__viewport {
+  width: 100%;
+  overflow: hidden;
+}
+
+.service-bar__track {
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  will-change: transform;
+  animation: navsa-service-scroll 58s linear infinite;
+}
+
+.service-bar:hover .service-bar__track {
+  animation-play-state: paused;
+}
+
+.service-bar__item {
+  position: relative;
+  display: grid;
+  place-content: center;
+  gap: 3px;
+  width: 230px;
+  min-width: 230px;
+  min-height: 72px;
+  padding: 12px 20px;
+  text-align: center;
+  background: #ffffff;
+}
+
+.service-bar__item::after {
+  content: '';
+  position: absolute;
+  top: 18%;
+  right: 0;
+  width: 1px;
+  height: 64%;
+  background: #e5eaf1;
+}
+
+.service-bar__title {
+  color: #d91f26;
+  font-size: 12px;
+  line-height: 1.2;
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+.service-bar__value {
+  color: #082b53;
+  font-size: 13px;
+  line-height: 1.2;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .service-bar__track {
+    animation-duration: 48s;
+  }
+
+  .service-bar__item {
+    width: 190px;
+    min-width: 190px;
+    min-height: 64px;
+    padding: 10px 16px;
+  }
+
+  .service-bar__title {
+    font-size: 10px;
+  }
+
+  .service-bar__value {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .service-bar {
+    overflow-x: auto;
+  }
+
+  .service-bar__track {
+    animation: none;
+  }
+}

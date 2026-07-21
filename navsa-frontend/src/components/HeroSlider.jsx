@@ -1,97 +1,83 @@
-import { useEffect, useState } from "react";
-import { colors } from "../theme";
-
-import banner1 from "../assets/banners/banner1.jpg";
-import banner2 from "../assets/banners/banner2.jpg";
-import banner3 from "../assets/banners/banner3.jpg";
+import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
+import banner1 from '../assets/banners/banner1.jpg'
+import banner2 from '../assets/banners/banner2.jpg'
+import banner3 from '../assets/banners/banner3.jpg'
+import './HeroSlider.css'
 
 const slides = [
-  banner1,
-  banner2,
-  banner3,
-];
+  {
+    image: banner1,
+    brand: 'Twix',
+    link: '/shop?brand=Twix',
+    alt: 'Shop all Twix products',
+  },
+  {
+    image: banner2,
+    brand: 'KitKat',
+    link: '/shop?brand=KitKat',
+    alt: 'Shop all KitKat products',
+  },
+  {
+    image: banner3,
+    brand: 'Lipton',
+    link: '/shop?brand=Lipton',
+    alt: 'Shop all Lipton products',
+  },
+]
 
 export default function HeroSlider() {
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(0)
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 4000);
+    const timer = window.setInterval(() => {
+      setCurrent(previous => (previous + 1) % slides.length)
+    }, 5000)
 
-    return () => clearInterval(timer);
-  }, []);
-
-  const previous = () => {
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-  };
-
-  const next = () => {
-    setCurrent((prev) => (prev + 1) % slides.length);
-  };
+    return () => window.clearInterval(timer)
+  }, [])
 
   return (
-    <section
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "500px",
-        overflow: "hidden",
-      }}
-    >
-      {slides.map((image, index) => (
-        <div
-          key={index}
-          style={{
-            position: "absolute",
-            inset: 0,
-            opacity: current === index ? 1 : 0,
-            transition: "opacity 1s ease-in-out",
-          }}
-        >
-          <img
-            src={image}
-            alt={`Banner ${index + 1}`}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              userSelect: "none",
-            }}
-            draggable={false}
-          />
-        </div>
-      ))}
-
-      
-
-      {/* Dots */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: "25px",
-          left: "50%",
-          transform: "translateX(-50%)",
-          display: "flex",
-          gap: "12px",
-          zIndex: 10,
-        }}
-      >
-        {slides.map((_, index) => (
-          <div
-            key={index}
-            onClick={() => setCurrent(index)}
-            style={{
-              width: current === index ? "34px" : "12px",
-              height: "12px",
-              borderRadius: "30px",
-              background: current === index ? colors.accent : "#ffffff",
-              cursor: "pointer",
-              transition: "all .3s ease",
-            }}
-          />
+    <section className="hero-slider" aria-label="NAVSA promotions">
+      <div className="hero-slider__stage">
+        {slides.map((slide, index) => (
+          <Link
+            to={slide.link}
+            className={`hero-slider__slide ${
+              current === index ? 'hero-slider__slide--active' : ''
+            }`}
+            key={slide.brand}
+            aria-hidden={current !== index}
+            tabIndex={current === index ? 0 : -1}
+            aria-label={slide.alt}
+          >
+            <img
+              src={slide.image}
+              alt={slide.alt}
+              draggable={false}
+            />
+          </Link>
         ))}
+
+        <div className="hero-slider__dots" aria-label="Select banner">
+          {slides.map((slide, index) => (
+            <button
+              type="button"
+              key={slide.brand}
+              className={`hero-slider__dot ${
+                current === index ? 'hero-slider__dot--active' : ''
+              }`}
+              onClick={event => {
+                event.preventDefault()
+                event.stopPropagation()
+                setCurrent(index)
+              }}
+              aria-label={`Show ${slide.brand} banner`}
+              aria-current={current === index ? 'true' : undefined}
+            />
+          ))}
+        </div>
       </div>
     </section>
-  );
+  )
 }

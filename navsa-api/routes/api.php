@@ -11,6 +11,8 @@ use App\Http\Controllers\Api\ShippingController;
 use App\Http\Controllers\Api\CustomerRegistrationController;
 use App\Http\Controllers\Api\SupplierRegistrationController;
 
+
+//routes 
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');

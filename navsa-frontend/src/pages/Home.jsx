@@ -1,4 +1,5 @@
-import HeroSlider from '../components/HeroSlider'
+import Banner from '../components/Banner'
+import Deals from '../components/Deals'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ShippingSelector from '../components/ShippingSelector'
@@ -6,99 +7,82 @@ import ProductCard from '../components/ProductCard'
 import './Home.css'
 
 const categories = [
-  { name: 'Chocolates', number: '01' },
-  { name: 'Groceries', number: '02' },
-  { name: 'Confectionery', number: '03' },
-  { name: 'Crisps & Snacks', number: '04' },
-  { name: 'Cold & Hot Beverages', number: '05' },
-  { name: 'Biscuits', number: '06' },
-  { name: 'Seasonal', number: '07' },
-  { name: 'Chilled Items', number: '08' },
-  { name: 'Frozen', number: '09' },
-  { name: 'Baby and Kids', number: '10' },
-  { name: 'Health & Personal Care', number: '11' },
-  { name: 'Pet Care & Food', number: '12' },
-  { name: 'Cleaning & Households', number: '13' },
+  { name: 'Chocolates', image: '/categories/1 Chocolates.PNG' },
+  { name: 'Groceries', image: '/categories/2 Groceries.PNG' },
+  { name: 'Confectionery', image: '/categories/3 Confectionery.PNG' },
+  { name: 'Crisps & Snacks', image: '/categories/4 Crisps & Snacks.PNG' },
+  { name: 'Cold & Hot Beverages', image: '/categories/5 Cold and Hot Beverages.PNG' },
+  { name: 'Biscuits', image: '/categories/6 Biscuits.PNG' },
+  { name: 'Seasonal', image: '/categories/7 Seasonal.PNG' },
+  { name: 'Chilled Items', image: '/categories/8 Chilled Items.PNG' },
+  { name: 'Frozen', image: '/categories/9 Frozen.PNG' },
+  { name: 'Baby and Kids', image: '/categories/10 Baby and Kids.PNG' },
+  { name: 'Health & Personal Care', image: '/categories/11 Health and Personal Care.PNG' },
+  { name: 'Pet Care & Food', image: '/categories/12 Pet Care and Food.PNG' },
+  { name: 'Cleaning & Households', image: '/categories/13 Cleaning & Households.PNG' },
+]
+
+const brandLogos = [
+  '/brand logos/3706_2026011913353360.png',
+  '/brand logos/3706_20260119133536595.png',
+  '/brand logos/3706_20260119133537156.png',
+  '/brand logos/3706_20260119133538846.png',
+  '/brand logos/3706_20260119133541163.png',
+  '/brand logos/3706_20260119133546487.png',
+  '/brand logos/3706_20260119133547224.png',
+  '/brand logos/3706_20260119133548337.png',
+  '/brand logos/3706_20260119133550163.png',
+  '/brand logos/3706_2026011913355125.png',
+  '/brand logos/3706_20260119133818992.png',
+  '/brand logos/3706_20260119133820735.png',
+  '/brand logos/3706_20260119133822407.png',
+  '/brand logos/3706_20260119133823491.png',
+  '/brand logos/3706_20260119133824458.png',
+  '/brand logos/3706_20260119133825685.png',
+  '/brand logos/3706_20260119133826130.png',
+  '/brand logos/3706_20260119133827372.png',
+  '/brand logos/3706_2026012612325573.jpg',
+  '/brand logos/3706_20260126123543675.jpg',
+  '/brand logos/3706_20260126123543814.jpg',
+  '/brand logos/3706_2026012612354431.jpg',
+  '/brand logos/3706_20260126123544676.jpg',
+  '/brand logos/3706_20260126123545663.jpg',
+  '/brand logos/3706_20260126123546200.jpg',
+  '/brand logos/3706_20260126123546300.jpg',
+  '/brand logos/3706_20260126123547580.jpg',
+  '/brand logos/3706_2026012612354770.jpg',
+  '/brand logos/3706_20260317143151368.jpg',
+  '/brand logos/3706_20260317143152425.jpg',
+  '/brand logos/3706_20260317143152762.jpg',
+  '/brand logos/3706_20260317143153215.jpg',
+  '/brand logos/3706_20260317143153575.jpg',
+  '/brand logos/3706_20260317143154422.jpg',
+  '/brand logos/3706_20260317143154427.jpg',
+  '/brand logos/3706_20260317143154840.jpg',
+  '/brand logos/3706_20260317143155753.jpg',
 ]
 
 const services = [
   {
-    title: 'Consolidation Expertise',
-    text: 'Efficient mixed-load consolidation for wholesale export orders.',
+    title: 'Consolidation and Bulk Loading Expertise',
+    text: 'Efficient sourcing, consolidation and loading support for wholesale export orders.',
     icon: '◫',
   },
   {
-    title: 'Flexible Transport',
-    text: 'Road, sea and air freight options matched to every destination.',
+    title: 'Flexible Transport Solutions',
+    text: 'Reliable road, sea and air freight options matched to each destination.',
     icon: '↗',
   },
   {
-    title: 'Custom Labelling',
-    text: 'Professional relabelling, compliance and packaging support.',
+    title: 'Custom Labelling and Packaging Services',
+    text: 'Professional relabelling, date coding, translation and packaging support.',
     icon: '◈',
   },
   {
-    title: 'Export Documentation',
-    text: 'Accurate paperwork and compliance support for international trade.',
+    title: 'Expert Export Documentation and Compliance',
+    text: 'Certificates, regulatory guidance and accurate export documentation support.',
     icon: '▤',
   },
-]
-
-const brands = [
-  'Kit Kat',
-  'Twix',
-  'Lipton',
-  'Nescafe',
-  'Bisto',
-  'Tetley',
-  'Walkers',
-  "Young's",
-  'Lindt',
-  'McVities',
-]
-
-
-
-const promotions = [
-  {
-    id: 'p10',
-    title: 'NAVSA P10',
-    validFrom: '08/06/2026',
-    validTo: '19/07/2026',
-    description:
-      'Monthly impulse promotions with all the top UK brands for retailers at fantastic prices.',
-    preview: '/deals/deal1_preview.jpg',
-    pdf: '/deals/deal1.pdf',
-    badge: 'LATEST',
-  },
-  {
-    id: 'p11',
-    title: 'NAVSA P11',
-    validFrom: '29/06/2026',
-    validTo: '09/08/2026',
-    description:
-      'Monthly retail grocery promotions with all the top UK brands for retailers at fantastic prices.',
-    preview: '/deals/deal2_preview.jpg',
-    pdf: '/deals/deal2.pdf',
-    badge: 'NEW',
-  },
-  {
-    id: 'christmas-2026',
-    title: 'NAVSA Christmas 2026',
-    validFrom: '',
-    validTo: '',
-    description:
-      'Monthly food service promotions: discover the latest products for the food service sector at fantastic prices.',
-    preview: '/deals/deal3_preview.png',
-    pdf: '/deals/deal3.pdf',
-    badge: 'CHRISTMAS',
-  },
-]
-
-const comingSoon = [
-  'Spring Range 2027',
-  'New Snacking Line',
-  'Expanded Health & Wellness',
 ]
 
 function ProductStrip({ title, subtitle, products, badge, tone = 'cream' }) {
@@ -131,83 +115,141 @@ function ProductStrip({ title, subtitle, products, badge, tone = 'cream' }) {
   )
 }
 
+function BrandLogoMarquee() {
+  const brandViewportRef = useRef(null)
+  const brandAnimationRef = useRef(null)
+  const brandPausedRef = useRef(false)
+  const repeatedLogos = [...brandLogos, ...brandLogos]
 
-function PromotionCard({ promotion }) {
+  useEffect(() => {
+    let previousTime = 0
+
+    function animate(timestamp) {
+      const viewport = brandViewportRef.current
+
+      if (viewport && !brandPausedRef.current) {
+        if (previousTime) {
+          const elapsed = timestamp - previousTime
+          const pixelsToMove = elapsed * 0.045
+          const halfwayPoint = viewport.scrollWidth / 2
+
+          viewport.scrollLeft += pixelsToMove
+
+          if (viewport.scrollLeft >= halfwayPoint) {
+            viewport.scrollLeft -= halfwayPoint
+          }
+        }
+      }
+
+      previousTime = timestamp
+      brandAnimationRef.current = window.requestAnimationFrame(animate)
+    }
+
+    brandAnimationRef.current = window.requestAnimationFrame(animate)
+
+    return () => {
+      if (brandAnimationRef.current) {
+        window.cancelAnimationFrame(brandAnimationRef.current)
+      }
+    }
+  }, [])
+
+  function moveBrands(direction) {
+    const viewport = brandViewportRef.current
+    if (!viewport) return
+
+    viewport.scrollBy({
+      left: direction * Math.min(viewport.clientWidth * 0.72, 760),
+      behavior: 'smooth',
+    })
+  }
+
   return (
-    <article className="home-promotion-card">
-      <span className="home-promotion-badge">{promotion.badge}</span>
-
-      <a
-        href={promotion.pdf}
-        target="_blank"
-        rel="noreferrer"
-        className="home-promotion-preview"
-        aria-label={`Open ${promotion.title} promotion PDF`}
+    <section
+      className="home-logo-marquee"
+      aria-label="Featured brands"
+      onMouseEnter={() => {
+        brandPausedRef.current = true
+      }}
+      onMouseLeave={() => {
+        brandPausedRef.current = false
+      }}
+      onTouchStart={() => {
+        brandPausedRef.current = true
+      }}
+      onTouchEnd={() => {
+        brandPausedRef.current = false
+      }}
+    >
+      <button
+        type="button"
+        className="home-logo-marquee__arrow home-logo-marquee__arrow--left"
+        onClick={() => moveBrands(-1)}
+        aria-label="Previous brands"
       >
-        <img
-          src={promotion.preview}
-          alt={`${promotion.title} first-page preview`}
-        />
+        ‹
+      </button>
 
-        <span className="home-promotion-preview-action">
-          Open catalogue →
-        </span>
-      </a>
-
-      <div className="home-promotion-body">
-        <div className="home-promotion-title-row">
-          <div>
-            <span className="home-promotion-kicker">
-              PROMOTION CATALOGUE
-            </span>
-
-            <h3>{promotion.title}</h3>
-          </div>
-
-          <span className="home-promotion-pdf-label">PDF</span>
-        </div>
-
-        {promotion.validFrom && promotion.validTo && (
-          <p className="home-promotion-validity">
-            Valid {promotion.validFrom} to {promotion.validTo}
-          </p>
-        )}
-
-        <p className="home-promotion-description">
-          {promotion.description}
-        </p>
-
-        <div className="home-promotion-buttons">
-          <a
-            href={promotion.pdf}
-            target="_blank"
-            rel="noreferrer"
-            className="home-promotion-view"
-          >
-            View PDF
-          </a>
-
-          <a
-            href={promotion.pdf}
-            download
-            className="home-promotion-download"
-          >
-            Download
-          </a>
+      <div
+        ref={brandViewportRef}
+        className="home-logo-marquee__viewport"
+      >
+        <div className="home-logo-marquee__track">
+          {repeatedLogos.map((logo, index) => (
+            <div className="home-logo-marquee__item" key={`${logo}-${index}`}>
+              <img src={logo} alt="" loading="lazy" />
+            </div>
+          ))}
         </div>
       </div>
-    </article>
+
+      <button
+        type="button"
+        className="home-logo-marquee__arrow home-logo-marquee__arrow--right"
+        onClick={() => moveBrands(1)}
+        aria-label="Next brands"
+      >
+        ›
+      </button>
+    </section>
   )
 }
 
+function getCollectionCount(payload) {
+  if (Array.isArray(payload)) return payload.length
+  if (Array.isArray(payload?.data)) return payload.data.length
+  if (Array.isArray(payload?.items)) return payload.items.length
+  if (Array.isArray(payload?.results)) return payload.results.length
+
+  const numericTotal = Number(
+    payload?.total ??
+    payload?.count ??
+    payload?.meta?.total ??
+    payload?.pagination?.total
+  )
+
+  return Number.isFinite(numericTotal) ? numericTotal : 0
+}
+
+function formatStatNumber(value) {
+  return new Intl.NumberFormat('en-GB').format(Number(value || 0))
+}
+
 function Home() {
+  const repeatedCategories = [...categories, ...categories]
   const [newArrivals, setNewArrivals] = useState([])
   const [clearance, setClearance] = useState([])
   const [bestSellers, setBestSellers] = useState([])
-  const [stats, setStats] = useState({ products: 0 })
+  const [stats, setStats] = useState({
+    brands: 0,
+    containers: 0,
+    countries: 0,
+    products: 0,
+  })
 
   const categoryTrackRef = useRef(null)
-  const categoryTimerRef = useRef(null)
+  const categoryAnimationRef = useRef(null)
+  const categoryPausedRef = useRef(false)
 
   useEffect(() => {
     fetch('/api/products?page=1&sort_by=created_at&order=desc')
@@ -227,38 +269,73 @@ function Home() {
       .then(r => r.json())
       .then(d => setBestSellers((d.data || []).slice(0, 10)))
       .catch(() => {})
+
+    Promise.allSettled([
+      fetch('/api/brands').then(response => response.json()),
+      fetch('/api/shipping/containers').then(response => response.json()),
+      fetch('/api/shipping/countries').then(response => response.json()),
+    ]).then(([brandsResult, containersResult, countriesResult]) => {
+      setStats(current => ({
+        ...current,
+        brands:
+          brandsResult.status === 'fulfilled'
+            ? getCollectionCount(brandsResult.value)
+            : current.brands,
+        containers:
+          containersResult.status === 'fulfilled'
+            ? getCollectionCount(containersResult.value)
+            : current.containers,
+        countries:
+          countriesResult.status === 'fulfilled'
+            ? getCollectionCount(countriesResult.value)
+            : current.countries,
+      }))
+    })
   }, [])
 
   useEffect(() => {
-    startCategoryAutoScroll()
-    return stopCategoryAutoScroll
+    let previousTime = 0
+
+    function animateCategories(timestamp) {
+      const track = categoryTrackRef.current
+
+      if (track && !categoryPausedRef.current) {
+        if (previousTime) {
+          const elapsed = timestamp - previousTime
+          const pixelsToMove = elapsed * 0.03
+          const halfwayPoint = track.scrollWidth / 2
+
+          if (halfwayPoint > track.clientWidth) {
+            track.scrollLeft += pixelsToMove
+
+            if (track.scrollLeft >= halfwayPoint) {
+              track.scrollLeft -= halfwayPoint
+            }
+          }
+        }
+      }
+
+      previousTime = timestamp
+      categoryAnimationRef.current =
+        window.requestAnimationFrame(animateCategories)
+    }
+
+    categoryAnimationRef.current =
+      window.requestAnimationFrame(animateCategories)
+
+    return () => {
+      if (categoryAnimationRef.current) {
+        window.cancelAnimationFrame(categoryAnimationRef.current)
+      }
+    }
   }, [])
 
-  function startCategoryAutoScroll() {
-    stopCategoryAutoScroll()
-
-    categoryTimerRef.current = window.setInterval(() => {
-      const track = categoryTrackRef.current
-      if (!track) return
-
-      const firstCard = track.querySelector('.home-category-card')
-      const distance = (firstCard?.offsetWidth || 280) + 18
-      const maxScroll = track.scrollWidth - track.clientWidth
-      const nextLeft = track.scrollLeft + distance
-
-      if (nextLeft >= maxScroll - 10) {
-        track.scrollTo({ left: 0, behavior: 'smooth' })
-      } else {
-        track.scrollBy({ left: distance, behavior: 'smooth' })
-      }
-    }, 3800)
+  function pauseCategoryAutoScroll() {
+    categoryPausedRef.current = true
   }
 
-  function stopCategoryAutoScroll() {
-    if (categoryTimerRef.current) {
-      window.clearInterval(categoryTimerRef.current)
-      categoryTimerRef.current = null
-    }
+  function resumeCategoryAutoScroll() {
+    categoryPausedRef.current = false
   }
 
   function moveCategories(direction) {
@@ -266,7 +343,7 @@ function Home() {
     if (!track) return
 
     const firstCard = track.querySelector('.home-category-card')
-    const distance = (firstCard?.offsetWidth || 280) + 18
+    const distance = (firstCard?.offsetWidth || 360) + 22
 
     track.scrollBy({
       left: direction * distance,
@@ -276,17 +353,8 @@ function Home() {
 
   return (
     <main className="home-page">
-      <HeroSlider />
-
-      <section className="home-highlight-strip">
-        <div className="home-container home-highlight-grid">
-          <div><strong>£5,000</strong><span>UK & Europe MOQ</span></div>
-          <div><strong>£10,000</strong><span>International MOQ</span></div>
-          <div><strong>Daily</strong><span>New Products Added</span></div>
-          <div><strong>Bulk</strong><span>Competitive Pricing</span></div>
-          <div><strong>24×7</strong><span>Customer Support</span></div>
-        </div>
-      </section>
+      <Banner type="hero" />
+      <BrandLogoMarquee />
 
       <ProductStrip
         title="New Arrivals"
@@ -306,24 +374,6 @@ function Home() {
 
       <ShippingSelector />
 
-      <section className="home-brand-strip">
-        <div className="home-container">
-          <div className="home-mini-heading">SHOP LEADING BRANDS</div>
-
-          <div className="home-brand-scroll">
-            {brands.map(brand => (
-              <Link
-                key={brand}
-                to={`/shop?brand=${encodeURIComponent(brand)}`}
-                className="home-brand-pill"
-              >
-                {brand}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <div className="home-view-all">
         <Link to="/shop">View All Products</Link>
       </div>
@@ -335,16 +385,24 @@ function Home() {
               <span className="home-section-kicker">BROWSE RANGE</span>
               <h2>Shop by Category</h2>
               <p>
-                Explore NAVSA's wholesale product families. Category images can
-                be added later without changing this carousel structure.
+                Browse NAVSA's wholesale product families and open the
+                relevant product range.
               </p>
             </div>
 
             <div className="home-category-controls">
-              <button type="button" onClick={() => moveCategories(-1)}>
+              <button
+                type="button"
+                onClick={() => moveCategories(-1)}
+                aria-label="Previous categories"
+              >
                 ←
               </button>
-              <button type="button" onClick={() => moveCategories(1)}>
+              <button
+                type="button"
+                onClick={() => moveCategories(1)}
+                aria-label="Next categories"
+              >
                 →
               </button>
             </div>
@@ -353,23 +411,23 @@ function Home() {
           <div
             ref={categoryTrackRef}
             className="home-category-track"
-            onMouseEnter={stopCategoryAutoScroll}
-            onMouseLeave={startCategoryAutoScroll}
-            onTouchStart={stopCategoryAutoScroll}
-            onTouchEnd={startCategoryAutoScroll}
+            onMouseEnter={pauseCategoryAutoScroll}
+            onMouseLeave={resumeCategoryAutoScroll}
+            onTouchStart={pauseCategoryAutoScroll}
+            onTouchEnd={resumeCategoryAutoScroll}
           >
-            {categories.map(category => (
+            {repeatedCategories.map((category, index) => (
               <Link
                 to={`/shop?category=${encodeURIComponent(category.name)}`}
-                key={category.name}
+                key={`${category.name}-${index}`}
                 className="home-category-card"
+                aria-label={`Shop ${category.name}`}
               >
-                <div className="home-category-number">{category.number}</div>
-                <div className="home-category-orb" />
-                <div className="home-category-content">
-                  <span>{category.name}</span>
-                  <strong>Explore category →</strong>
-                </div>
+                <img
+                  src={category.image}
+                  alt={category.name}
+                  loading="lazy"
+                />
               </Link>
             ))}
           </div>
@@ -378,11 +436,26 @@ function Home() {
 
       <section className="home-stats-strip">
         <div className="home-container home-stats-grid">
-          <article><strong>500+</strong><span>Brands</span></article>
-          <article><strong>1,200+</strong><span>Containers Loaded</span></article>
-          <article><strong>80+</strong><span>Countries Covered</span></article>
-          <article><strong>{stats.products}+</strong><span>Products Available</span></article>
-          <article><strong>24×7</strong><span>Customer Support</span></article>
+          <article>
+            <strong>{formatStatNumber(stats.brands)}</strong>
+            <span>Brands</span>
+          </article>
+          <article>
+            <strong>{formatStatNumber(stats.containers)}</strong>
+            <span>Containers Available</span>
+          </article>
+          <article>
+            <strong>{formatStatNumber(stats.countries)}</strong>
+            <span>Countries Covered</span>
+          </article>
+          <article>
+            <strong>{formatStatNumber(stats.products)}</strong>
+            <span>Products Available</span>
+          </article>
+          <article>
+            <strong>24×7</strong>
+            <span>Customer Support</span>
+          </article>
         </div>
       </section>
 
@@ -394,37 +467,67 @@ function Home() {
         tone="white"
       />
 
+      <Banner type="middle" />
+
       <section className="home-info-section">
         <div className="home-container home-info-grid">
-          <div className="home-info-card">
-            <span className="home-section-kicker">JOIN NAVSA</span>
-            <h3>Become a Customer</h3>
-            <p className="home-card-intro">
-              Apply for a wholesale trade account and access the full NAVSA range.
-            </p>
-            <ul>
-              <li>UK companies must be VAT registered.</li>
-              <li>Business registered at a commercial property.</li>
-              <li>Minimum order £5,000 for UK & Europe.</li>
-              <li>Minimum order £10,000 for Rest of World.</li>
-              <li>UK customers must be trading for over 12 months.</li>
-            </ul>
-            <Link to="/become-a-customer" className="home-card-button">
-              Apply for an account
-            </Link>
-          </div>
+          <article className="home-feature-card home-feature-card--customer">
+            <div className="home-feature-card__image-wrap">
+              <img
+                src="/logos/navsa logo combined.png"
+                alt="NAVSA International and The King's Awards for Enterprise"
+                className="home-feature-card__image"
+                loading="lazy"
+              />
+            </div>
 
-          <div className="home-trade-card">
-            <span className="home-section-kicker orange">TRADE SHOW</span>
-            <h3>Gulfood 2026</h3>
-            <p className="home-trade-date">26th to 30th January 2026</p>
-            <p>
-              Meet NAVSA for export, wholesale and consolidation opportunities.
-            </p>
-            <Link to="/contact" className="home-card-button home-card-button--light">
-              Arrange a meeting
-            </Link>
-          </div>
+            <div className="home-feature-card__content">
+              <h3>Become a Customer</h3>
+              <p className="home-card-intro">
+                Please note: You need to meet the following criteria for us to be able to process your account.
+              </p>
+              <ul>
+                <li>UK companies must be VAT registered.</li>
+                <li>Your business is registered at a commercial property, not a home address</li>
+                <li>Our minimum order is £5,000.00 for UK & Europe, £10,000.00 for ROW (Rest of the World)</li>
+                <li>You need to be trading for over 12 months for UK Customers</li>
+                <li>UK customers must be trading for over 12 months.</li>
+              </ul>
+              <Link to="/become-a-customer" className="home-card-button">
+                Apply for an account
+              </Link>
+            </div>
+          </article>
+
+          <article className="home-feature-card home-feature-card--trade">
+            <div className="home-feature-card__image-wrap home-feature-card__image-wrap--trade">
+              <img
+                src="/logos/tradeshow.png"
+                alt="NAVSA International trade show brands"
+                className="home-feature-card__image home-feature-card__image--trade"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="home-feature-card__content home-feature-card__content--trade">
+              <span className="home-section-kicker orange">TRADE SHOW</span>
+              <h3>Gulfood 2026</h3>
+              <p className="home-trade-date">26th to 30th January 2026</p>
+              <Link
+                to="/tradeshow"
+                className="home-card-button home-card-button--light"
+                onClick={() => {
+                  if ('scrollRestoration' in window.history) {
+                    window.history.scrollRestoration = 'manual'
+                  }
+                  window.scrollTo(0, 0)
+                }}
+              >
+                More Details
+                <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </article>
         </div>
       </section>
 
@@ -447,53 +550,19 @@ function Home() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      <section className="home-coming-section">
-        <div className="home-container">
-          <div className="home-section-head light">
-            <span className="home-section-kicker orange">COMING SOON</span>
-            <h2>Upcoming Ranges</h2>
-          </div>
-
-          <div className="home-coming-grid">
-            {comingSoon.map((item, index) => (
-              <div className="home-coming-card" key={item}>
-                <span>0{index + 1}</span>
-                <strong>{item}</strong>
-              </div>
-            ))}
+          <div className="home-services-more">
+            <Link to="/services" className="home-services-more__button">
+              View All Services
+              <span aria-hidden="true">→</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      <section className="home-promotions-section">
-        <div className="home-container">
-          <div className="home-section-head home-section-head--center">
-            <span className="home-section-kicker">
-              LATEST DEALS
-            </span>
+      <Deals />
 
-            <h2>Download Our Latest Promotions</h2>
-
-            <p>
-              Browse the latest NAVSA promotion brochures. Open a catalogue
-              online or download it directly to your device.
-            </p>
-          </div>
-
-          <div className="home-promotions-grid">
-            {promotions.map(promotion => (
-              <PromotionCard
-                key={promotion.id}
-                promotion={promotion}
-              />
-            ))}
-          </div>
-        </div>
-      </section>
-
+      <Banner type="bottom" />
     </main>
   )
 }

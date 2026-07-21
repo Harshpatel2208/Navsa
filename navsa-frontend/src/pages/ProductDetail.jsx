@@ -11,641 +11,6 @@ import {
 import NoticeModal from '../components/NoticeModal'
 import './ProductDetail.css'
 
-const styleTag = `
-@keyframes navsa-spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes navsa-fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.navsa-spinner {
-  animation: navsa-spin 0.8s linear infinite;
-}
-
-.navsa-fade {
-  animation: navsa-fade-in 0.4s ease both;
-}
-
-.product-page-wrap {
-  width: 100%;
-  background: #D0E7E6;
-  font-family: Arial, sans-serif;
-}
-
-.product-main {
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 34px 5vw 55px;
-}
-
-.product-breadcrumb {
-  margin-bottom: 24px;
-  color: #6b7280;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.product-breadcrumb a {
-  color: #293681;
-  text-decoration: none;
-  font-weight: 900;
-}
-
-.product-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 42px;
-  align-items: start;
-}
-
-.product-image-card,
-.product-info-card,
-.product-barcode-card,
-.product-metric-card {
-  background: #fff;
-  border: 1px solid #d9dee7;
-  border-radius: 16px;
-  box-shadow: 0 12px 28px rgba(8, 43, 83, 0.08);
-}
-
-.product-image-card {
-  min-height: 520px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  position: sticky;
-  top: 18px;
-}
-
-.product-image-card img {
-  max-width: 88%;
-  max-height: 470px;
-  object-fit: contain;
-}
-
-.product-info-card {
-  padding: 28px;
-}
-
-.product-tags {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-.product-tag {
-  display: inline-block;
-  padding: 9px 15px;
-  border-radius: 4px;
-  border: 2px solid #293681;
-  color: #293681;
-  background: #fff;
-  text-decoration: none;
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
-  transition: 0.2s ease;
-}
-
-.product-tag:hover {
-  background: #293681;
-  color: #fff;
-  transform: translateY(-1px);
-}
-
-.product-tag.category {
-  background: #293681;
-  color: #fff;
-}
-
-.product-tag.category:hover {
-  background: #c9a84c;
-  border-color: #c9a84c;
-}
-
-.product-title {
-  margin: 0 0 10px;
-  color: #293681;
-  font-size: clamp(26px, 3vw, 42px);
-  line-height: 1.14;
-  font-weight: 900;
-}
-
-.product-price {
-  color: #1f7a4d;
-  font-size: 34px;
-  font-weight: 900;
-  margin: 14px 0 6px;
-}
-
-.product-subtitle {
-  color: #6b7280;
-  font-size: 14px;
-  margin-bottom: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  font-weight: 800;
-}
-
-.product-detail-table {
-  margin-top: 18px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.product-detail-row {
-  display: grid;
-  grid-template-columns: 190px 1fr;
-  gap: 16px;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 13px 16px;
-  font-size: 14px;
-}
-
-.product-detail-row:last-child {
-  border-bottom: none;
-}
-
-.product-detail-row > span:first-child {
-  color: #6b7280;
-  font-weight: 800;
-}
-
-.product-detail-row > span:last-child,
-.product-detail-row a {
-  color: #293681;
-  font-weight: 900;
-}
-
-.product-detail-row a {
-  text-decoration: none;
-}
-
-.product-detail-row a:hover {
-  color: #c9a84c;
-}
-
-.product-barcode-card {
-  margin-top: 18px;
-  padding: 18px;
-}
-
-.barcode-title {
-  color: #293681;
-  font-weight: 900;
-  margin-bottom: 10px;
-}
-
-.barcode-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 14px;
-}
-
-.barcode-tabs button {
-  border: 1px solid #293681;
-  background: #fff;
-  color: #293681;
-  padding: 8px 14px;
-  border-radius: 999px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.barcode-tabs button.active {
-  background: #293681;
-  color: #fff;
-}
-
-.barcode-box {
-  min-height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow-x: auto;
-}
-
-.quantity-card {
-  margin-top: 20px;
-  background: #fff;
-  border: 1px solid #d9dee7;
-  border-radius: 16px;
-  padding: 22px;
-}
-
-.quantity-title {
-  color: #293681;
-  font-size: 18px;
-  font-weight: 900;
-  margin-bottom: 14px;
-}
-
-.qty-row {
-  display: grid;
-  grid-template-columns: 90px 1fr auto auto;
-  gap: 12px;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.qty-row.disabled {
-  opacity: 0.45;
-}
-
-.qty-label {
-  color: #293681;
-  font-weight: 900;
-}
-
-.qty-desc {
-  color: #6b7280;
-  font-size: 13px;
-  font-weight: 700;
-}
-
-.qty-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.qty-controls button {
-  width: 32px;
-  height: 32px;
-  border: 1px solid #cbd5e1;
-  background: #fff;
-  border-radius: 7px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.qty-controls button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.qty-controls span {
-  min-width: 30px;
-  text-align: center;
-  font-weight: 900;
-}
-
-.qty-x {
-  color: #6b7280;
-  font-weight: 900;
-}
-
-.total-strip {
-  margin-top: 16px;
-  padding: 14px;
-  background: #293681;
-  color: #fff;
-  border-radius: 10px;
-  text-align: center;
-  font-weight: 900;
-}
-
-.calculation-strip {
-  margin-top: 14px;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.calculation-strip div {
-  background: #f5faff;
-  border: 1px solid #d9e8f8;
-  border-radius: 12px;
-  padding: 13px;
-  color: #293681;
-  font-weight: 900;
-}
-
-.shipping-required-notice {
-  margin-top: 18px;
-  padding: 16px 18px;
-  background: #fff7ed;
-  border: 1px solid #f59e0b;
-  color: #92400e;
-  border-radius: 12px;
-  line-height: 1.65;
-}
-
-.shipping-required-notice strong {
-  display: block;
-  margin-bottom: 4px;
-}
-
-.reefer-warning {
-  margin-top: 18px;
-  padding: 16px 18px;
-  background: #fef2f2;
-  border: 1px solid #ef4444;
-  color: #7f1d1d;
-  border-radius: 12px;
-  line-height: 1.6;
-}
-
-.reefer-warning a,
-.mix-warning a {
-  display: inline-block;
-  margin-top: 10px;
-  color: #293681;
-  font-weight: 900;
-}
-
-.mix-warning {
-  margin-top: 18px;
-  padding: 16px 18px;
-  background: #fef2f2;
-  border: 1px solid #ef4444;
-  color: #7f1d1d;
-  border-radius: 12px;
-  line-height: 1.6;
-}
-
-.product-action-btn {
-  width: 100%;
-  margin-top: 16px;
-  padding: 16px;
-  border: none;
-  border-radius: 12px;
-  background: #c9a84c;
-  color: #fff;
-  font-weight: 900;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.product-action-btn:hover:not(:disabled) {
-  background: #d95f00;
-}
-
-.product-action-btn.added {
-  background: #1f7a4d;
-}
-
-.product-action-btn.disabled,
-.product-action-btn:disabled {
-  background: #e5a0a0;
-  cursor: not-allowed;
-}
-
-.wishlist-btn {
-  width: 100%;
-  margin-top: 12px;
-  padding: 14px;
-  border-radius: 12px;
-  border: 2px solid #293681;
-  background: #fff;
-  color: #293681;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.wishlist-btn.active {
-  background: #293681;
-  color: #fff;
-}
-
-.product-metrics {
-  margin-top: 26px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-.product-metric-card {
-  padding: 20px;
-  min-height: 105px;
-}
-
-.product-metric-card strong {
-  display: block;
-  color: #293681;
-  font-size: 15px;
-  margin-bottom: 12px;
-}
-
-.product-metric-card span {
-  color: #27364a;
-  font-weight: 800;
-}
-
-.back-link {
-  display: inline-block;
-  margin-top: 32px;
-  color: #293681;
-  text-decoration: none;
-  font-weight: 900;
-}
-
-/* Shipping popup */
-
-.pd-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  padding: 24px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(2, 15, 30, 0.72);
-  backdrop-filter: blur(4px);
-}
-
-.pd-shipping-modal {
-  width: min(980px, 96vw);
-  max-height: 92vh;
-  overflow-y: auto;
-  position: relative;
-  padding: 30px;
-  border-radius: 22px;
-  background: #fff;
-  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.32);
-}
-
-.pd-shipping-modal h2 {
-  margin: 0 45px 8px 0;
-  color: #293681;
-  font-size: 27px;
-  font-weight: 900;
-}
-
-.pd-shipping-modal > p {
-  margin: 0 0 22px;
-  color: #6b7280;
-  line-height: 1.6;
-}
-
-.pd-modal-close {
-  position: absolute;
-  top: 17px;
-  right: 17px;
-  width: 38px;
-  height: 38px;
-  border: 1px solid #dbe3ef;
-  border-radius: 50%;
-  background: #fff;
-  color: #293681;
-  font-size: 22px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.pd-shipping-note {
-  margin-bottom: 22px;
-  padding: 15px 18px;
-  border-left: 5px solid #dc2626;
-  border-radius: 12px;
-  background: #fff5f5;
-  color: #991b1b;
-  line-height: 1.6;
-  font-weight: 700;
-}
-
-.pd-shipping-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 18px;
-}
-
-.pd-shipping-grid.collection {
-  grid-template-columns: 1fr;
-}
-
-.pd-shipping-field label {
-  display: block;
-  margin-bottom: 8px;
-  color: #293681;
-  font-size: 13px;
-  font-weight: 900;
-}
-
-.pd-shipping-field select {
-  width: 100%;
-  min-height: 48px;
-  padding: 11px 13px;
-  border: 1px solid #cfd8e3;
-  border-radius: 11px;
-  background: #fff;
-  color: #293681;
-  font-size: 14px;
-  font-weight: 700;
-  outline: none;
-}
-
-.pd-shipping-field select:focus {
-  border-color: #293681;
-  box-shadow: 0 0 0 3px rgba(8, 43, 83, 0.1);
-}
-
-.pd-shipping-field select:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.pd-container-info {
-  margin-top: 18px;
-  padding: 14px 16px;
-  border: 1px solid #dbeafe;
-  border-radius: 12px;
-  background: #f5faff;
-  color: #293681;
-  line-height: 1.6;
-}
-
-.pd-shipping-error {
-  margin-bottom: 18px;
-  padding: 13px 16px;
-  border: 1px solid #ef4444;
-  border-radius: 12px;
-  background: #fef2f2;
-  color: #991b1b;
-  font-weight: 800;
-}
-
-.pd-shipping-loading {
-  padding: 25px;
-  text-align: center;
-  color: #293681;
-  font-weight: 900;
-}
-
-.pd-start-order {
-  display: block;
-  min-width: 190px;
-  margin: 24px auto 0;
-  padding: 14px 30px;
-  border: none;
-  border-radius: 999px;
-  background: #dc2626;
-  color: #fff;
-  font-size: 15px;
-  font-weight: 900;
-  cursor: pointer;
-}
-
-.pd-start-order:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-@media (max-width: 950px) {
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .product-image-card {
-    position: static;
-  }
-
-  .product-metrics {
-    grid-template-columns: 1fr;
-  }
-
-  .qty-row,
-  .product-detail-row {
-    grid-template-columns: 1fr;
-  }
-
-  .pd-shipping-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .product-info-card {
-    padding: 20px;
-  }
-
-  .calculation-strip {
-    grid-template-columns: 1fr;
-  }
-
-  .pd-shipping-modal {
-    padding: 24px 18px;
-  }
-}
-`
-import './ProductDetail.css'
-
-
 
 function normalizeEan(raw) {
   const digits = String(raw || '').replace(/\D/g, '')
@@ -898,6 +263,7 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
+<<<<<<< Updated upstream
       <div
         style={{
           minHeight: '60vh',
@@ -929,12 +295,18 @@ export default function ProductDetail() {
         >
           LOADING PRODUCT…
         </p>
+=======
+      <div className="pd-state">
+        <div className="pd-spinner" />
+        <p>LOADING PRODUCT…</p>
+>>>>>>> Stashed changes
       </div>
     )
   }
 
   if (error) {
     return (
+<<<<<<< Updated upstream
       <div
         style={{
           minHeight: '60vh',
@@ -948,27 +320,13 @@ export default function ProductDetail() {
         <div style={{ fontSize: '40px' }}>
           📦
         </div>
+=======
+      <div className="pd-state pd-state-error">
+        <div className="pd-state-icon">📦</div>
+        <p>{error}</p>
+>>>>>>> Stashed changes
 
-        <p
-          style={{
-            fontFamily: fonts.body,
-            color: '#B3261E',
-            fontSize: '16px',
-            fontWeight: 600,
-          }}
-        >
-          {error}
-        </p>
-
-        <Link
-          to="/shop"
-          style={{
-            color: '#293681',
-            fontWeight: 700,
-            fontFamily: fonts.mono,
-            fontSize: '13px',
-          }}
-        >
+        <Link to="/shop" className="pd-state-link">
           ← BACK TO SHOP
         </Link>
       </div>
@@ -1305,59 +663,84 @@ export default function ProductDetail() {
                 )}
               </div>
 
-              <div className="barcode-box">
-                {barcodeTab === 'ean' &&
-                  (eanBarcode ? (
-                    <Barcode
-                      value={eanBarcode.value}
-                      format={eanBarcode.format}
-                      width={2}
-                      height={70}
-                      fontSize={14}
-                      margin={8}
-                      displayValue
-                    />
-                  ) : (
-                    <span>No EAN on file</span>
-                  ))}
+              <div
+                className="barcode-panel"
+                key={barcodeTab}
+              >
+                <div className="barcode-number">
+                  <strong>
+                    {barcodeTab === 'ean' ? 'EAN:' : 'Case ITF-14:'}
+                  </strong>
+                  <span>
+                    {barcodeTab === 'ean'
+                      ? String(product.barcode_ean || '').replace(/\D/g, '') || 'Not available'
+                      : String(product.barcode_case || '').replace(/\D/g, '') || 'Not available'}
+                  </span>
+                </div>
 
-                {barcodeTab === 'case' &&
-                  (caseBarcode ? (
-                    <Barcode
-                      value={caseBarcode.value}
-                      format="ITF14"
-                      width={2}
-                      height={70}
-                      fontSize={14}
-                      margin={8}
-                      displayValue
-                    />
-                  ) : (
-                    <span>No case barcode on file</span>
-                  ))}
+                <div className="barcode-box">
+                  {barcodeTab === 'ean' &&
+                    (eanBarcode ? (
+                      <Barcode
+                        value={eanBarcode.value}
+                        format={eanBarcode.format}
+                        width={2}
+                        height={70}
+                        fontSize={14}
+                        margin={8}
+                        displayValue={false}
+                      />
+                    ) : (
+                      <span>No EAN on file</span>
+                    ))}
+
+                  {barcodeTab === 'case' &&
+                    (caseBarcode ? (
+                      <Barcode
+                        value={caseBarcode.value}
+                        format="ITF14"
+                        width={2}
+                        height={70}
+                        fontSize={14}
+                        margin={8}
+                        displayValue={false}
+                      />
+                    ) : (
+                      <span>No case barcode on file</span>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
 
           <div className="product-info-card">
-            <div className="product-tags">
-              {product.brand?.brand_name && (
-                <Link
-                  to={makeBrandUrl(product)}
-                  className="product-tag"
-                >
-                  {product.brand.brand_name}
-                </Link>
-              )}
+            <div className="product-info-topline">
+              <div className="product-tags">
+                {product.brand?.brand_name && (
+                  <Link
+                    to={makeBrandUrl(product)}
+                    className="product-tag"
+                  >
+                    {product.brand.brand_name}
+                  </Link>
+                )}
 
-              {product.category?.category_name && (
-                <Link
-                  to={makeCategoryUrl(product)}
-                  className="product-tag category"
-                >
-                  {product.category.category_name}
-                </Link>
-              )}
+                {product.category?.category_name && (
+                  <Link
+                    to={makeCategoryUrl(product)}
+                    className="product-tag category"
+                  >
+                    {product.category.category_name}
+                  </Link>
+                )}
+              </div>
+
+              <span
+                className={`product-storage-badge product-storage-${productStorageType.toLowerCase()}`}
+                aria-label={`Storage type: ${productStorageType}`}
+              >
+                {productStorageType}
+              </span>
             </div>
 
             <h1 className="product-title">{product.description}</h1>
@@ -1390,11 +773,6 @@ export default function ProductDetail() {
               />
 
               <DetailRow
-                label="Storage Type"
-                value={productStorageType}
-              />
-
-              <DetailRow
                 label="Units per Case"
                 value={unitsPerCase}
               />
@@ -1407,15 +785,6 @@ export default function ProductDetail() {
               <DetailRow
                 label="Unit Volume"
                 value={`${Number(product.volume || 0).toFixed(6)} m³`}
-              />
-
-              <DetailRow
-                label="Shelf Life"
-                value={
-                  Number(product.shelf_life || 0) > 0
-                    ? `${Number(product.shelf_life)} days`
-                    : 'Not available'
-                }
               />
 
               <DetailRow
@@ -1571,24 +940,52 @@ export default function ProductDetail() {
           </div>
         </div>
 
-        <div className="product-metrics">
+        <section
+          className="product-metrics"
+          aria-label="Additional product information"
+        >
           <div className="product-metric-card">
-            <strong>Case Weight</strong>
-            <span>{caseWeight.toFixed(3)} kg</span>
+            <span className="product-metric-icon" aria-hidden="true">⚖</span>
+            <div>
+              <strong>Case Weight</strong>
+              <span>{caseWeight.toFixed(3)} kg</span>
+            </div>
           </div>
 
           <div className="product-metric-card">
-            <strong>CBM (per case)</strong>
-            <span>
-              {Number(product.volume || 0).toFixed(6)} m³
-            </span>
+            <span className="product-metric-icon" aria-hidden="true">◎</span>
+            <div>
+              <strong>Tariff Code</strong>
+              <span>{product.comm_code || 'Not available'}</span>
+            </div>
           </div>
 
           <div className="product-metric-card">
-            <strong>Language</strong>
-            <span>English</span>
+            <span className="product-metric-icon" aria-hidden="true">◇</span>
+            <div>
+              <strong>CBM (per case)</strong>
+              <span>
+                {Number(product.volume || 0).toFixed(6)} m³
+              </span>
+            </div>
           </div>
-        </div>
+
+          <div className="product-metric-card product-metric-card-wide">
+            <span className="product-metric-icon" aria-hidden="true">⌖</span>
+            <div>
+              <strong>Country of Origin</strong>
+              <span>{product.intra_country || 'Not available'}</span>
+            </div>
+          </div>
+
+          <div className="product-metric-card product-metric-card-wide">
+            <span className="product-metric-icon" aria-hidden="true">◎</span>
+            <div>
+              <strong>Language</strong>
+              <span>English</span>
+            </div>
+          </div>
+        </section>
 
         <Link
           to={

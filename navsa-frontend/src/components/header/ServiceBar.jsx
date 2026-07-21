@@ -1,102 +1,42 @@
-import { useEffect, useState } from "react";
-import { colors } from "../../theme";
-import {
-  FaTruck,
-  FaShip,
-  FaPlane,
-  FaSnowflake,
-  FaTags,
-  FaWarehouse,
-  FaFileAlt,
-} from "react-icons/fa";
+import './ServiceBar.css'
 
-const services = [
-  {
-    icon: <FaTags />,
-    text: "Labelling",
-  },
-  {
-    icon: <FaSnowflake />,
-    text: "Reefer Consolidation",
-  },
-  {
-    icon: <FaTruck />,
-    text: "Road Freight",
-  },
-  {
-    icon: <FaShip />,
-    text: "Sea Freight",
-  },
-  {
-    icon: <FaPlane />,
-    text: "Air Freight",
-  },
-  {
-    icon: <FaWarehouse />,
-    text: "Warehousing",
-  },
-  {
-    icon: <FaFileAlt />,
-    text: "Export Documentation",
-  },
-];
+const SERVICES = [
+  { title: 'MOQ UK & EUROPE', value: '£5,000.00' },
+  { title: 'MOQ INTERNATIONAL', value: '£10,000.00' },
+  { title: 'COMPETITIVE PRICING', value: 'ON BULK ORDER' },
+  { title: 'NEW PRODUCTS', value: 'ADDED DAILY' },
+  { title: 'LABELLING', value: 'INKJET' },
+  { title: 'REEFER', value: 'CONSOLIDATION' },
+  { title: 'ROAD', value: 'FREIGHT' },
+  { title: 'SEA', value: 'FREIGHT' },
+  { title: 'AIR', value: 'FREIGHT' },
+  { title: 'DOCUMENTS', value: 'CERTIFICATION' },
+  { title: 'WAREHOUSING', value: 'STORAGE' },
+]
 
 export default function ServiceBar() {
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setOffset((prev) => (prev <= -100 ? 0 : prev - 0.06));
-    }, 35);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const items = [...services, ...services, ...services];
+  const repeatedServices = [...SERVICES, ...SERVICES]
 
   return (
-    <div
-      style={{
-        width: "100%",
-        background: colors.accent,
-        overflow: "hidden",
-        borderTop: "1px solid rgba(255,255,255,.15)",
-        borderBottom: "1px solid rgba(0,0,0,.08)",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          transform: `translateX(${offset}%)`,
-          whiteSpace: "nowrap",
-          width: "max-content",
-        }}
-      >
-        {items.map((item, index) => (
-          <div
-            key={index}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "10px",
-              padding: "14px 38px",
-              color: "#ffffff",
-              fontWeight: 600,
-              fontSize: "14px",
-            }}
-          >
-            <span
-              style={{
-                fontSize: "17px",
-              }}
+    <section className="service-bar" aria-label="NAVSA trade services">
+      <div className="service-bar__viewport">
+        <div className="service-bar__track">
+          {repeatedServices.map((service, index) => (
+            <div
+              className="service-bar__item"
+              key={`${service.title}-${service.value}-${index}`}
             >
-              {item.icon}
-            </span>
+              <strong className="service-bar__title">
+                {service.title}
+              </strong>
 
-            <span>{item.text}</span>
-          </div>
-        ))}
+              <span className="service-bar__value">
+                {service.value}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
+    </section>
+  )
 }

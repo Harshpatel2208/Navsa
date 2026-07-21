@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 
+
+//shipping 
 class ImportShippingPorts extends Command
 {
     protected $signature = 'shipping:import-ports {file}';

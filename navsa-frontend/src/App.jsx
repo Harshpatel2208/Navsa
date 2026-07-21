@@ -9,10 +9,12 @@ import Shop from './pages/Shop'
 import Account from './pages/Account'
 import Wishlist from './pages/Wishlist'
 import Basket from './pages/Basket'
+import Services from './pages/Services'
 import ScrollToHash from './components/ScrollToHash'
 import Admin from './pages/Admin'
 import BecomeCustomer from './pages/BecomeCustomer'
 import BecomeSupplier from './pages/BecomeSupplier'
+import Tradeshow from './pages/Tradeshow'
 
 function PlaceholderPage({ title }) {
   return (
@@ -43,11 +45,9 @@ function App() {
     <BrowserRouter>
       <ScrollToHash />
       <Routes>
-        {/* Admin — no Navbar/Footer */}
         <Route path="/admin" element={<Admin />} />
         <Route path="/admin/*" element={<Admin />} />
 
-        {/* Public pages — wrapped with Navbar/Footer */}
         <Route path="/*" element={
           <PublicLayout>
             <Routes>
@@ -57,12 +57,14 @@ function App() {
               <Route path="/wishlist"           element={<Wishlist />} />
               <Route path="/basket"             element={<Basket />} />
               <Route path="/brand"              element={<Brands />} />
+              <Route path="/services"           element={<Services />} />
               <Route path="/about"              element={<PlaceholderPage title="About Us" />} />
               <Route path="/contact"            element={<PlaceholderPage title="Contact Us" />} />
               <Route path="/terms"              element={<PlaceholderPage title="Terms & Conditions" />} />
               <Route path="/privacy"            element={<PlaceholderPage title="Privacy & Cookies" />} />
               <Route path="/become-a-customer"  element={<BecomeCustomer />} />
               <Route path="/become-a-supplier"  element={<BecomeSupplier />} />
+              <Route path="/tradeshow"          element={<Tradeshow />} />
               <Route path="/product/:id"        element={<ProductDetail />} />
               <Route path="*"                   element={<Navigate to="/" replace />} />
             </Routes>

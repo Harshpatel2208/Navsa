@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useShipping } from '../context/ShippingContext'
+import ConfirmModal from '../components/common/ConfirmModal'
 import './Basket.css'
 
 function money(value) {
@@ -29,6 +31,8 @@ function ft3(value) {
 }
 
 function Basket() {
+  const [itemToRemove, setItemToRemove] = useState(null)
+
   const {
     basketItems,
     changeLayerQty,
@@ -81,6 +85,21 @@ function Basket() {
     !frozenMixed &&
     !overWeight &&
     !overVolume
+
+  function requestBasketRemoval(item) {
+    setItemToRemove(item)
+  }
+
+  function closeBasketRemoval() {
+    setItemToRemove(null)
+  }
+
+  function confirmBasketRemoval() {
+    if (itemToRemove?.id == null) return
+
+    removeFromBasket(itemToRemove.id)
+    setItemToRemove(null)
+  }
 
   if (basketItems.length === 0) {
     return (
@@ -201,7 +220,15 @@ const lineVolume =
                 <div>{lineVolume.toFixed(2)}</div>
                 <div>{money(subtotal)}</div>
 
-                <button className="basket-remove" onClick={() => removeFromBasket(item.id)}>×</button>
+                <button
+                  type="button"
+                  className="basket-remove"
+                  onClick={() => requestBasketRemoval(item)}
+                  aria-label={`Remove ${item.description} from basket`}
+                  title="Remove from basket"
+                >
+                  ×
+                </button>
               </div>
             )
           })}
@@ -251,7 +278,47 @@ const lineVolume =
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        open={Boolean(itemToRemove)}
+        eyebrow="BASKET"
+        icon={<BasketIcon />}
+        title="Remove this product?"
+        message={
+          <>
+            Are you sure you want to remove
+            <strong> “{itemToRemove?.description}” </strong>
+            from your basket?
+          </>
+        }
+        description="You can add it again at any time."
+        cancelText="Keep Item"
+        confirmText="Remove Item"
+        variant="danger"
+        onClose={closeBasketRemoval}
+        onConfirm={confirmBasketRemoval}
+      />
     </div>
+  )
+}
+
+function BasketIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M5 10h14l-1.2 9H6.2L5 10Z" />
+      <path d="m8 10 4-6 4 6" />
+      <path d="M9 14v2" />
+      <path d="M12 14v2" />
+      <path d="M15 14v2" />
+    </svg>
   )
 }
 

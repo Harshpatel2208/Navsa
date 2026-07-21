@@ -9,7 +9,6 @@ import {
 } from '../services/shippingService'
 import './ProductCard.css'
 import NoticeModal from './NoticeModal'
-import './ProductCard.css'
 import './ProductCardFinal.css'
 
 function money(value) {
@@ -48,7 +47,11 @@ function isCollectionContainer(container) {
   )
 }
 
-function ProductCard({ product, badge }) {
+function ProductCard({
+  product,
+  badge,
+  onWishlistRemoveRequest,
+}) {
   const navigate = useNavigate()
 
   const {
@@ -276,10 +279,16 @@ function ProductCard({ product, badge }) {
     event.stopPropagation()
 
     if (isInWishlist(product.id)) {
+      if (typeof onWishlistRemoveRequest === 'function') {
+        onWishlistRemoveRequest(product)
+        return
+      }
+
       removeFromWishlist(product.id)
-    } else {
-      addToWishlist(product)
+      return
     }
+
+    addToWishlist(product)
   }
 
   function handleAddClick(event) {

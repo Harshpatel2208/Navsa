@@ -1,85 +1,188 @@
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { colors, fonts, radius, shadow } from '../theme'
+import ConfirmModal from '../components/common/ConfirmModal'
+import ProductCard from '../components/ProductCard'
 import { useCart } from '../context/CartContext'
+import './Wishlist.css'
 
-function Wishlist() {
+function normaliseProduct(payload, fallback) {
+  const product = payload?.data ?? payload?.product ?? payload
+
+  if (!product || typeof product !== 'object' || Array.isArray(product)) {
+    return fallback
+  }
+
+  return {
+    ...fallback,
+    ...product,
+    id: product.id ?? fallback.id,
+  }
+}
+
+export default function Wishlist() {
   const { wishlistItems, removeFromWishlist } = useCart()
+  const [products, setProducts] = useState(wishlistItems)
+  const [loading, setLoading] = useState(false)
+  const [productToRemove, setProductToRemove] = useState(null)
 
-  if (wishlistItems.length === 0) {
+  const wishlistIds = useMemo(
+    () => wishlistItems.map(item => String(item.id)).join(','),
+    [wishlistItems]
+  )
+
+  useEffect(() => {
+    let cancelled = false
+
+    async function hydrateWishlistProducts() {
+      if (!wishlistItems.length) {
+        setProducts([])
+        setLoading(false)
+        return
+      }
+
+      setLoading(true)
+
+      try {
+        const hydrated = await Promise.all(
+          wishlistItems.map(async item => {
+            try {
+              const response = await fetch(`/api/products/${item.id}`, {
+                headers: { Accept: 'application/json' },
+              })
+
+              if (!response.ok) return item
+
+              const payload = await response.json()
+              return normaliseProduct(payload, item)
+            } catch (error) {
+              console.error(
+                `Could not refresh wishlist product ${item.id}:`,
+                error
+              )
+              return item
+            }
+          })
+        )
+
+        if (!cancelled) {
+          setProducts(hydrated)
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
+    }
+
+    hydrateWishlistProducts()
+
+    return () => {
+      cancelled = true
+    }
+  }, [wishlistIds, wishlistItems])
+
+  function requestRemove(product) {
+    setProductToRemove(product)
+  }
+
+  function closeRemoveModal() {
+    setProductToRemove(null)
+  }
+
+  function confirmRemove() {
+    const productId = productToRemove?.id
+    if (productId === undefined || productId === null) return
+
+    removeFromWishlist(productId)
+    setProducts(currentProducts =>
+      currentProducts.filter(
+        product => String(product.id) !== String(productId)
+      )
+    )
+    closeRemoveModal()
+  }
+
+  if (!wishlistItems.length) {
     return (
-      <div style={{ width: '100%', minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', background: colors.paper, padding: '60px 6vw' }}>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '40px', marginBottom: '14px' }}>♥</div>
-          <h2 style={{ fontFamily: fonts.display, color: colors.navy, marginBottom: '10px' }}>Your Wishlist is Empty</h2>
-          <p style={{ color: colors.inkMuted, fontSize: '14px', marginBottom: '24px' }}>
-            Browse the catalogue and save products you're interested in.
+      <main className="wishlist-page wishlist-page--empty">
+        <section className="wishlist-empty-card">
+          <div className="wishlist-empty-icon" aria-hidden="true">
+            ♡
+          </div>
+          <span className="wishlist-eyebrow">SAVED PRODUCTS</span>
+          <h1>Your Wishlist is Empty</h1>
+          <p>
+            Browse the catalogue and save products that you may want to
+            order later.
           </p>
-          <Link to="/shop">
-            <button style={{ background: colors.accent, color: '#fff', border: 'none', padding: '12px 30px', fontWeight: 600, cursor: 'pointer', borderRadius: radius.pill, boxShadow: '0 8px 20px rgba(201, 168, 76, 0.3)' }}>
-              Browse Products
-            </button>
+          <Link to="/shop" className="wishlist-primary-link">
+            Browse Products →
           </Link>
-        </div>
-      </div>
+        </section>
+      </main>
     )
   }
 
   return (
-    <div style={{ width: '100%', minHeight: '60vh', background: colors.paper, padding: '50px 6vw' }}>
-      <div style={{ maxWidth: '1600px', margin: '0 auto' }}>
-        <h1 style={{ fontFamily: fonts.display, color: colors.navy, fontSize: '28px', marginBottom: '28px' }}>
-          Your Wishlist <span style={{ color: colors.inkMuted, fontSize: '16px', fontWeight: 400 }}>({wishlistItems.length} products)</span>
-        </h1>
+    <main className="wishlist-page">
+      <div className="wishlist-shell">
+        <header className="wishlist-header">
+          <div>
+            <span className="wishlist-eyebrow">SAVED PRODUCTS</span>
+            <h1>
+              Your Wishlist
+              <small>
+                {wishlistItems.length}{' '}
+                {wishlistItems.length === 1 ? 'product' : 'products'}
+              </small>
+            </h1>
+            <p>
+              Review saved products, open their full details or add them
+              directly to your basket.
+            </p>
+          </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: '22px' }}>
-          {wishlistItems.map(item => (
-            <div key={item.id} style={{ background: '#fff', border: `1px solid rgba(149, 204, 221, 0.6)`, borderRadius: radius.md, boxShadow: shadow.soft, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-              <div style={{ width: '100%', height: '170px', background: '#D0E7E6', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-                {item.web_image ? (
-                  <img
-                    src={`/products/${item.web_image}`}
-                    alt={item.description}
-                    style={{ maxWidth: '85%', maxHeight: '85%', objectFit: 'contain' }}
-                    onError={(e) => { e.target.style.display = 'none' }}
-                  />
-                ) : (
-                  <span style={{ color: '#A7AAB2', fontFamily: fonts.mono, fontSize: '11px' }}>NO IMAGE</span>
-                )}
-              </div>
+          <Link to="/shop" className="wishlist-secondary-link">
+            Continue Shopping →
+          </Link>
+        </header>
 
-              <div style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {item.brand && (
-                  <span style={{ fontFamily: fonts.mono, fontSize: '10px', color: '#c9a84c', fontWeight: 700, marginBottom: '6px' }}>
-                    {item.brand}
-                  </span>
-                )}
-                <h3 style={{ fontFamily: fonts.display, fontSize: '14px', color: colors.navy, minHeight: '40px', margin: '0 0 10px' }}>
-                  {item.description}
-                </h3>
-                <div style={{ fontSize: '22px', fontWeight: 700, color: '#1F7A4D', marginBottom: '14px', fontFamily: fonts.display }}>
-                  £{item.price}
-                </div>
+        {loading && (
+          <div className="wishlist-refresh-message" role="status">
+            Refreshing current product information…
+          </div>
+        )}
 
-                <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
-                  <Link to={`/product/${item.id}`} style={{ flex: 1, textDecoration: 'none' }}>
-                    <button style={{ width: '100%', background: colors.navy, color: '#fff', border: 'none', padding: '10px', fontWeight: 700, cursor: 'pointer', fontFamily: fonts.mono, fontSize: '11px', borderRadius: radius.sm }}>
-                      VIEW PRODUCT
-                    </button>
-                  </Link>
-                  <button
-                    onClick={() => removeFromWishlist(item.id)}
-                    style={{ background: 'transparent', border: `1px solid ${colors.hairline}`, color: '#B3261E', padding: '10px 12px', cursor: 'pointer', fontFamily: fonts.mono, fontSize: '11px', borderRadius: radius.sm }}
-                  >
-                    ✕
-                  </button>
-                </div>
-              </div>
-            </div>
+        <section className="wishlist-grid" aria-label="Wishlist products">
+          {products.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onWishlistRemoveRequest={requestRemove}
+            />
           ))}
-        </div>
+        </section>
       </div>
-    </div>
+
+      <ConfirmModal
+        open={Boolean(productToRemove)}
+        eyebrow="WISHLIST"
+        icon="♥"
+        title="Remove this product?"
+        message={
+          <>
+            Are you sure you want to remove
+            <strong> “{productToRemove?.description}” </strong>
+            from your wishlist?
+          </>
+        }
+        description="You can add it again at any time."
+        cancelText="Keep Item"
+        confirmText="Remove Item"
+        variant="danger"
+        onClose={closeRemoveModal}
+        onConfirm={confirmRemove}
+      />
+    </main>
   )
 }
-
-export default Wishlist
