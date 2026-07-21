@@ -263,68 +263,18 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-<<<<<<< Updated upstream
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '18px',
-        }}
-      >
-        <div
-          className="navsa-spinner"
-          style={{
-            width: '32px',
-            height: '32px',
-            border: `3px solid ${colors.hairline}`,
-            borderTopColor: '#293681',
-            borderRadius: '50%',
-          }}
-        />
-
-        <p
-          style={{
-            fontFamily: fonts.mono,
-            color: colors.inkMuted,
-            fontSize: '13px',
-            letterSpacing: '0.5px',
-          }}
-        >
-          LOADING PRODUCT…
-        </p>
-=======
       <div className="pd-state">
         <div className="pd-spinner" />
         <p>LOADING PRODUCT…</p>
->>>>>>> Stashed changes
       </div>
     )
   }
 
   if (error) {
     return (
-<<<<<<< Updated upstream
-      <div
-        style={{
-          minHeight: '60vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
-        <div style={{ fontSize: '40px' }}>
-          📦
-        </div>
-=======
       <div className="pd-state pd-state-error">
         <div className="pd-state-icon">📦</div>
         <p>{error}</p>
->>>>>>> Stashed changes
 
         <Link to="/shop" className="pd-state-link">
           ← BACK TO SHOP

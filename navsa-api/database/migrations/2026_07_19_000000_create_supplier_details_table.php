@@ -19,8 +19,7 @@ return new class extends Migration
         if (!Schema::hasTable('supplier_details')) {
             Schema::create('supplier_details', function (Blueprint $table) {
                 $table->id();
-                // user_id must be integer to match users.id (which is int(11))
-                $table->integer('user_id')->unsigned();
+                $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
                 $table->string('first_name')->nullable();
                 $table->string('last_name')->nullable();
                 $table->string('email_address')->nullable();
@@ -42,9 +41,6 @@ return new class extends Migration
                 $table->boolean('consent_marketing')->default(false);
                 $table->json('contact_time')->nullable();
                 $table->timestamps();
-
-                // Foreign key constraint
-                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             });
         }
     }
