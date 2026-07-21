@@ -36,6 +36,7 @@ const navItems = [
   { name: "About Us",           path: "/about",             mega: false },
   { name: "Contact Us",         path: "/contact",           mega: false },
   { name: "Become a Customer",  path: "/become-a-customer", mega: false },
+  { name: "Become a Supplier",  path: "/become-a-supplier", mega: false },
 ];
 
 export default function Navigation({ isSticky, scrollProgress }) {

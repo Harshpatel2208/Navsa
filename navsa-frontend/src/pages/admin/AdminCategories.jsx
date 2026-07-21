@@ -1,8 +1,41 @@
 import { useEffect, useState, useCallback } from 'react'
 import { getCategories, createCategory, updateCategory, softDeleteCategory, hardDeleteCategory } from '../../services/adminApi'
-import { Plus, Edit2, Trash2, EyeOff } from 'lucide-react';
+import { Plus, Edit2, Trash2, EyeOff, X } from 'lucide-react';
 
-function CategoryRow({ category, onRefresh }) {
+function CategoryDetailModal({ cat, onClose }) {
+  const rows = [
+    ['ID',            cat.id],
+    ['Category Name', cat.category_name],
+    ['Status',        cat.status ? 'Active' : 'Disabled'],
+    ['Products',      cat.products_count ?? 0],
+    ['Created',       cat.created_at ? new Date(cat.created_at).toLocaleString() : '—'],
+    ['Last Updated',  cat.updated_at ? new Date(cat.updated_at).toLocaleString() : '—'],
+  ]
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.7)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'20px' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background:'#1e293b', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'16px', width:'100%', maxWidth:'420px', padding:'28px', position:'relative' }}>
+        <button onClick={onClose} style={{ position:'absolute', top:'16px', right:'16px', background:'none', border:'none', cursor:'pointer', color:'#94a3b8' }}><X size={20}/></button>
+        <div style={{ display:'flex', alignItems:'center', gap:'14px', marginBottom:'24px', paddingBottom:'20px', borderBottom:'1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ width:'50px', height:'50px', borderRadius:'12px', background:'linear-gradient(135deg,#10b981,#059669)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'22px' }}>🏷️</div>
+          <div>
+            <div style={{ color:'#fff', fontWeight:700, fontSize:'18px' }}>{cat.category_name}</div>
+            <span style={{ marginTop:'4px', display:'inline-block', background: cat.status ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)', color: cat.status ? '#10b981' : '#ef4444', fontSize:'11px', fontWeight:700, padding:'2px 10px', borderRadius:'10px' }}>{cat.status ? 'ACTIVE' : 'DISABLED'}</span>
+          </div>
+        </div>
+        <div style={{ display:'grid', gap:'12px' }}>
+          {rows.map(([label, val]) => (
+            <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'12px' }}>
+              <span style={{ color:'#94a3b8', fontSize:'12px', fontWeight:600, flexShrink:0 }}>{label}</span>
+              <span style={{ color:'#fff', fontSize:'13px', textAlign:'right' }}>{String(val)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CategoryRow({ category, onRefresh, onView }) {
   const [editing, setEditing] = useState(false)
   const [name, setName]       = useState(category.category_name)
   const [busy, setBusy]       = useState(false)
@@ -39,8 +72,8 @@ function CategoryRow({ category, onRefresh }) {
   }
 
   return (
-    <tr>
-      <td>
+    <tr onClick={onView} style={{ cursor:'pointer' }}>
+      <td onClick={e => e.stopPropagation()}>
         {editing ? (
           <div style={{ display: 'flex', gap: '6px' }}>
             <input value={name} onChange={e => setName(e.target.value)} className="admin-input-field" style={{ width: '200px' }}
@@ -60,10 +93,10 @@ function CategoryRow({ category, onRefresh }) {
           {category.status ? 'Active' : 'Disabled'}
         </span>
       </td>
-      <td>
+      <td onClick={e => e.stopPropagation()}>
         <div style={{ display: 'flex', gap: '6px' }}>
           {!editing && (
-            <button onClick={() => setEditing(true)} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#3b82f6' }}>
+            <button onClick={(e) => { e.stopPropagation(); setEditing(true) }} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#3b82f6' }}>
               <Edit2 size={16} />
             </button>
           )}
@@ -71,10 +104,10 @@ function CategoryRow({ category, onRefresh }) {
             <input type="checkbox" checked={!!category.status} onChange={toggleStatus} disabled={busy} />
             <span className="admin-slider"></span>
           </label>
-          <button onClick={doSoft} disabled={busy} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#f59e0b' }}>
+          <button onClick={(e) => { e.stopPropagation(); doSoft() }} disabled={busy} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#f59e0b' }}>
             <EyeOff size={16} />
           </button>
-          <button onClick={doHard} disabled={busy} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#ef4444' }}>
+          <button onClick={(e) => { e.stopPropagation(); doHard() }} disabled={busy} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#ef4444' }}>
             <Trash2 size={16} />
           </button>
         </div>
@@ -88,6 +121,7 @@ export default function AdminCategories() {
   const [loading, setLoading]       = useState(true)
   const [newName, setNewName]       = useState('')
   const [adding, setAdding]         = useState(false)
+  const [selected, setSelected]     = useState(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -108,6 +142,7 @@ export default function AdminCategories() {
 
   return (
     <div>
+      {selected && <CategoryDetailModal cat={selected} onClose={() => setSelected(null)} />}
       <div className="admin-flex-between mb-6">
         <div>
           <h1 style={{ marginBottom: '0.25rem' }}>Categories</h1>
@@ -137,7 +172,7 @@ export default function AdminCategories() {
               </tr>
             </thead>
             <tbody>
-              {categories.map(c => <CategoryRow key={c.id} category={c} onRefresh={load} />)}
+              {categories.map(c => <CategoryRow key={c.id} category={c} onRefresh={load} onView={() => setSelected(c)} />)}
             </tbody>
           </table>
         )}

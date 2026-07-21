@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Routes, Route, Navigate, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, Tag, Users, Settings, LogOut, Search, Bell, Lock, UserCheck } from 'lucide-react';
+import { LayoutDashboard, Package, Tag, Users, Settings, LogOut, Lock, UserCheck, ChevronDown } from 'lucide-react';
 import AdminDashboard  from './admin/AdminDashboard';
 import AdminUsers      from './admin/AdminUsers';
 import AdminProducts   from './admin/AdminProducts';
@@ -13,6 +13,9 @@ import AdminPdfs from './admin/AdminPdfs';
 // Temporary bypass for login as requested
 function AdminShell({ onLogout }) {
   const location = useLocation();
+  const [profileOpen, setProfileOpen] = useState(false);
+  const adminUser = (() => { try { return JSON.parse(localStorage.getItem('admin_user') || '{}'); } catch { return {}; } })();
+  const initials = (adminUser.name || 'A').charAt(0).toUpperCase();
 
   return (
     <div className="admin-layout admin-bg">
@@ -58,15 +61,76 @@ function AdminShell({ onLogout }) {
         </div>
       </aside>
 
-      {/* Main Content */}
+        {/* Main Content */}
       <main className="admin-main-content">
         {/* Topbar */}
-        <header className="glass-header admin-flex-between" style={{ padding: '1rem 2rem' }}>
+        <header className="glass-header admin-flex-between" style={{ padding: '1rem 2rem', position: 'relative' }}>
           <div />
-          <div className="admin-flex-center" style={{ gap: '1rem' }}>
-            <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#3b82f6', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold' }}>
-              A
-            </div>
+          <div className="admin-flex-center" style={{ gap: '1rem', position: 'relative' }}>
+            {/* Profile Avatar Button */}
+            <button
+              onClick={() => setProfileOpen(o => !o)}
+              style={{
+                display: 'flex', alignItems: 'center', gap: '8px',
+                background: 'rgba(59,130,246,0.12)', border: '1px solid rgba(59,130,246,0.3)',
+                borderRadius: '24px', padding: '6px 12px 6px 6px', cursor: 'pointer', color: '#fff'
+              }}
+            >
+              <div style={{
+                width: '32px', height: '32px', borderRadius: '50%',
+                background: 'linear-gradient(135deg,#3b82f6,#6366f1)',
+                color: '#fff', display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontWeight: 'bold', fontSize: '14px'
+              }}>
+                {initials}
+              </div>
+              <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
+                <div style={{ fontSize: '13px', fontWeight: 600 }}>{adminUser.name || 'Admin'}</div>
+                <div style={{ fontSize: '10px', color: '#94a3b8' }}>Administrator</div>
+              </div>
+              <ChevronDown size={14} style={{ color: '#94a3b8', marginLeft: '2px', transform: profileOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+            </button>
+
+            {/* Dropdown */}
+            {profileOpen && (
+              <div style={{
+                position: 'absolute', top: 'calc(100% + 8px)', right: 0,
+                background: '#1e293b', border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '12px', padding: '12px', minWidth: '240px',
+                boxShadow: '0 8px 32px rgba(0,0,0,0.4)', zIndex: 1000
+              }}>
+                {/* Profile header */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div style={{
+                    width: '48px', height: '48px', borderRadius: '50%', flexShrink: 0,
+                    background: 'linear-gradient(135deg,#3b82f6,#6366f1)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '20px', fontWeight: 'bold', color: '#fff'
+                  }}>
+                    {initials}
+                  </div>
+                  <div>
+                    <div style={{ color: '#fff', fontWeight: 700, fontSize: '15px' }}>{adminUser.name || 'Admin User'}</div>
+                    <div style={{ color: '#94a3b8', fontSize: '12px', marginTop: '2px' }}>{adminUser.email || 'admin@navsainternational.com'}</div>
+                    <div style={{ marginTop: '6px' }}>
+                      <span style={{ background: 'rgba(59,130,246,0.2)', color: '#3b82f6', fontSize: '10px', fontWeight: 700, padding: '2px 8px', borderRadius: '10px', letterSpacing: '0.5px' }}>ADMINISTRATOR</span>
+                    </div>
+                  </div>
+                </div>
+                {/* Logout */}
+                <button
+                  onClick={() => { setProfileOpen(false); onLogout(); }}
+                  style={{
+                    width: '100%', display: 'flex', alignItems: 'center', gap: '8px',
+                    background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)',
+                    color: '#ef4444', borderRadius: '8px', padding: '8px 12px',
+                    cursor: 'pointer', fontSize: '13px', fontWeight: 600
+                  }}
+                >
+                  <LogOut size={15} /> Sign Out
+                </button>
+              </div>
+            )}
           </div>
         </header>
 
@@ -138,6 +202,36 @@ function AdminLogin({ onLogin }) {
             {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
+
+        <div style={{ 
+          marginTop: '20px', 
+          padding: '12px', 
+          background: 'rgba(255,255,255,0.05)', 
+          border: '1px dashed rgba(255,255,255,0.15)', 
+          borderRadius: '6px', 
+          fontSize: '12px',
+          color: '#94a3b8',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '6px'
+        }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <strong>Demo Credentials:</strong>
+            <button 
+              type="button"
+              onClick={() => {
+                setEmail('admin@navsainternational.com');
+                setPassword('password');
+              }}
+              className="admin-btn"
+              style={{ padding: '3px 8px', fontSize: '11px', background: '#3b82f6', color: '#fff', borderRadius: '4px', cursor: 'pointer', border: 'none' }}
+            >
+              Auto Fill
+            </button>
+          </div>
+          <div><strong>Email:</strong> admin@navsainternational.com</div>
+          <div><strong>Password:</strong> password</div>
+        </div>
       </div>
     </div>
   );

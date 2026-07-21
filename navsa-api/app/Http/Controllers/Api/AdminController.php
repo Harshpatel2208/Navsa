@@ -43,6 +43,10 @@ class AdminController extends Controller
             return response()->json(['message' => 'Invalid email or password'], 401);
         }
 
+        if ($user->status === 'frozen') {
+            return response()->json(['message' => 'Your account has been frozen. Please contact support at info@navsainternational.com.'], 403);
+        }
+
         if ($user->status !== 'approved') {
             return response()->json(['message' => 'Your account is pending approval by the admin.'], 403);
         }
@@ -91,7 +95,7 @@ class AdminController extends Controller
     {
         if (!$this->auth($request)) return $this->deny();
 
-        $registrations = User::with('customerDetail')
+        $registrations = User::with(['customerDetail', 'supplierDetail'])
             ->where('status', 'pending')
             ->orderBy('created_at', 'desc')
             ->get();

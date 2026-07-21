@@ -91,6 +91,7 @@ export default function AdminRegistrations() {
               <th style={{ padding: '10px' }}>Name</th>
               <th style={{ padding: '10px' }}>Company</th>
               <th style={{ padding: '10px' }}>Email</th>
+              <th style={{ padding: '10px' }}>Role</th>
               <th style={{ padding: '10px' }}>Date</th>
               <th style={{ padding: '10px', textAlign: 'right' }}>Actions</th>
             </tr>
@@ -98,7 +99,7 @@ export default function AdminRegistrations() {
           <tbody>
             {registrations.length === 0 ? (
               <tr>
-                <td colSpan="5" style={{ padding: '20px', textAlign: 'center' }}>No pending registrations</td>
+                <td colSpan="6" style={{ padding: '20px', textAlign: 'center' }}>No pending registrations</td>
               </tr>
             ) : (
               registrations.map(reg => (
@@ -106,6 +107,7 @@ export default function AdminRegistrations() {
                   <td style={{ padding: '10px' }}>{reg.name}</td>
                   <td style={{ padding: '10px' }}>{reg.company_name}</td>
                   <td style={{ padding: '10px' }}>{reg.email}</td>
+                  <td style={{ padding: '10px', textTransform: 'capitalize' }}>{reg.role || 'customer'}</td>
                   <td style={{ padding: '10px' }}>{new Date(reg.created_at).toLocaleDateString()}</td>
                   <td style={{ padding: '10px', textAlign: 'right' }}>
                     <button 
@@ -143,7 +145,7 @@ export default function AdminRegistrations() {
         }}>
           <div className="glass-panel" style={{ width: '80%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: '30px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <h2>Registration Details: {selectedReg.name}</h2>
+              <h2>Registration Details: {selectedReg.name} ({selectedReg.role === 'supplier' ? 'Supplier' : 'Customer'})</h2>
               <button onClick={() => setSelectedReg(null)} className="admin-btn admin-btn-ghost">Close</button>
             </div>
             
@@ -177,6 +179,38 @@ export default function AdminRegistrations() {
                     <p><strong>Import Containers:</strong> {selectedReg.customer_detail.import_full_containers}</p>
                     <p><strong>Brands:</strong> {selectedReg.customer_detail.brands_interested}</p>
                     <p><strong>Categories:</strong> {selectedReg.customer_detail.categories_interested?.join(', ')}</p>
+                  </div>
+                </>
+              )}
+
+              {selectedReg.supplier_detail && (
+                <>
+                  <div>
+                    <h3>Supplier Details</h3>
+                    <p><strong>Company Type:</strong> {selectedReg.supplier_detail.company_type || 'N/A'}</p>
+                    <p><strong>Registration No:</strong> {selectedReg.supplier_detail.company_registration_number || 'N/A'}</p>
+                    <p><strong>Website:</strong> {selectedReg.supplier_detail.website_url || 'N/A'}</p>
+                    <p><strong>Business Phone:</strong> {selectedReg.supplier_detail.business_phone || 'N/A'}</p>
+                  </div>
+                  <div>
+                    <h3>Address</h3>
+                    <p>{selectedReg.supplier_detail.address_line_1}</p>
+                    {selectedReg.supplier_detail.address_line_2 && <p>{selectedReg.supplier_detail.address_line_2}</p>}
+                    <p>{selectedReg.supplier_detail.city}, {selectedReg.supplier_detail.county}</p>
+                    <p>{selectedReg.supplier_detail.country} - {selectedReg.supplier_detail.postcode}</p>
+                  </div>
+                  <div>
+                    <h3>Preferences & Categories</h3>
+                    <p><strong>Categories Supplied:</strong> {selectedReg.supplier_detail.categories_supplied?.join(', ') || 'None selected'}</p>
+                    <p><strong>Preferred Times:</strong> {selectedReg.supplier_detail.contact_time?.join(', ') || 'No preference'}</p>
+                    <p><strong>News & Updates:</strong> {selectedReg.supplier_detail.consent_news ? 'Yes' : 'No'}</p>
+                    <p><strong>Marketing Mailers:</strong> {selectedReg.supplier_detail.consent_marketing ? 'Yes' : 'No'}</p>
+                  </div>
+                  <div style={{ gridColumn: 'span 2' }}>
+                    <h3>Additional Comments</h3>
+                    <p style={{ background: 'rgba(255,255,255,0.05)', padding: '10px', borderRadius: '4px', whiteSpace: 'pre-wrap' }}>
+                      {selectedReg.supplier_detail.additional_comments || 'No comments'}
+                    </p>
                   </div>
                 </>
               )}

@@ -71,6 +71,7 @@ function Footer() {
             <Link to="/about">About Us</Link>
             <Link to="/contact">Contact Us</Link>
             <Link to="/become-a-customer">Become a Customer</Link>
+            <Link to="/become-a-supplier">Become a Supplier</Link>
           </section>
 
           <section>

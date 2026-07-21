@@ -9,6 +9,7 @@ use App\Models\Brand;
 use App\Models\SubCategory;
 use App\Http\Controllers\Api\ShippingController;
 use App\Http\Controllers\Api\CustomerRegistrationController;
+use App\Http\Controllers\Api\SupplierRegistrationController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -54,6 +55,7 @@ Route::get('/shipping/ports/{country}', [ShippingController::class, 'ports']);
 
 // Customer Registration (public)
 Route::post('/register-customer', [CustomerRegistrationController::class, 'register']);
+Route::post('/register-supplier', [SupplierRegistrationController::class, 'register']);
 
 // Public routes
 Route::post('/login', [AdminController::class, 'login']);

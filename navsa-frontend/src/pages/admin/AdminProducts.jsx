@@ -3,8 +3,52 @@ import {
   softDeleteProduct, hardDeleteProduct, restoreProduct, updateProduct, createProduct
 } from '../../services/adminApi'
 import { getBrands, getCategories } from '../../services/adminApi'
-import { Plus, Edit2, Trash2, Filter, EyeOff, RotateCcw } from 'lucide-react';
+import { Plus, Edit2, Trash2, Filter, EyeOff, RotateCcw, X } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react'
+
+function ProductDetailModal({ product, onClose }) {
+  const rows = [
+    ['Reference / SKU', product.reference || '—'],
+    ['Barcode (EAN)',    product.barcode_ean || '—'],
+    ['Description',     product.description || '—'],
+    ['Brand',           product.brand?.brand_name || '—'],
+    ['Category',        product.category?.category_name || '—'],
+    ['Sell Price',      product.price != null ? `£${product.price}` : '—'],
+    ['List Price',      product.price_list != null ? `£${product.price_list}` : '—'],
+    ['Stock',           product.stock_quantity ?? 0],
+    ['Live on Web',     product.live_for_web ? 'Yes ✔' : 'No ✘'],
+    ['Is Offer',        product.is_offer ? `Yes — ${product.offer_label || ''}` : 'No'],
+    ['Best Offer',      product.is_best_offer ? 'Yes ✔' : 'No'],
+    ['New Arrival',     product.is_new_arrival ? 'Yes ✔' : 'No'],
+    ['Status',          product.deleted_at ? '🗑 Deleted' : 'Active'],
+    ['Created',         product.created_at ? new Date(product.created_at).toLocaleString() : '—'],
+    ['Updated',         product.updated_at ? new Date(product.updated_at).toLocaleString() : '—'],
+  ]
+  return (
+    <div onClick={onClose} style={{ position:'fixed', inset:0, background:'rgba(0,0,0,0.75)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:2000, padding:'20px' }}>
+      <div onClick={e => e.stopPropagation()} style={{ background:'#1e293b', border:'1px solid rgba(255,255,255,0.1)', borderRadius:'16px', width:'100%', maxWidth:'520px', maxHeight:'90vh', overflowY:'auto', padding:'28px', position:'relative' }}>
+        <button onClick={onClose} style={{ position:'absolute', top:'16px', right:'16px', background:'none', border:'none', cursor:'pointer', color:'#94a3b8' }}><X size={20}/></button>
+        <div style={{ display:'flex', alignItems:'center', gap:'14px', marginBottom:'24px', paddingBottom:'20px', borderBottom:'1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ width:'50px', height:'50px', borderRadius:'12px', background:'linear-gradient(135deg,#3b82f6,#6366f1)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:'22px' }}>📦</div>
+          <div>
+            <div style={{ color:'#fff', fontWeight:700, fontSize:'17px', lineHeight:1.3 }}>{product.description?.slice(0,60) || 'Product'}</div>
+            <div style={{ color:'#94a3b8', fontSize:'12px', marginTop:'3px' }}>Ref: {product.reference} {product.barcode_ean ? `• EAN: ${product.barcode_ean}` : ''}</div>
+            <span style={{ marginTop:'6px', display:'inline-block', background: product.live_for_web ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)', color: product.live_for_web ? '#10b981' : '#ef4444', fontSize:'10px', fontWeight:700, padding:'2px 10px', borderRadius:'10px' }}>{product.live_for_web ? 'LIVE' : 'HIDDEN'}</span>
+            {product.is_offer && <span style={{ marginTop:'6px', marginLeft:'6px', display:'inline-block', background:'rgba(245,158,11,0.15)', color:'#f59e0b', fontSize:'10px', fontWeight:700, padding:'2px 10px', borderRadius:'10px' }}>OFFER</span>}
+          </div>
+        </div>
+        <div style={{ display:'grid', gap:'12px' }}>
+          {rows.map(([label, val]) => (
+            <div key={label} style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'12px' }}>
+              <span style={{ color:'#94a3b8', fontSize:'12px', fontWeight:600, flexShrink:0, minWidth:'120px' }}>{label}</span>
+              <span style={{ color:'#fff', fontSize:'13px', textAlign:'right', wordBreak:'break-word' }}>{String(val)}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const BLANK_PRODUCT = {
   description: '',
@@ -128,6 +172,25 @@ const SEO_FIELDS = [
   { key: 'web_long_description',  label: 'Meta Description', type: 'textarea' },
 ]
 
+// ── Shared style tokens used by EditProductModal ───────────────────────────
+const EP_INP    = { width:'100%', padding:'7px 10px', border:'1px solid #ccc', borderRadius:'4px', fontSize:'14px', boxSizing:'border-box', background:'#fff', color:'#333', outline:'none' }
+const EP_BTN_SM = { background:'#f5f5f5', color:'#333', border:'1px solid #ccc', borderRadius:'4px', padding:'6px 12px', cursor:'pointer', fontSize:'13px', whiteSpace:'nowrap' }
+const EP_BTN_ORG = { background:'#f97316', color:'#fff', border:'none', borderRadius:'4px', padding:'8px 18px', cursor:'pointer', fontSize:'14px', fontWeight:600, display:'flex', alignItems:'center', gap:'6px' }
+const EP_BTN_GH  = { background:'transparent', color:'#555', border:'1px solid #ccc', borderRadius:'4px', padding:'8px 18px', cursor:'pointer', fontSize:'14px', display:'flex', alignItems:'center', gap:'6px' }
+
+// Must be outside EditProductModal — if defined inside, React recreates it
+// on every keystroke causing inputs to lose focus (cursor jumps out).
+function FieldRow({ label, required, children }) {
+  return (
+    <tr>
+      <td style={{ width:'210px', verticalAlign:'top', paddingRight:'14px', paddingTop:'10px', textAlign:'right', fontSize:'13px', color:'#555', whiteSpace:'nowrap' }}>
+        {required && <span style={{ color:'#999', fontSize:'11px', marginRight:'4px' }}>(REQUIRED)</span>}{label}
+      </td>
+      <td style={{ paddingBottom:'12px', paddingTop:'4px' }}>{children}</td>
+    </tr>
+  )
+}
+
 function EditProductModal({ product, onClose, onSaved }) {
   const [form, setForm] = useState({ ...product })
   const [tab, setTab]   = useState('General')
@@ -216,27 +279,16 @@ function EditProductModal({ product, onClose, onSaved }) {
     finally { setBusy(false) }
   }
 
-  const inp    = { width:'100%', padding:'7px 10px', border:'1px solid #ccc', borderRadius:'4px', fontSize:'14px', boxSizing:'border-box', background:'#fff', color:'#333', outline:'none' }
-  const btnSm  = { background:'#f5f5f5', color:'#333', border:'1px solid #ccc', borderRadius:'4px', padding:'6px 12px', cursor:'pointer', fontSize:'13px', whiteSpace:'nowrap' }
-  const btnOrg = { background:'#f97316', color:'#fff', border:'none', borderRadius:'4px', padding:'8px 18px', cursor:'pointer', fontSize:'14px', fontWeight:600, display:'flex', alignItems:'center', gap:'6px' }
-  const btnGh  = { background:'transparent', color:'#555', border:'1px solid #ccc', borderRadius:'4px', padding:'8px 18px', cursor:'pointer', fontSize:'14px', display:'flex', alignItems:'center', gap:'6px' }
-
-  const Row = ({ label, required, children }) => (
-    <tr>
-      <td style={{ width:'210px', verticalAlign:'top', paddingRight:'14px', paddingTop:'10px', textAlign:'right', fontSize:'13px', color:'#555', whiteSpace:'nowrap' }}>
-        {required && <span style={{ color:'#999', fontSize:'11px', marginRight:'4px' }}>(REQUIRED)</span>}{label}
-      </td>
-      <td style={{ paddingBottom:'12px', paddingTop:'4px' }}>{children}</td>
-    </tr>
-  )
+  const inp    = EP_INP
+  const btnSm  = EP_BTN_SM
+  const btnOrg = EP_BTN_ORG
+  const btnGh  = EP_BTN_GH
+  const Row    = FieldRow
 
   const renderGeneral = () => (
     <table style={{ width:'100%', borderCollapse:'collapse' }}><tbody>
       <Row label="Product name" required>
-        <div style={{ display:'flex', gap:'8px' }}>
-          <input value={form.description || ''} onChange={e => hc('description', e.target.value)} style={{ ...inp, flex:1 }} />
-          <button style={btnSm}>Improve with AI</button>
-        </div>
+        <input value={form.description || ''} onChange={e => hc('description', e.target.value)} style={{ ...inp }} />
       </Row>
       <Row label="Categories" required>
         <div style={{ position:'relative' }}>
@@ -302,16 +354,7 @@ function EditProductModal({ product, onClose, onSaved }) {
         </div>
       </Row>
       <tr><td colSpan={2} style={{ paddingBottom:'12px' }}>
-        <div style={{ display:'flex', gap:'8px', marginBottom:'8px' }}>
-          <button style={btnSm}>Generate Product Description with AI</button>
-          <button style={btnSm}>Improve with AI</button>
-        </div>
         <div style={{ border:'1px solid #ccc', borderRadius:'4px', overflow:'hidden' }}>
-          <div style={{ background:'#f5f5f5', borderBottom:'1px solid #ccc', padding:'6px 10px', display:'flex', gap:'6px', flexWrap:'wrap' }}>
-            {['</>','f','B','I','list','img','link','A'].map((ic, i) => (
-              <button key={i} style={{ background:'none', border:'none', cursor:'pointer', fontSize:'13px', color:'#555', padding:'2px 5px', fontWeight:'bold' }}>{ic}</button>
-            ))}
-          </div>
           <textarea rows={5} value={form.web_long_description || ''} onChange={e => hc('web_long_description', e.target.value)}
             style={{ width:'100%', border:'none', outline:'none', padding:'10px', fontSize:'14px', resize:'vertical', fontFamily:'inherit', boxSizing:'border-box', color:'#333', display:'block' }} />
         </div>
@@ -350,11 +393,11 @@ function EditProductModal({ product, onClose, onSaved }) {
     <div style={{ position:'fixed', inset:0, background:'rgba(0,0,0,.65)', display:'flex', alignItems:'center', justifyContent:'center', zIndex:1000, overflowY:'auto', padding:'20px' }}>
       <div style={{ background:'#fff', borderRadius:'8px', width:'100%', maxWidth:'860px', boxShadow:'0 8px 40px rgba(0,0,0,.35)', display:'flex', flexDirection:'column', maxHeight:'92vh', color:'#333' }}>
         <div style={{ padding:'18px 24px 0', borderBottom:'1px solid #e5e7eb', position:'relative' }}>
-          <button onClick={onClose} style={{ position:'absolute', right:'16px', top:'16px', background:'none', border:'none', fontSize:'22px', cursor:'pointer', color:'#666', lineHeight:1 }}>x</button>
+          <button type="button" onClick={onClose} style={{ position:'absolute', right:'16px', top:'16px', background:'none', border:'none', fontSize:'22px', cursor:'pointer', color:'#666', lineHeight:1 }}>x</button>
           <h3 style={{ margin:0, marginBottom:'14px', fontSize:'20px', fontWeight:700, color:'#111' }}>Edit a product</h3>
           <div style={{ display:'flex', overflowX:'auto' }}>
             {ALL_TABS.map(t => (
-              <button key={t} onClick={() => setTab(t)} style={{
+              <button type="button" key={t} onClick={() => setTab(t)} style={{
                 padding:'8px 16px', background:'transparent', border:'none',
                 borderBottom: t === tab ? '2px solid #1d4ed8' : '2px solid transparent',
                 color: t === tab ? '#1d4ed8' : '#555', cursor:'pointer', fontSize:'13px',
@@ -363,18 +406,20 @@ function EditProductModal({ product, onClose, onSaved }) {
             ))}
           </div>
         </div>
-        <div style={{ flex:1, overflowY:'auto', padding:'20px 24px' }}>
-          {renderTab()}
-        </div>
-        <div style={{ padding:'14px 24px', borderTop:'1px solid #e5e7eb', display:'flex', gap:'10px', justifyContent:'flex-end', background:'#fafafa', borderRadius:'0 0 8px 8px' }}>
-          <button onClick={onClose} style={btnGh}>Cancel</button>
-          <button onClick={() => save(true)} disabled={busy} style={btnOrg}>
-            {busy ? 'Saving...' : 'Save changes & close'}
-          </button>
-          <button onClick={() => save(false)} disabled={busy} style={{ ...btnOrg, background:'#ea580c' }}>
-            {busy ? 'Saving...' : 'Save changes'}
-          </button>
-        </div>
+        <form onSubmit={e => e.preventDefault()} style={{ flex:1, display:'flex', flexDirection:'column', overflowY:'hidden' }}>
+          <div style={{ flex:1, overflowY:'auto', padding:'20px 24px' }}>
+            {renderTab()}
+          </div>
+          <div style={{ padding:'14px 24px', borderTop:'1px solid #e5e7eb', display:'flex', gap:'10px', justifyContent:'flex-end', background:'#fafafa', borderRadius:'0 0 8px 8px' }}>
+            <button type="button" onClick={onClose} style={btnGh}>Cancel</button>
+            <button type="button" onClick={() => save(true)} disabled={busy} style={btnOrg}>
+              {busy ? 'Saving...' : 'Save changes & close'}
+            </button>
+            <button type="button" onClick={() => save(false)} disabled={busy} style={{ ...btnOrg, background:'#ea580c' }}>
+              {busy ? 'Saving...' : 'Save changes'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )
@@ -390,6 +435,7 @@ export default function AdminProducts() {
   const [stockModal, setStockModal] = useState(null)
   const [offerModal, setOfferModal] = useState(null)
   const [editModal, setEditModal]   = useState(null)
+  const [detailModal, setDetailModal] = useState(null)
 
   const load = useCallback(async () => {
     setLoading(true)
@@ -447,9 +493,10 @@ export default function AdminProducts() {
 
   return (
     <div>
-      {stockModal && <StockModal product={stockModal} onClose={() => setStockModal(null)} onSaved={load} />}
-      {offerModal && <OfferModal product={offerModal} onClose={() => setOfferModal(null)} onSaved={load} />}
-      {editModal  && <EditProductModal product={editModal} onClose={() => setEditModal(null)} onSaved={load} />}
+      {stockModal  && <StockModal product={stockModal} onClose={() => setStockModal(null)} onSaved={load} />}
+      {offerModal  && <OfferModal product={offerModal} onClose={() => setOfferModal(null)} onSaved={load} />}
+      {editModal   && <EditProductModal product={editModal} onClose={() => setEditModal(null)} onSaved={load} />}
+      {detailModal && <ProductDetailModal product={detailModal} onClose={() => setDetailModal(null)} />}
 
       <div className="admin-flex-between mb-6">
         <div>
@@ -500,7 +547,7 @@ export default function AdminProducts() {
               </thead>
               <tbody>
                 {data.data?.map(p => (
-                  <tr key={p.id} style={{ opacity: p.deleted ? 0.5 : 1 }}>
+                  <tr key={p.id} style={{ opacity: p.deleted ? 0.5 : 1, cursor:'pointer' }} onClick={() => setDetailModal(p)}>
                     <td style={{ color: '#94a3b8' }}>{p.reference}</td>
                     <td style={{ maxWidth: '220px' }}>
                       <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontWeight: 500 }}>{p.description}</div>
@@ -515,46 +562,46 @@ export default function AdminProducts() {
                         {p.stock_quantity ?? 0}
                       </span>
                     </td>
-                    <td>
+                    <td onClick={e => e.stopPropagation()}>
                       <label className="admin-switch">
                         <input type="checkbox" checked={!!p.live_for_web} onChange={() => !p.deleted && doToggleWeb(p.id)} />
                         <span className="admin-slider"></span>
                       </label>
                     </td>
-                    <td>
+                    <td onClick={e => e.stopPropagation()}>
                        <label className="admin-switch">
                         <input type="checkbox" checked={!!p.is_offer} onChange={() => !p.deleted && doToggleOffer(p)} />
                         <span className="admin-slider"></span>
                       </label>
                     </td>
-                    <td>
+                    <td onClick={e => e.stopPropagation()}>
                        <label className="admin-switch">
                         <input type="checkbox" checked={!!p.is_best_offer} onChange={() => !p.deleted && doToggleBestOffer(p.id)} />
                         <span className="admin-slider"></span>
                       </label>
                     </td>
-                    <td>
+                    <td onClick={e => e.stopPropagation()}>
                        <label className="admin-switch">
                         <input type="checkbox" checked={!!p.is_new_arrival} onChange={() => !p.deleted && doToggleNewArrival(p.id)} />
                         <span className="admin-slider"></span>
                       </label>
                     </td>
-                    <td>
+                    <td onClick={e => e.stopPropagation()}>
                       <div style={{ display: 'flex', gap: '0.5rem' }}>
                         {!p.deleted && (
-                          <button onClick={() => setEditModal(p)} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#3b82f6' }} title="Edit product">
+                          <button onClick={(e) => { e.stopPropagation(); setEditModal(p) }} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#3b82f6' }} title="Edit product">
                             <Edit2 size={16} />
                           </button>
                         )}
                         {!p.deleted
-                          ? <button onClick={() => doSoftDelete(p.id)} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#f59e0b' }}>
+                          ? <button onClick={(e) => { e.stopPropagation(); doSoftDelete(p.id) }} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#f59e0b' }}>
                               <EyeOff size={16} />
                             </button>
-                          : <button onClick={() => doRestore(p.id)} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#10b981' }}>
+                          : <button onClick={(e) => { e.stopPropagation(); doRestore(p.id) }} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#10b981' }}>
                               <RotateCcw size={16} />
                             </button>
                         }
-                        <button onClick={() => doHardDelete(p.id)} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#ef4444' }}>
+                        <button onClick={(e) => { e.stopPropagation(); doHardDelete(p.id) }} className="admin-btn admin-btn-ghost" style={{ padding: '0.5rem', color: '#ef4444' }}>
                           <Trash2 size={16} />
                         </button>
                       </div>

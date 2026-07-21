@@ -898,9 +898,6 @@ export default function ProductDetail() {
 
   if (loading) {
     return (
-      <div className="pd-state">
-        <div className="pd-spinner" />
-        <p>LOADING PRODUCT…</p>
       <div
         style={{
           minHeight: '60vh',
@@ -938,10 +935,6 @@ export default function ProductDetail() {
 
   if (error) {
     return (
-      <div className="pd-state pd-state-error">
-        <div className="pd-state-icon">📦</div>
-        <p>{error}</p>
-        <Link to="/shop">← BACK TO SHOP</Link>
       <div
         style={{
           minHeight: '60vh',
