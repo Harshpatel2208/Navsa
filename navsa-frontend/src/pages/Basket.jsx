@@ -149,20 +149,17 @@ function Basket() {
           </div>
 
           {basketItems.map(item => {
-            // const lineWeight = Number(item.weight || 0) * Number(item.totalCases || 0)
-            // const lineVolume = Number(item.volume || 0) * Number(item.totalCases || 0)
-
             const unitsPerCase = Number(item.units_of || item.inner_case_quantity || 1)
 
             const lineWeight =
-  Number(item.weight || 0) *
-  unitsPerCase *
-  Number(item.totalCases || 0)
+              Number(item.weight || 0) *
+              unitsPerCase *
+              Number(item.totalCases || 0)
 
-const lineVolume =
-  Number(item.volume || 0) *
-  Number(item.totalCases || 0)
-            
+            const lineVolume =
+              Number(item.volume || 0) *
+              Number(item.totalCases || 0)
+
             const subtotal = Number(item.price || 0) * Number(item.totalCases || 0)
 
             return (
@@ -261,6 +258,7 @@ const lineVolume =
               overVolume={overVolume}
               canCheckout={canCheckout}
               removeByStorageType={removeByStorageType}
+              money={money}
             />
           )}
 
@@ -335,6 +333,7 @@ function ContainerSummary({
   overVolume,
   canCheckout,
   removeByStorageType,
+  money,
 }) {
   const remainingVolume = Number(selectedContainer?.volume_m3 || 0) - basketVolume
   const remainingWeight = Number(selectedContainer?.payload_weight_kg || 0) - basketWeight
