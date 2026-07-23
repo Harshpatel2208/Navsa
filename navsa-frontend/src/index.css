@@ -44,6 +44,48 @@ img {
   -webkit-user-drag: none;
 }
 
+/* Completely hide Google Translate floating logo, widgets, popups, tooltips, and iframe banners */
+.goog-te-banner-frame,
+.goog-te-banner-frame.skiptranslate,
+.goog-te-balloon-frame,
+#goog-gt-tt,
+.goog-te-spinner-pos,
+.goog-te-gadget,
+.goog-te-gadget-icon,
+.goog-te-gadget-simple,
+#google_translate_element,
+.VIpgJd-yD05df-Smw21b,
+.VIpgJd-yD05df-IAoFlb,
+.VIpgJd-yD05df-Smw21b-hTf-Lg2Whd,
+div[class*="VIpgJd"],
+span[class*="VIpgJd"],
+iframe[class*="goog-te"],
+.goog-tooltip,
+.goog-tooltip:hover {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+body {
+  top: 0 !important;
+  position: static !important;
+}
+
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+.skiptranslate {
+  font-family: inherit;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

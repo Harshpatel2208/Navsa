@@ -21,6 +21,7 @@ function Shop() {
 
   const categoryFilter = searchParams.get('category') || ''
   const brandFilter = searchParams.get('brand') || ''
+  const offerFilter = searchParams.get('offer') || ''
   const urlSearch = searchParams.get('search') || ''
 
   const [products, setProducts] = useState([])
@@ -41,6 +42,9 @@ function Shop() {
       let url = `/api/products?page=${page}`
       if (categoryFilter) url += `&category=${encodeURIComponent(categoryFilter)}`
       if (brandFilter) url += `&brand=${encodeURIComponent(brandFilter)}`
+      if (offerFilter === 'daily' || offerFilter === '1') url += `&is_offer=1`
+      if (offerFilter === 'new') url += `&is_new_arrival=1`
+      if (offerFilter === 'best') url += `&is_best_offer=1`
       if (searchValue.trim().length >= 3) {
         url += `&search=${encodeURIComponent(searchValue.trim())}`
       }

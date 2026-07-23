@@ -48,16 +48,16 @@ function Footer() {
             </address>
 
             <div className="site-footer__socials">
-              <a href="https://facebook.com/navsainternational" target="_blank" rel="noreferrer" aria-label="Facebook">
+              <a href="https://facebook.com/navsainternational" target="_blank" rel="noreferrer" aria-label="Facebook" className="footer-social-icon footer-social-icon--facebook">
                 <FaFacebookF />
               </a>
-              <a href="https://instagram.com/navsainternational" target="_blank" rel="noreferrer" aria-label="Instagram">
+              <a href="https://instagram.com/navsainternational" target="_blank" rel="noreferrer" aria-label="Instagram" className="footer-social-icon footer-social-icon--instagram">
                 <FaInstagram />
               </a>
-              <a href="https://x.com/navsaintl" target="_blank" rel="noreferrer" aria-label="X">
+              <a href="https://x.com/navsaintl" target="_blank" rel="noreferrer" aria-label="X" className="footer-social-icon footer-social-icon--x">
                 <FaXTwitter />
               </a>
-              <a href="https://linkedin.com/company/navsa-international-limited" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+              <a href="https://linkedin.com/company/navsa-international-limited" target="_blank" rel="noreferrer" aria-label="LinkedIn" className="footer-social-icon footer-social-icon--linkedin">
                 <FaLinkedinIn />
               </a>
             </div>

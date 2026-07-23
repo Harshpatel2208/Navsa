@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import './BecomeCustomer.css';
 
 function BecomeCustomer() {
+  const [isCriteriaConfirmed, setIsCriteriaConfirmed] = useState(false);
+  const [isSingleTickChecked, setIsSingleTickChecked] = useState(false);
+
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -71,11 +74,41 @@ function BecomeCustomer() {
     "Yemen", "Zambia", "Zimbabwe"
   ];
 
-  const categories = [
-    'Health Care', 'Skin Care', 'Baby Care', 'Hair Care', 'Dental',
-    'Medicines & Vitamins', 'Toiletries', 'Confectionery', 'Crisps Snacks & Nuts',
-    'Soft Drinks', 'Seasonal', 'Healthy Living Range', 'Household', 'Grocery', 'Bath Care'
-  ];
+  const [categories, setCategories] = useState([]);
+
+
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const BASE = import.meta.env.VITE_API_URL || '/api';
+        const response = await fetch(`${BASE}/categories`);
+        if (response.ok) {
+          const data = await response.json();
+          const categoryList = Array.isArray(data)
+            ? data.map(item => (typeof item === 'string' ? item : item.category_name || item.name)).filter(Boolean)
+            : [];
+
+          if (categoryList.length > 0) {
+            setCategories(categoryList);
+            return;
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch categories from DB:', err);
+      }
+
+      // Default categories fallback
+      setCategories([
+        'Chocolates', 'Groceries', 'Confectionery', 'Crisps & Snacks',
+        'Cold and Hot Beverages', 'Biscuits', 'Seasonal', 'Chilled Items',
+        'Frozen', 'Baby and Kids', 'Health and Personal Care', 'Pet Care and Food',
+        'Cleaning & Households'
+      ]);
+    }
+
+    loadCategories();
+  }, []);
+
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -133,18 +166,60 @@ function BecomeCustomer() {
     );
   }
 
+  if (!isCriteriaConfirmed) {
+    return (
+      <div className="become-customer-container">
+        <div className="customer-form-wrapper eligibility-wrapper">
+          <h1 className="form-title">Customer Registration Criteria</h1>
+          <p className="eligibility-intro">
+            Please Note: You need to meet the following criteria for us to be able to process your account.
+          </p>
+
+          <div className="form-instructions criteria-box">
+            <ul className="criteria-list">
+              <li>• UK companies <strong>must be VAT registered</strong></li>
+              <li>• Your business is <strong>registered at a commercial property</strong>, not a home address</li>
+              <li>• Our minimum order is <strong>£5,000 for UK & Europe, £10,000 for ROW</strong></li>
+              <li>• You need to be <strong>trading for over 12 months</strong> for UK Customers</li>
+            </ul>
+          </div>
+
+          <div className="single-tick-box">
+            <label>
+              <input
+                type="checkbox"
+                checked={isSingleTickChecked}
+                onChange={(e) => setIsSingleTickChecked(e.target.checked)}
+              />
+              <span><strong>I confirm that my business meets all of the above eligibility criteria</strong></span>
+            </label>
+          </div>
+
+          <button
+            type="button"
+            className="continue-btn"
+            disabled={!isSingleTickChecked}
+            onClick={() => setIsCriteriaConfirmed(true)}
+          >
+            Continue to Application Form →
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="become-customer-container">
       <div className="customer-form-wrapper">
         <h1 className="form-title">Customer Application Form</h1>
-        <div className="form-instructions">
-          <p>Please Note: You need to meet the following criteria for us to be able to process your account.</p>
-          <ol>
-            <li>UK companies <strong>must be VAT registered</strong></li>
-            <li>Your business is <strong>registered at a commercial property</strong>, not a home address</li>
-            <li>Our minimum order is <strong>£5,000 for UK & Europe, £10,000 for ROW</strong></li>
-            <li>You need to be <strong>trading for over 12 months</strong> for UK Customers</li>
-          </ol>
+        <div className="form-instructions confirmed-instructions">
+          <div className="confirmed-badge">✓ Verified Eligibility Criteria</div>
+          <ul className="criteria-list">
+            <li>• UK companies <strong>must be VAT registered</strong></li>
+            <li>• Your business is <strong>registered at a commercial property</strong>, not a home address</li>
+            <li>• Our minimum order is <strong>£5,000 for UK & Europe, £10,000 for ROW</strong></li>
+            <li>• You need to be <strong>trading for over 12 months</strong> for UK Customers</li>
+          </ul>
         </div>
 
         {status === 'error' && (

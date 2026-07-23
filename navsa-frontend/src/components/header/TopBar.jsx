@@ -73,6 +73,7 @@ export default function TopBar() {
               target="_blank"
               rel="noreferrer"
               aria-label={item.label}
+              className={`top-bar__social-icon top-bar__social-icon--${item.label.toLowerCase()}`}
             >
               {item.icon}
             </a>

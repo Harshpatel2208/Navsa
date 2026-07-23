@@ -35,7 +35,7 @@ function AdminShell({ onLogout }) {
             <Package size={20} /> Products
           </NavLink>
           <NavLink to="/admin/offers" className={({isActive}) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            <Tag size={20} /> Daily Offers
+            <Tag size={20} /> Offers & Promotions
           </NavLink>
           <NavLink to="/admin/registrations" className={({isActive}) => `admin-nav-item ${isActive ? 'active' : ''}`}>
             <UserCheck size={20} /> Registrations

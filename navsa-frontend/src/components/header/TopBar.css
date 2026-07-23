@@ -45,20 +45,38 @@
   width: 26px;
   height: 26px;
   color: #ffffff;
-  background: rgba(255, 255, 255, 0.11);
   border-radius: 50%;
   text-decoration: none;
   font-size: 12px;
-  transition:
-    color 0.2s ease,
-    background 0.2s ease,
-    transform 0.2s ease;
+  transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Original Brand Colors for Social Icons */
+.top-bar__social-icon--facebook {
+  background: #1877f2;
+}
+
+.top-bar__social-icon--instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%);
+}
+
+.top-bar__social-icon--x {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.top-bar__social-icon--linkedin {
+  background: #0077b5;
+}
+
+.top-bar__social-icon--whatsapp {
+  background: #25d366;
 }
 
 .top-bar__socials a:hover {
-  color: #082c52;
-  background: #ffffff;
-  transform: translateY(-1px);
+  transform: translateY(-2px) scale(1.1);
+  filter: brightness(1.15);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.3);
 }
 
 .top-bar__promotion {

@@ -488,14 +488,15 @@ function Home() {
               </p>
               <ul>
                 <li>UK companies must be VAT registered.</li>
-                <li>Your business is registered at a commercial property, not a home address</li>
-                <li>Our minimum order is £5,000.00 for UK & Europe, £10,000.00 for ROW (Rest of the World)</li>
-                <li>You need to be trading for over 12 months for UK Customers</li>
-                <li>UK customers must be trading for over 12 months.</li>
+                <li>Your business is registered at a commercial property, not a home address.</li>
+                <li>Our minimum order is £5,000.00 for UK & Europe, £10,000.00 for ROW (Rest of the World).</li>
+                <li>You need to be trading for over 12 months for UK Customers.</li>
               </ul>
-              <Link to="/become-a-customer" className="home-card-button">
-                Apply for an account
-              </Link>
+              <div className="home-card-footer">
+                <Link to="/become-a-customer" className="home-card-button">
+                  Apply for an account
+                </Link>
+              </div>
             </div>
           </article>
 
@@ -513,19 +514,58 @@ function Home() {
               <span className="home-section-kicker orange">TRADE SHOW</span>
               <h3>Gulfood 2026</h3>
               <p className="home-trade-date">26th to 30th January 2026</p>
-              <Link
-                to="/tradeshow"
-                className="home-card-button home-card-button--light"
-                onClick={() => {
-                  if ('scrollRestoration' in window.history) {
-                    window.history.scrollRestoration = 'manual'
-                  }
-                  window.scrollTo(0, 0)
-                }}
-              >
-                More Details
-                <span aria-hidden="true">→</span>
-              </Link>
+              <p className="home-card-intro light">
+                Join NAVSA at the world's largest annual food & beverage trade show.
+              </p>
+              <ul>
+                <li>Meet our international wholesale & export delegation in Dubai.</li>
+                <li>Discover over 20,000+ British FMCG brands & products.</li>
+                <li>Discuss direct container loading and flexible freight options.</li>
+              </ul>
+              <div className="home-card-footer">
+                <Link
+                  to="/tradeshow"
+                  className="home-card-button home-card-button--light"
+                  onClick={() => {
+                    if ('scrollRestoration' in window.history) {
+                      window.history.scrollRestoration = 'manual'
+                    }
+                    window.scrollTo(0, 0)
+                  }}
+                >
+                  More Details
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
+          </article>
+
+          <article className="home-feature-card home-feature-card--supplier">
+            <div className="home-feature-card__image-wrap">
+              <img
+                src="/logos/navsa logo combined.png"
+                alt="NAVSA International Supplier Partnership"
+                className="home-feature-card__image"
+                loading="lazy"
+              />
+            </div>
+
+            <div className="home-feature-card__content">
+              <h3>Become a Supplier</h3>
+              <p className="home-card-intro">
+                Partner with NAVSA to distribute your FMCG products across global markets.
+              </p>
+              <ul>
+                <li>Expand your brand reach to over 50+ international countries.</li>
+                <li>High-volume purchasing, bulk ordering & prompt payment terms.</li>
+                <li>Complete export documentation, compliance & logistics handling.</li>
+                <li>Direct connection to global wholesale & retail networks.</li>
+              </ul>
+              <div className="home-card-footer">
+                <Link to="/become-a-supplier" className="home-card-button">
+                  Apply as a Supplier
+                </Link>
+              </div>
             </div>
           </article>
         </div>

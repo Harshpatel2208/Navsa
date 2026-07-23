@@ -11,6 +11,60 @@
   color: var(--navsa-navy-dark);
   background: #ffffff;
   font-family: Arial, Helvetica, sans-serif;
+  transition: box-shadow 0.3s ease;
+}
+
+/* ── Sticky mode ── */
+
+.header-main--sticky {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  box-shadow: 0 4px 24px rgba(8, 43, 83, 0.14);
+  animation: navsa-slide-in 0.25s ease;
+}
+
+@keyframes navsa-slide-in {
+  from { transform: translateY(-100%); opacity: 0.6; }
+  to   { transform: translateY(0);     opacity: 1;   }
+}
+
+/* Hide award images in sticky mode */
+.header-main--sticky .header-main__award {
+  display: none;
+}
+
+/* Shrink brand row height in sticky mode */
+.header-main--sticky .header-main__brand-row {
+  min-height: 72px;
+  padding: 8px 0;
+  grid-template-columns:
+    minmax(160px, 1fr)
+    minmax(280px, 420px)
+    minmax(160px, 1fr);
+  gap: 16px;
+}
+
+/* Shrink logo in sticky mode */
+.header-main--sticky .header-main__logo {
+  width: min(100%, 280px);
+  max-height: 56px;
+  transition: all 0.3s ease;
+}
+
+/* Shrink buttons slightly in sticky mode */
+.header-main--sticky .header-main__customer-button,
+.header-main--sticky .header-main__account-button {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 12px;
+}
+
+/* Placeholder div to prevent layout jump when header becomes fixed */
+.header-main--sticky ~ .header-sticky-spacer {
+  display: block;
 }
 
 .sr-only {

@@ -12,6 +12,7 @@ import {
   MdVisibilityOff,
 } from 'react-icons/md'
 import { useCart } from '../../context/CartContext'
+import { useCurrency } from '../../utils/currency'
 import './HeaderMain.css'
 
 const CATEGORIES = [
@@ -61,12 +62,14 @@ function getProductImage(product) {
 export default function HeaderMain() {
   const navigate = useNavigate()
   const { wishlistCount, basketCount, basketTotal } = useCart()
+  const { formatPrice } = useCurrency()
 
   const searchAreaRef = useRef(null)
   const searchRequestRef = useRef(null)
 
   const [shopOpen, setShopOpen] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isSticky, setIsSticky] = useState(false)
 
   const [search, setSearch] = useState('')
   const [suggestions, setSuggestions] = useState([])
@@ -87,15 +90,49 @@ export default function HeaderMain() {
     () => localStorage.getItem('navsa_prices_hidden') === 'true'
   )
 
-  useEffect(() => {
-    localStorage.setItem('navsa_language', language)
+  function handleLanguageChange(selectedLang) {
+    const lang = selectedLang || 'en'
+    setLanguage(selectedLang)
+    localStorage.setItem('navsa_language', selectedLang)
+
+    const cookieVal = `/en/${lang}`
+    document.cookie = `googtrans=${cookieVal}; path=/;`
+    document.cookie = `googtrans=${cookieVal}; domain=${window.location.hostname}; path=/;`
+
+    if (lang === 'ar') {
+      document.documentElement.setAttribute('dir', 'rtl')
+      document.documentElement.setAttribute('lang', 'ar')
+    } else {
+      document.documentElement.setAttribute('dir', 'ltr')
+      document.documentElement.setAttribute('lang', lang)
+    }
 
     window.dispatchEvent(
       new CustomEvent('navsa-language-change', {
-        detail: { language },
+        detail: { language: selectedLang },
       })
     )
-  }, [language])
+
+    const googleSelect = document.querySelector('.goog-te-combo')
+    if (googleSelect) {
+      googleSelect.value = lang
+      googleSelect.dispatchEvent(new Event('change'))
+    } else {
+      window.location.reload()
+    }
+  }
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('navsa_language') || ''
+    if (savedLang) {
+      const lang = savedLang === 'en' ? 'en' : savedLang
+      const cookieVal = `/en/${lang}`
+      document.cookie = `googtrans=${cookieVal}; path=/;`
+      if (lang === 'ar') {
+        document.documentElement.setAttribute('dir', 'rtl')
+      }
+    }
+  }, [])
 
   useEffect(() => {
     localStorage.setItem('navsa_currency', currency)
@@ -152,6 +189,14 @@ export default function HeaderMain() {
       document.removeEventListener('mousedown', handleOutsideClick)
       document.removeEventListener('keydown', handleEscape)
     }
+  }, [])
+
+  useEffect(() => {
+    function handleScroll() {
+      setIsSticky(window.scrollY > 80)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
@@ -286,7 +331,7 @@ export default function HeaderMain() {
   }
 
   return (
-    <div className="header-main">
+    <div className={`header-main${isSticky ? ' header-main--sticky' : ''}`}>
       <div className="header-main__brand-row">
         <div className="header-main__brand-side">
           <img
@@ -565,7 +610,7 @@ export default function HeaderMain() {
 
                       {!pricesHidden && (
                         <span className="header-main__suggestion-price">
-                          £{Number(product.price || 0).toFixed(2)}
+                          {formatPrice(product.price)}
                         </span>
                       )}
                     </button>
@@ -588,13 +633,15 @@ export default function HeaderMain() {
         </div>
 
         <div className="header-main__controls">
-          <label className="header-main__select">
+          <label className="header-main__select notranslate" translate="no">
             <span className="sr-only">Select language</span>
 
             <select
+              className="notranslate"
+              translate="no"
               value={language}
               onChange={event =>
-                setLanguage(event.target.value)
+                handleLanguageChange(event.target.value)
               }
               aria-label="Select language"
             >
@@ -602,6 +649,8 @@ export default function HeaderMain() {
                 <option
                   key={option.value || 'select-language'}
                   value={option.value}
+                  className="notranslate"
+                  translate="no"
                 >
                   {option.label}
                 </option>
@@ -611,10 +660,12 @@ export default function HeaderMain() {
             <FaChevronDown />
           </label>
 
-          <label className="header-main__select header-main__currency">
+          <label className="header-main__select header-main__currency notranslate" translate="no">
             <span className="sr-only">Select currency</span>
 
             <select
+              className="notranslate"
+              translate="no"
               value={currency}
               onChange={event =>
                 setCurrency(event.target.value)
@@ -625,6 +676,8 @@ export default function HeaderMain() {
                 <option
                   key={option.value}
                   value={option.value}
+                  className="notranslate"
+                  translate="no"
                 >
                   {option.label}
                 </option>
@@ -672,7 +725,7 @@ export default function HeaderMain() {
 
               {!pricesHidden && (
                 <small>
-                  £{Number(basketTotal || 0).toFixed(2)}
+                  {formatPrice(basketTotal)}
                 </small>
               )}
             </span>

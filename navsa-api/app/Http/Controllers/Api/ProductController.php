@@ -78,6 +78,18 @@ class ProductController extends Controller
             $query->where('supplier_id', $request->supplier_id);
         }
 
+        if ($request->filled('is_offer')) {
+            $query->where('is_offer', $request->is_offer);
+        }
+
+        if ($request->filled('is_new_arrival')) {
+            $query->where('is_new_arrival', $request->is_new_arrival);
+        }
+
+        if ($request->filled('is_best_offer')) {
+            $query->where('is_best_offer', $request->is_best_offer);
+        }
+
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }

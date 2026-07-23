@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useShipping } from '../context/ShippingContext'
+import { useCurrency } from '../utils/currency'
 import {
   getContainers,
   getCountries,
@@ -46,10 +47,6 @@ function normalizeCase(raw) {
   }
 
   return null
-}
-
-function money(value) {
-  return `£${Number(value || 0).toFixed(2)}`
 }
 
 function makeBrandUrl(product) {
@@ -103,6 +100,7 @@ function calculateIndicativeBbd(shelfLifeDays) {
 
 export default function ProductDetail() {
   const { id } = useParams()
+  const { formatPrice: money } = useCurrency()
 
   const [product, setProduct] = useState(null)
   const [loading, setLoading] = useState(true)

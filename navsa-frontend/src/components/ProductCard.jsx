@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useShipping } from '../context/ShippingContext'
+import { useCurrency } from '../utils/currency'
 import {
   getContainers,
   getCountries,
@@ -10,10 +11,6 @@ import {
 import './ProductCard.css'
 import NoticeModal from './NoticeModal'
 import './ProductCardFinal.css'
-
-function money(value) {
-  return `£${Number(value || 0).toFixed(2)}`
-}
 
 function getImage(product) {
   return product?.web_image ? `/products/${product.web_image}` : ''
@@ -53,6 +50,7 @@ function ProductCard({
   onWishlistRemoveRequest,
 }) {
   const navigate = useNavigate()
+  const { formatPrice: money } = useCurrency()
 
   const {
     addToBasket,

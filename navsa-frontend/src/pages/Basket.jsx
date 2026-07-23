@@ -2,15 +2,9 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useCart } from '../context/CartContext'
 import { useShipping } from '../context/ShippingContext'
+import { useCurrency } from '../utils/currency'
 import ConfirmModal from '../components/common/ConfirmModal'
 import './Basket.css'
-
-function money(value) {
-  return `£${Number(value || 0).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  })}`
-}
 
 function kg(value) {
   return Number(value || 0).toLocaleString(undefined, {
@@ -32,6 +26,7 @@ function ft3(value) {
 
 function Basket() {
   const [itemToRemove, setItemToRemove] = useState(null)
+  const { formatPrice: money } = useCurrency()
 
   const {
     basketItems,

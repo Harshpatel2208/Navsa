@@ -377,7 +377,7 @@
 /* Info */
 .home-info-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
@@ -683,68 +683,83 @@
   max-width: 100%;
 }
 
-/* Homepage customer and trade-show feature cards */
-.home-feature-card {
+/* Homepage 3-Card Feature Section Layout */
+.home-info-grid {
   display: grid;
-  grid-template-columns: minmax(240px, 0.92fr) minmax(0, 1.35fr);
-  min-height: 430px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 26px;
+  align-items: stretch;
+  max-width: 1560px;
+  margin: 0 auto;
+}
+
+.home-feature-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow: hidden;
   background: #ffffff;
   border: 1px solid var(--navsa-border);
-  border-radius: 24px;
-  box-shadow: 0 18px 38px rgba(8, 43, 83, 0.11);
+  border-radius: 22px;
+  box-shadow: 0 16px 34px rgba(8, 43, 83, 0.1);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.home-feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 24px 46px rgba(8, 43, 83, 0.16);
 }
 
 .home-feature-card--trade {
   color: #ffffff;
   background: linear-gradient(135deg, var(--navsa-navy), #174a83);
-  border-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .home-feature-card__image-wrap {
+  width: 100%;
+  height: 230px;
+  min-height: 230px;
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 0;
-  padding: 28px;
-  background: linear-gradient(145deg, #ffffff, #f3f6fa);
-  border-right: 1px solid var(--navsa-border);
+  padding: 20px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid var(--navsa-border);
+  overflow: hidden;
 }
 
 .home-feature-card__image-wrap--trade {
   padding: 0;
-  background: #ffffff;
-  border-right-color: rgba(255, 255, 255, 0.15);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
 }
 
 .home-feature-card__image {
-  display: block;
   width: 100%;
   height: 100%;
-  max-height: 360px;
   object-fit: contain;
   object-position: center;
 }
 
 .home-feature-card__image--trade {
-  max-height: none;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 
 .home-feature-card__content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  min-width: 0;
-  padding: 38px;
+  flex: 1;
+  padding: 28px 28px 30px;
 }
 
 .home-feature-card__content h3 {
-  margin: 0 0 12px;
+  margin: 0 0 10px;
   color: var(--navsa-navy);
-  font-size: 28px;
-  line-height: 1.12;
+  font-size: clamp(22px, 1.7vw, 27px);
+  line-height: 1.18;
   font-weight: 900;
 }
 
@@ -754,391 +769,100 @@
 
 .home-feature-card__content .home-card-intro {
   margin: 0;
+  color: #667085;
+  font-size: 14px;
+  line-height: 1.6;
 }
 
-.home-feature-card__content ul {
-  margin: 20px 0 0;
-  padding-left: 18px;
-  color: #596579;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.9;
+.home-feature-card__content--trade .home-card-intro.light {
+  color: #dbeafe;
 }
 
 .home-feature-card__content--trade .home-trade-date {
-  margin: 8px 0 0;
+  display: inline-block;
+  margin: 2px 0 10px;
   color: #ffffff !important;
+  font-size: 16px;
+  font-weight: 900;
 }
 
-.home-feature-card__content--trade .home-card-button {
-  gap: 10px;
-  margin-top: 28px;
+.home-feature-card__content ul {
+  margin: 14px 0 0;
+  padding-left: 18px;
+  color: #596579;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.68;
 }
 
-.home-feature-card__content--trade .home-card-button span {
-  font-size: 17px;
-  transition: transform 0.2s ease;
+.home-feature-card__content--trade ul {
+  color: #e2e8f0;
 }
 
-.home-feature-card__content--trade .home-card-button:hover span {
-  transform: translateX(4px);
+.home-feature-card__content--trade ul strong {
+  color: #ffffff;
 }
 
-@media (max-width: 1250px) {
-  .home-feature-card {
+.home-card-footer {
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.home-card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 24px;
+  color: #ffffff;
+  background: var(--navsa-orange);
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 900;
+  box-shadow: 0 4px 14px rgba(245, 130, 32, 0.25);
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.home-card-button:hover {
+  background: #e07216;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(245, 130, 32, 0.35);
+}
+
+.home-card-button--light {
+  color: var(--navsa-navy);
+  background: #ffffff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.home-card-button--light:hover {
+  color: var(--navsa-navy);
+  background: #f0f4f9;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+/* Responsive Grid for 3 Cards */
+@media (max-width: 1200px) {
+  .home-info-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .home-info-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
 
   .home-feature-card__image-wrap {
-    min-height: 260px;
-    border-right: 0;
-    border-bottom: 1px solid var(--navsa-border);
-  }
-
-  .home-feature-card__image-wrap--trade {
-    min-height: 250px;
-  }
-
-  .home-feature-card__image--trade {
-    max-height: 290px;
-    object-fit: contain;
-  }
-}
-
-@media (max-width: 760px) {
-  .home-feature-card {
-    min-height: 0;
-  }
-
-  .home-feature-card__image-wrap {
-    min-height: 220px;
-    padding: 20px;
-  }
-
-  .home-feature-card__image-wrap--trade {
-    padding: 0;
+    height: 200px;
+    min-height: 200px;
   }
 
   .home-feature-card__content {
-    padding: 28px 22px 30px;
-  }
-
-  .home-feature-card__content h3 {
-    font-size: 25px;
-  }
-}
-
-
-/* Final homepage feature-card layout: full image above content */
-.home-feature-card {
-  display: flex;
-  flex-direction: column;
-  min-height: 0;
-}
-
-.home-feature-card__image-wrap,
-.home-feature-card__image-wrap--trade {
-  width: 100%;
-  min-height: 0;
-  height: 270px;
-  padding: 18px;
-  background: #ffffff;
-  border-right: 0;
-  border-bottom: 1px solid var(--navsa-border);
-}
-
-.home-feature-card__image,
-.home-feature-card__image--trade {
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: contain;
-  object-position: center;
-}
-
-.home-feature-card__content {
-  flex: 1;
-  justify-content: flex-start;
-  padding: 34px 36px 38px;
-}
-
-.home-feature-card__content--trade {
-  justify-content: center;
-  min-height: 290px;
-}
-
-@media (max-width: 760px) {
-  .home-feature-card__image-wrap,
-  .home-feature-card__image-wrap--trade {
-    height: 220px;
-    padding: 14px;
-  }
-
-  .home-feature-card__content,
-  .home-feature-card__content--trade {
-    min-height: 0;
-    padding: 27px 22px 30px;
-  }
-}
-
-/* =========================================================
-   FINAL HOMEPAGE FEATURE CARD LAYOUT
-   Both cards use the same compact image-top/content-bottom design.
-   ========================================================= */
-.home-info-grid {
-  align-items: stretch;
-  gap: 26px;
-  max-width: 1420px;
-  margin-inline: auto;
-}
-
-.home-feature-card,
-.home-feature-card--trade {
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 235px auto;
-  min-height: 0;
-  height: 100%;
-  overflow: hidden;
-  border-radius: 22px;
-  box-shadow: 0 16px 34px rgba(8, 43, 83, 0.1);
-}
-
-.home-feature-card__image-wrap,
-.home-feature-card__image-wrap--trade {
-  width: 100%;
-  height: 235px;
-  min-height: 235px;
-  padding: 18px 24px;
-  background: #ffffff;
-  border-right: 0;
-  border-bottom: 1px solid var(--navsa-border);
-}
-
-.home-feature-card__image,
-.home-feature-card__image--trade {
-  width: 100%;
-  height: 100%;
-  max-height: none;
-  object-fit: contain;
-  object-position: center;
-}
-
-.home-feature-card__content,
-.home-feature-card__content--trade {
-  justify-content: flex-start;
-  min-height: 300px;
-  padding: 30px 34px 32px;
-}
-
-.home-feature-card__content h3,
-.home-feature-card__content--trade h3 {
-  margin-bottom: 11px;
-  font-size: clamp(24px, 2vw, 31px);
-}
-
-.home-feature-card__content .home-card-intro {
-  font-size: 15px;
-  line-height: 1.65;
-}
-
-.home-feature-card__content ul {
-  margin-top: 16px;
-  padding-left: 19px;
-  font-size: 13px;
-  line-height: 1.7;
-}
-
-.home-feature-card__content .home-card-button,
-.home-feature-card__content--trade .home-card-button {
-  margin-top: 20px;
-  padding: 12px 22px;
-}
-
-.home-feature-card__content--trade {
-  color: #ffffff;
-  background: linear-gradient(135deg, var(--navsa-navy), #174a83);
-}
-
-.home-feature-card__content--trade .home-trade-date {
-  margin-top: 4px;
-  font-size: 17px;
-}
-
-@media (max-width: 900px) {
-  .home-feature-card,
-  .home-feature-card--trade {
-    grid-template-rows: 220px auto;
-  }
-
-  .home-feature-card__image-wrap,
-  .home-feature-card__image-wrap--trade {
-    height: 220px;
-    min-height: 220px;
-  }
-}
-
-@media (max-width: 760px) {
-  .home-feature-card,
-  .home-feature-card--trade {
-    grid-template-rows: 205px auto;
-  }
-
-  .home-feature-card__image-wrap,
-  .home-feature-card__image-wrap--trade {
-    height: 205px;
-    min-height: 205px;
-    padding: 16px 20px;
-  }
-
-  .home-feature-card__content,
-  .home-feature-card__content--trade {
-    min-height: 0;
-    padding: 26px 24px 28px;
-  }
-}
-
-/* =========================================================
-   FINAL CARD FIT + CONTENT VISIBILITY FIX
-   ========================================================= */
-.home-info-grid {
-  max-width: 1380px;
-}
-
-.home-feature-card,
-.home-feature-card--trade {
-  overflow: hidden;
-  height: auto;
-}
-
-/* Keep both image and content sections equal across both cards. */
-.home-feature-card__image-wrap,
-.home-feature-card__image-wrap--trade {
-  padding: 0;
-  overflow: hidden;
-}
-
-/* Customer artwork keeps its natural proportions. */
-.home-feature-card--customer .home-feature-card__image {
-  padding: 18px 24px;
-  object-fit: contain;
-}
-
-/* Fill the tradeshow image from left edge to right edge without white gutters. */
-.home-feature-card__image--trade {
-  width: 100%;
-  height: 100%;
-  object-fit: fill;
-  object-position: center;
-}
-
-/* The removed JOIN NAVSA line gives enough room for all content and the CTA. */
-.home-feature-card__content {
-  min-height: 0;
-  padding: 27px 34px 30px;
-}
-
-.home-feature-card__content--trade {
-  min-height: 0;
-  padding: 27px 34px 30px;
-}
-
-.home-feature-card--customer .home-feature-card__content h3 {
-  margin-top: 0;
-}
-
-.home-feature-card__content ul {
-  margin-top: 13px;
-  margin-bottom: 0;
-  line-height: 1.62;
-}
-
-.home-feature-card--customer .home-card-button {
-  margin-top: 20px;
-}
-
-@media (max-width: 760px) {
-  .home-feature-card--customer .home-feature-card__image {
-    padding: 14px 18px;
-  }
-
-  .home-feature-card__content,
-  .home-feature-card__content--trade {
-    padding: 24px 22px 27px;
-  }
-}
-
-/* =========================================================
-   FINAL TRADE SHOW CARD PROPORTIONS
-   Keep the overall card height aligned with the customer card,
-   while giving more space to the artwork and less to the text.
-   ========================================================= */
-.home-feature-card--trade {
-  grid-template-rows: 300px 235px;
-}
-
-.home-feature-card__image-wrap--trade {
-  height: 300px;
-  min-height: 300px;
-  padding: 0;
-  overflow: hidden;
-  background: #ffffff;
-}
-
-.home-feature-card__image--trade {
-  width: 100%;
-  height: 100%;
-  display: block;
-  object-fit: fill;
-  object-position: center;
-}
-
-.home-feature-card__content--trade {
-  min-height: 235px;
-  padding: 24px 34px 26px;
-  justify-content: center;
-}
-
-.home-feature-card__content--trade h3 {
-  margin-bottom: 8px;
-}
-
-.home-feature-card__content--trade .home-trade-date {
-  margin-top: 0;
-  margin-bottom: 14px;
-}
-
-.home-feature-card__content--trade .home-card-button {
-  margin-top: 10px;
-}
-
-@media (max-width: 900px) {
-  .home-feature-card--trade {
-    grid-template-rows: 270px auto;
-  }
-
-  .home-feature-card__image-wrap--trade {
-    height: 270px;
-    min-height: 270px;
-  }
-
-  .home-feature-card__content--trade {
-    min-height: 220px;
-  }
-}
-
-@media (max-width: 760px) {
-  .home-feature-card--trade {
-    grid-template-rows: 235px auto;
-  }
-
-  .home-feature-card__image-wrap--trade {
-    height: 235px;
-    min-height: 235px;
-  }
-
-  .home-feature-card__content--trade {
-    min-height: 0;
-    padding: 23px 22px 26px;
+    padding: 24px 20px 26px;
   }
 }
