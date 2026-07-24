@@ -18,7 +18,7 @@ function normaliseProduct(payload, fallback) {
     id: product.id ?? fallback.id,
   }
 }
-
+//function
 export default function Wishlist() {
   const { wishlistItems, removeFromWishlist } = useCart()
   const [products, setProducts] = useState(wishlistItems)
